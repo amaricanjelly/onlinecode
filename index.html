@@ -3,309 +3,345 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>ESP8266 Deauther — Cyver Store</title>
+<title>ESP8266 Deauther Store</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 :root{
   --bg:#0a0a0f;--surface:#111118;--card:#16161f;--border:#2a2a3a;
-  --accent:#00f5a0;--accent2:#00c3f5;--danger:#ff3c5a;
+  --accent:#00f5a0;--accent2:#00c3f5;--danger:#ff3c5a;--warn:#ffb400;
   --text:#e8e8f0;--muted:#888899;
   --fh:'Syne',sans-serif;--fm:'Space Mono',monospace;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--text);font-family:var(--fm);min-height:100vh;overflow-x:hidden;}
-body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-  background-image:linear-gradient(rgba(0,245,160,0.025) 1px,transparent 1px),
-  linear-gradient(90deg,rgba(0,245,160,0.025) 1px,transparent 1px);
+html,body{height:100%;overflow:hidden;}
+body{background:var(--bg);color:var(--text);font-family:var(--fm);}
+
+/* ══ MAIN SPLIT LAYOUT ══ */
+.app{display:flex;height:100vh;width:100vw;}
+
+/* ── LEFT: STORE ── */
+.store{flex:1;overflow-y:auto;min-width:0;position:relative;}
+.store::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(rgba(0,245,160,0.02) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(0,245,160,0.02) 1px,transparent 1px);
   background-size:44px 44px;}
 
-/* NAV */
-nav{display:flex;align-items:center;justify-content:space-between;padding:18px 40px;
+/* ── RIGHT: ADMIN PANEL ── */
+.admin-panel{
+  width:340px;min-width:340px;height:100vh;overflow-y:auto;
+  background:var(--surface);border-left:2px solid var(--border);
+  display:flex;flex-direction:column;
+}
+
+/* ADMIN: login wall */
+.admin-lock{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:100%;padding:32px;text-align:center;
+}
+.lock-icon{font-size:2.5rem;margin-bottom:16px;}
+.lock-title{font-family:var(--fh);font-size:1.1rem;font-weight:800;margin-bottom:6px;}
+.lock-sub{color:var(--muted);font-size:0.68rem;margin-bottom:24px;line-height:1.7;}
+.lock-line{width:100%;height:1px;background:var(--border);margin-bottom:24px;}
+
+/* ADMIN: dashboard */
+.admin-dash{display:none;flex-direction:column;height:100%;}
+.admin-dash.active{display:flex;}
+.adash-head{
+  padding:14px 16px;border-bottom:1px solid var(--border);
+  background:var(--card);flex-shrink:0;
+}
+.adash-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.adash-logo{font-family:var(--fh);font-size:0.85rem;font-weight:800;}
+.adash-logo span{color:var(--danger);}
+.btn-logout{background:none;border:1px solid var(--border);color:var(--muted);
+  font-family:var(--fm);font-size:0.6rem;padding:4px 10px;cursor:pointer;}
+.btn-logout:hover{border-color:var(--danger);color:var(--danger);}
+.adash-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+.stat{background:var(--surface);border:1px solid var(--border);padding:8px;text-align:center;}
+.stat-l{font-size:0.5rem;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:3px;}
+.stat-v{font-family:var(--fh);font-size:1.3rem;font-weight:800;color:var(--accent);}
+.stat-v.y{color:var(--warn);}
+.adash-body{flex:1;overflow-y:auto;padding:10px;}
+.btn-refresh{width:100%;background:none;border:1px solid var(--border);color:var(--muted);
+  font-family:var(--fm);font-size:0.62rem;padding:7px;cursor:pointer;margin-bottom:8px;}
+.btn-refresh:hover{border-color:var(--accent);color:var(--accent);}
+
+/* ORDER CARDS */
+.ocard{background:var(--card);border:1px solid var(--border);margin-bottom:8px;
+  padding:12px;position:relative;transition:border 0.2s;}
+.ocard.pending{border-left:3px solid var(--warn);}
+.ocard.sent{border-left:3px solid var(--accent);opacity:0.7;}
+.o-num{font-size:0.52rem;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:3px;}
+.o-email{font-size:0.73rem;color:var(--accent2);margin-bottom:3px;word-break:break-all;}
+.o-tx{font-size:0.6rem;color:var(--muted);margin-bottom:3px;}
+.o-time{font-size:0.57rem;color:var(--muted);margin-bottom:8px;}
+.o-pill{display:inline-block;padding:2px 8px;font-size:0.55rem;letter-spacing:1px;
+  text-transform:uppercase;margin-bottom:8px;}
+.pill-p{background:rgba(255,180,0,0.12);color:var(--warn);border:1px solid rgba(255,180,0,0.3);}
+.pill-s{background:rgba(0,245,160,0.08);color:var(--accent);border:1px solid rgba(0,245,160,0.25);}
+.o-btns{display:flex;gap:4px;flex-wrap:wrap;}
+.btn-accept{background:var(--accent);color:#000;border:none;font-family:var(--fm);
+  font-size:0.58rem;font-weight:700;padding:6px 8px;cursor:pointer;flex:1;transition:all 0.2s;}
+.btn-accept:hover:not(:disabled){background:#00c87a;}
+.btn-accept:disabled{background:var(--border);color:var(--muted);cursor:not-allowed;}
+.btn-email{background:var(--accent2);color:#000;border:none;font-family:var(--fm);
+  font-size:0.6rem;font-weight:700;padding:6px 9px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;}
+.btn-email:hover{background:#00a8d6;}
+.btn-del{background:none;border:1px solid var(--border);color:var(--muted);
+  font-family:var(--fm);font-size:0.6rem;padding:5px 8px;cursor:pointer;}
+.btn-del:hover{border-color:var(--danger);color:var(--danger);}
+.no-orders{text-align:center;padding:30px 10px;color:var(--muted);font-size:0.7rem;line-height:1.8;}
+.send-overlay{position:absolute;inset:0;background:rgba(10,10,15,0.9);
+  display:flex;align-items:center;justify-content:center;font-size:0.68rem;color:var(--accent);}
+@keyframes rot{to{transform:rotate(360deg)}}
+.spin{display:inline-block;animation:rot 1s linear infinite;margin-right:6px;}
+
+/* ── FORM ELEMENTS (shared) ── */
+label{display:block;font-size:0.6rem;letter-spacing:2px;color:var(--muted);
+  text-transform:uppercase;margin-bottom:5px;margin-top:12px;}
+input[type=email],input[type=text],input[type=password]{
+  width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);
+  font-family:var(--fm);font-size:0.78rem;padding:10px 12px;outline:none;transition:border 0.2s;}
+input:focus{border-color:var(--accent);}
+.btn-main{width:100%;font-family:var(--fm);font-size:0.78rem;font-weight:700;
+  letter-spacing:2px;padding:13px;border:none;cursor:pointer;text-transform:uppercase;
+  margin-top:14px;transition:all 0.2s;}
+.btn-main.green{background:var(--accent);color:#000;}
+.btn-main.green:hover{background:#00c87a;}
+.btn-main.red{background:var(--danger);color:#fff;}
+.btn-main.red:hover{background:#cc2a45;}
+.btn-main:disabled{background:var(--border);color:var(--muted);cursor:not-allowed;}
+.err-msg{color:var(--danger);font-size:0.65rem;margin-top:7px;display:none;line-height:1.6;}
+.err-msg.show{display:block;}
+
+/* ── STORE NAV ── */
+.s-nav{display:flex;align-items:center;justify-content:space-between;padding:16px 30px;
   border-bottom:1px solid var(--border);background:rgba(10,10,15,0.95);
   backdrop-filter:blur(20px);position:sticky;top:0;z-index:100;}
-.logo{font-family:var(--fh);font-size:1.3rem;font-weight:800;letter-spacing:2px;}
+.logo{font-family:var(--fh);font-size:1.2rem;font-weight:800;letter-spacing:2px;}
 .logo span{color:var(--accent);}
-.nav-tag{font-size:0.6rem;letter-spacing:3px;color:var(--accent);padding:4px 10px;border:1px solid var(--accent);text-transform:uppercase;}
+.nav-tag{font-size:0.58rem;letter-spacing:3px;color:var(--accent);padding:4px 9px;
+  border:1px solid var(--accent);text-transform:uppercase;}
 
-/* HERO */
-.hero{display:grid;grid-template-columns:1fr 1fr;gap:0;min-height:88vh;
-  align-items:center;padding:80px 40px;max-width:1200px;margin:0 auto;position:relative;z-index:1;}
-.hero-text{padding-right:60px;}
-.tag-line{font-size:0.62rem;letter-spacing:4px;color:var(--accent);text-transform:uppercase;
-  margin-bottom:20px;display:flex;align-items:center;gap:10px;}
-.tag-line::before{content:'';display:block;width:30px;height:1px;background:var(--accent);}
-h1{font-family:var(--fh);font-size:clamp(2.5rem,5vw,4rem);font-weight:800;line-height:1.05;
-  margin-bottom:24px;background:linear-gradient(135deg,#fff 40%,var(--accent) 100%);
+/* ── HERO ── */
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:0;min-height:80vh;
+  align-items:center;padding:60px 30px;max-width:900px;margin:0 auto;position:relative;z-index:1;}
+.hero-text{padding-right:40px;}
+.tag-line{font-size:0.6rem;letter-spacing:4px;color:var(--accent);text-transform:uppercase;
+  margin-bottom:18px;display:flex;align-items:center;gap:10px;}
+.tag-line::before{content:'';display:block;width:28px;height:1px;background:var(--accent);}
+h1{font-family:var(--fh);font-size:clamp(2rem,3.5vw,3.2rem);font-weight:800;line-height:1.08;
+  margin-bottom:20px;background:linear-gradient(135deg,#fff 40%,var(--accent) 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.hero-desc{color:var(--muted);line-height:1.8;font-size:0.83rem;margin-bottom:36px;}
-.price-block{display:flex;align-items:flex-end;gap:16px;margin-bottom:36px;}
-.price{font-family:var(--fh);font-size:3.5rem;font-weight:800;color:var(--accent);}
-.price-note{color:var(--muted);font-size:0.68rem;margin-bottom:14px;line-height:1.6;}
+.hero-desc{color:var(--muted);line-height:1.8;font-size:0.78rem;margin-bottom:28px;}
+.price-block{display:flex;align-items:flex-end;gap:14px;margin-bottom:28px;}
+.price{font-family:var(--fh);font-size:3rem;font-weight:800;color:var(--accent);}
+.price-note{color:var(--muted);font-size:0.64rem;margin-bottom:10px;line-height:1.6;}
 .btn-order{display:inline-block;background:var(--accent);color:#000;font-family:var(--fm);
-  font-size:0.88rem;font-weight:700;letter-spacing:2px;padding:18px 48px;border:none;
+  font-size:0.82rem;font-weight:700;letter-spacing:2px;padding:15px 38px;border:none;
   cursor:pointer;text-transform:uppercase;transition:all 0.2s;
-  clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));}
-.btn-order:hover{background:#fff;transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,245,160,0.3);}
+  clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));}
+.btn-order:hover{background:#fff;transform:translateY(-2px);}
 
 /* PRODUCT CARD */
 .hero-visual{display:flex;align-items:center;justify-content:center;position:relative;}
-.glow-ring{position:absolute;width:320px;height:320px;border-radius:50%;
+.glow{position:absolute;width:260px;height:260px;border-radius:50%;pointer-events:none;
   background:radial-gradient(circle,rgba(0,245,160,0.07) 0%,transparent 70%);
-  animation:pulse 4s ease-in-out infinite;}
-@keyframes pulse{0%,100%{opacity:0.5}50%{opacity:1}}
-.product-card{background:var(--card);border:1px solid var(--border);padding:36px;
-  width:100%;max-width:390px;position:relative;overflow:hidden;animation:float 4s ease-in-out infinite;}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-.product-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  animation:gp 4s ease-in-out infinite;}
+@keyframes gp{0%,100%{opacity:0.5}50%{opacity:1}}
+.pcard{background:var(--card);border:1px solid var(--border);padding:26px;
+  width:100%;max-width:320px;position:relative;overflow:hidden;animation:fl 4s ease-in-out infinite;}
+@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.pcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
   background:linear-gradient(90deg,transparent,var(--accent),var(--accent2),transparent);
-  animation:glow-scan 3s linear infinite;}
-@keyframes glow-scan{0%{opacity:0.3}50%{opacity:1}100%{opacity:0.3}}
-.pimg{background:#0d0d15;border:1px solid var(--border);padding:30px;
-  display:flex;align-items:center;justify-content:center;margin-bottom:20px;height:190px;position:relative;}
-.badge{position:absolute;top:12px;right:12px;background:var(--accent);color:#000;
-  font-size:0.6rem;font-weight:700;letter-spacing:2px;padding:4px 8px;text-transform:uppercase;}
-.spec-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);font-size:0.7rem;}
-.spec-row:last-child{border:none;}
-.sk{color:var(--muted);} .sv{color:var(--accent2);}
+  animation:gs 3s linear infinite;}
+@keyframes gs{0%{opacity:0.3}50%{opacity:1}100%{opacity:0.3}}
+.pimg{background:#0d0d15;border:1px solid var(--border);display:flex;align-items:center;
+  justify-content:center;margin-bottom:16px;height:160px;position:relative;}
+.pbadge{position:absolute;top:8px;right:8px;background:var(--accent);color:#000;
+  font-size:0.56rem;font-weight:700;letter-spacing:2px;padding:3px 6px;text-transform:uppercase;}
+.spec{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:0.65rem;}
+.spec:last-child{border:none;}
+.sk{color:var(--muted);}.sv{color:var(--accent2);}
 
 /* FEATURES */
-.features{padding:80px 40px;max-width:1200px;margin:0 auto;position:relative;z-index:1;}
-.sec-lbl{font-size:0.6rem;letter-spacing:4px;color:var(--accent);text-transform:uppercase;
-  margin-bottom:32px;display:flex;align-items:center;gap:16px;}
+.feats{padding:50px 30px;max-width:900px;margin:0 auto;position:relative;z-index:1;}
+.sec-lbl{font-size:0.58rem;letter-spacing:4px;color:var(--accent);text-transform:uppercase;
+  margin-bottom:24px;display:flex;align-items:center;gap:12px;}
 .sec-lbl::after{content:'';flex:1;height:1px;background:var(--border);}
 .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);}
-.feat{background:var(--card);padding:28px;transition:background 0.2s;}
+.feat{background:var(--card);padding:22px;transition:background 0.2s;}
 .feat:hover{background:#1a1a25;}
-.fi{font-size:1.4rem;margin-bottom:14px;}
-.ft{font-family:var(--fh);font-size:1rem;font-weight:700;margin-bottom:8px;}
-.fd{color:var(--muted);font-size:0.71rem;line-height:1.7;}
+.fi{font-size:1.2rem;margin-bottom:10px;}
+.ft{font-family:var(--fh);font-size:0.88rem;font-weight:700;margin-bottom:6px;}
+.fd{color:var(--muted);font-size:0.67rem;line-height:1.7;}
 
-/* MODAL */
-.modal{display:none;position:fixed;inset:0;z-index:1000;align-items:center;justify-content:center;padding:20px;}
+/* ── PAYMENT MODAL ── */
+.modal{display:none;position:fixed;inset:0;z-index:2000;align-items:center;justify-content:center;padding:20px;}
 .modal.active{display:flex;}
-.mbg{position:absolute;inset:0;background:rgba(0,0,0,0.88);backdrop-filter:blur(10px);}
+.mbg{position:absolute;inset:0;background:rgba(0,0,0,0.9);backdrop-filter:blur(10px);}
 .mbox{position:relative;z-index:1;background:var(--card);border:1px solid var(--border);
-  padding:40px;width:100%;max-width:480px;animation:up 0.3s ease;max-height:90vh;overflow-y:auto;}
-@keyframes up{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+  padding:34px;width:100%;max-width:440px;animation:slideup 0.3s ease;max-height:92vh;overflow-y:auto;}
+@keyframes slideup{from{transform:translateY(28px);opacity:0}to{transform:translateY(0);opacity:1}}
 .mbox::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
   background:linear-gradient(90deg,var(--accent),var(--accent2));}
-.mtitle{font-family:var(--fh);font-size:1.4rem;font-weight:800;margin-bottom:6px;}
-.msub{color:var(--muted);font-size:0.72rem;margin-bottom:24px;line-height:1.6;}
-.mclose{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.2rem;}
+.mclose{position:absolute;top:12px;right:14px;background:none;border:none;
+  color:var(--muted);cursor:pointer;font-size:1.1rem;}
 .mclose:hover{color:var(--danger);}
-
-/* STEPS */
-.steps{display:flex;margin-bottom:28px;}
-.step{flex:1;text-align:center;font-size:0.62rem;letter-spacing:2px;padding:10px;
+.mtitle{font-family:var(--fh);font-size:1.25rem;font-weight:800;margin-bottom:5px;}
+.msub{color:var(--muted);font-size:0.7rem;margin-bottom:20px;line-height:1.6;}
+.steps-bar{display:flex;margin-bottom:22px;}
+.stp{flex:1;text-align:center;font-size:0.58rem;letter-spacing:2px;padding:8px;
   background:var(--surface);color:var(--muted);border-bottom:2px solid var(--border);text-transform:uppercase;}
-.step.on{color:var(--accent);border-bottom-color:var(--accent);background:#0d1a15;}
-.step.ok{color:var(--accent);background:#0d1a15;}
-
-/* PAYMENT */
-.pinfo{background:var(--surface);border:1px solid var(--border);padding:18px;margin-bottom:18px;}
-.pr{display:flex;justify-content:space-between;margin-bottom:7px;font-size:0.73rem;}
-.pr:last-child{margin:0;} .pl{color:var(--muted);}
-.binbox{background:#0d1a15;border:1px solid var(--accent);padding:16px;margin-bottom:18px;text-align:center;}
-.binlbl{font-size:0.58rem;letter-spacing:3px;color:var(--accent);text-transform:uppercase;margin-bottom:8px;}
-.binid{font-family:var(--fh);font-size:1.5rem;font-weight:800;color:var(--accent);letter-spacing:6px;}
+.stp.on{color:var(--accent);border-bottom-color:var(--accent);background:#0d1a15;}
+.stp.ok{color:var(--accent);background:#0d1a15;}
+.pinfo{background:var(--surface);border:1px solid var(--border);padding:14px;margin-bottom:14px;}
+.pr{display:flex;justify-content:space-between;margin-bottom:6px;font-size:0.7rem;}
+.pr:last-child{margin:0;}.pl{color:var(--muted);}
+.binbox{background:#0d1a15;border:1px solid var(--accent);padding:14px;margin-bottom:14px;text-align:center;}
+.binlbl{font-size:0.55rem;letter-spacing:3px;color:var(--accent);text-transform:uppercase;margin-bottom:6px;}
+.binid{font-family:var(--fh);font-size:1.4rem;font-weight:800;color:var(--accent);letter-spacing:5px;}
 .copybtn{background:none;border:1px solid var(--accent);color:var(--accent);
-  font-family:var(--fm);font-size:0.62rem;padding:5px 14px;cursor:pointer;margin-top:8px;transition:all 0.2s;}
+  font-family:var(--fm);font-size:0.6rem;padding:4px 12px;cursor:pointer;margin-top:6px;transition:all 0.2s;}
 .copybtn:hover{background:var(--accent);color:#000;}
+.ok-wrap{text-align:center;padding:14px 0;}
+.ok-icon{font-size:2.5rem;margin-bottom:10px;}
+.ok-t{font-family:var(--fh);font-size:1.2rem;font-weight:800;color:var(--accent);margin-bottom:8px;}
+.ok-d{color:var(--muted);font-size:0.7rem;line-height:1.9;}
 
-/* FORM */
-label{display:block;font-size:0.62rem;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:6px;margin-top:14px;}
-input[type=email],input[type=text],input[type=password]{width:100%;background:var(--surface);
-  border:1px solid var(--border);color:var(--text);font-family:var(--fm);font-size:0.82rem;
-  padding:12px 14px;outline:none;transition:border 0.2s;}
-input:focus{border-color:var(--accent);}
-.bsub{width:100%;background:var(--accent);color:#000;font-family:var(--fm);font-size:0.82rem;
-  font-weight:700;letter-spacing:2px;padding:15px;border:none;cursor:pointer;
-  text-transform:uppercase;margin-top:18px;transition:all 0.2s;}
-.bsub:hover{background:#00c87a;}
-.bsub:disabled{background:var(--border);color:var(--muted);cursor:not-allowed;}
-.err{color:var(--danger);font-size:0.68rem;margin-top:8px;display:none;line-height:1.6;}
-.err.show{display:block;}
+/* TOAST */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);
+  background:var(--card);border:1px solid var(--accent);color:var(--accent);
+  font-family:var(--fm);font-size:0.7rem;padding:10px 22px;z-index:9999;
+  transition:transform 0.3s,opacity 0.3s;opacity:0;white-space:nowrap;pointer-events:none;}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+.toast.err{border-color:var(--danger);color:var(--danger);}
 
-/* SUCCESS */
-.ok-msg{text-align:center;padding:16px 0;}
-.ok-icon{font-size:2.8rem;margin-bottom:14px;}
-.ok-title{font-family:var(--fh);font-size:1.4rem;font-weight:800;color:var(--accent);margin-bottom:8px;}
-.ok-desc{color:var(--muted);font-size:0.73rem;line-height:1.9;}
-
-/* ADMIN LOGIN */
-#alog{display:none;position:fixed;inset:0;z-index:1500;background:rgba(0,0,0,0.97);
-  backdrop-filter:blur(16px);align-items:center;justify-content:center;}
-#alog.show{display:flex;}
-.lbox{background:var(--card);border:1px solid var(--border);padding:44px;
-  width:100%;max-width:360px;position:relative;animation:up 0.3s ease;}
-.lbox::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--danger),#ff8c00);}
-.lbox h2{font-family:var(--fh);font-size:1.3rem;font-weight:800;margin-bottom:4px;}
-.lbox p{color:var(--muted);font-size:0.7rem;margin-bottom:24px;}
-.bback{width:100%;background:none;border:1px solid var(--border);color:var(--muted);
-  font-family:var(--fm);font-size:0.7rem;padding:10px;cursor:pointer;margin-top:8px;}
-.bback:hover{border-color:var(--muted);}
-
-/* ADMIN PANEL */
-#apanel{display:none;position:fixed;inset:0;z-index:2000;overflow-y:auto;background:var(--bg);}
-.anav{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;
-  background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;}
-.alogo{font-family:var(--fh);font-size:1rem;font-weight:800;}
-.alogo span{color:var(--danger);}
-.abtns button{background:none;border:1px solid var(--border);color:var(--muted);
-  font-family:var(--fm);font-size:0.68rem;padding:6px 14px;cursor:pointer;margin-left:8px;}
-.abtns button:hover{border-color:var(--accent);color:var(--accent);}
-.abtns .lo:hover{border-color:var(--danger);color:var(--danger);}
-.abody{max-width:1100px;margin:0 auto;padding:40px 32px;}
-.ahdr h2{font-family:var(--fh);font-size:1.7rem;font-weight:800;margin-bottom:6px;}
-.ahdr p{color:var(--muted);font-size:0.72rem;margin-bottom:32px;}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:36px;}
-.sc{background:var(--card);border:1px solid var(--border);padding:22px;}
-.sl{font-size:0.58rem;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:8px;}
-.sv2{font-family:var(--fh);font-size:2rem;font-weight:800;color:var(--accent);}
-.sv2.y{color:#ffb400;}
-
-/* TABLE */
-.twrap{overflow-x:auto;}
-table.ot{width:100%;border-collapse:collapse;min-width:700px;}
-table.ot th{text-align:left;font-size:0.58rem;letter-spacing:3px;color:var(--muted);
-  text-transform:uppercase;padding:10px 14px;border-bottom:1px solid var(--border);}
-table.ot td{padding:13px 14px;font-size:0.73rem;border-bottom:1px solid rgba(42,42,58,0.4);vertical-align:middle;}
-table.ot tr:hover td{background:var(--surface);}
-.pill{display:inline-block;padding:3px 10px;font-size:0.58rem;letter-spacing:1px;text-transform:uppercase;}
-.pp{background:rgba(255,180,0,0.12);color:#ffb400;border:1px solid rgba(255,180,0,0.25);}
-.ps{background:rgba(0,245,160,0.08);color:var(--accent);border:1px solid rgba(0,245,160,0.25);}
-.bmail{background:var(--accent2);color:#000;border:none;font-family:var(--fm);font-size:0.62rem;
-  font-weight:700;padding:6px 12px;cursor:pointer;letter-spacing:1px;text-decoration:none;display:inline-block;}
-.bmail:hover{background:#00a8d6;}
-.bmark{background:var(--accent);color:#000;border:none;font-family:var(--fm);font-size:0.62rem;
-  font-weight:700;padding:6px 12px;cursor:pointer;letter-spacing:1px;margin-left:4px;}
-.bmark:hover{background:#00c87a;}
-.bmark:disabled{background:var(--border);color:var(--muted);cursor:not-allowed;}
-.bdel{background:none;border:1px solid var(--danger);color:var(--danger);font-family:var(--fm);
-  font-size:0.6rem;padding:5px 10px;cursor:pointer;margin-left:4px;}
-.bdel:hover{background:var(--danger);color:#fff;}
-.empty{text-align:center;padding:60px;color:var(--muted);font-size:0.8rem;line-height:1.8;}
-
-/* SECRET DOT */
-.dot{position:fixed;bottom:16px;right:16px;width:10px;height:10px;
-  background:var(--border);cursor:pointer;z-index:500;border-radius:50%;transition:background 0.3s;}
-.dot:hover{background:var(--danger);}
-
-/* NOTICE BOX */
-.notice{background:#0d1a15;border:1px solid var(--accent);padding:14px 18px;margin-bottom:20px;font-size:0.72rem;line-height:1.7;}
-.notice strong{color:var(--accent);}
-
-@media(max-width:768px){
-  .hero{grid-template-columns:1fr;padding:50px 20px;}
-  .hero-text{padding-right:0;margin-bottom:36px;}
+@media(max-width:860px){
+  .app{flex-direction:column;}
+  .admin-panel{width:100%;min-width:0;height:auto;border-left:none;border-top:2px solid var(--border);}
+  html,body{overflow:auto;height:auto;}
+  .store{overflow:visible;}
+  .hero{grid-template-columns:1fr;padding:40px 20px;min-height:auto;}
+  .hero-text{padding-right:0;margin-bottom:30px;}
   .feat-grid{grid-template-columns:1fr;}
-  nav{padding:14px 20px;}
-  .stats{grid-template-columns:1fr 1fr;}
-  .mbox{padding:24px;}
-  .abody{padding:24px 16px;}
 }
 </style>
 </head>
 <body>
 
-<nav>
-  <div class="logo">CYVER<span>TECH</span></div>
-  <div class="nav-tag">VERIFIED STORE</div>
-</nav>
+<div class="app">
 
-<section class="hero">
-  <div class="hero-text">
-    <div class="tag-line">Digital Delivery — Instant</div>
-    <h1>ESP8266<br/>Deauther<br/>V2.6.1</h1>
-    <p class="hero-desc">
-      DSTIKE Deauther OLED V6 — pre-compiled firmware, ready to flash.
-      Stable build v2.6.1. For network security research,
-      penetration testing labs, and educational purposes.
-    </p>
-    <div class="price-block">
-      <div class="price">$40</div>
-      <div class="price-note">One-time payment<br/>Delivered to your email</div>
-    </div>
-    <button class="btn-order" onclick="openPay()">ORDER NOW →</button>
-  </div>
+<!-- ══════════════ LEFT: STORE ══════════════ -->
+<div class="store">
 
-  <div class="hero-visual">
-    <div class="glow-ring"></div>
-    <div class="product-card">
-      <div class="pimg">
-        <span class="badge">IN STOCK</span>
-        <svg width="110" height="110" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="25" y="25" width="70" height="70" rx="4" fill="#111" stroke="#00f5a0" stroke-width="1.5"/>
-          <rect x="35" y="35" width="50" height="50" rx="2" fill="#0d1a15" stroke="#00c3f5" stroke-width="1"/>
-          <text x="60" y="57" text-anchor="middle" fill="#00f5a0" font-size="7" font-family="monospace">ESP8266</text>
-          <text x="60" y="68" text-anchor="middle" fill="#00c3f5" font-size="5.5" font-family="monospace">DEAUTHER</text>
-          <text x="60" y="78" text-anchor="middle" fill="#888" font-size="4.5" font-family="monospace">v2.6.1 OLED V6</text>
-          <rect x="10" y="37" width="15" height="3" rx="1" fill="#00f5a0" opacity="0.7"/>
-          <rect x="10" y="47" width="15" height="3" rx="1" fill="#00f5a0" opacity="0.7"/>
-          <rect x="10" y="57" width="15" height="3" rx="1" fill="#00f5a0" opacity="0.7"/>
-          <rect x="10" y="67" width="15" height="3" rx="1" fill="#00f5a0" opacity="0.7"/>
-          <rect x="10" y="77" width="15" height="3" rx="1" fill="#00f5a0" opacity="0.7"/>
-          <rect x="95" y="37" width="15" height="3" rx="1" fill="#00c3f5" opacity="0.7"/>
-          <rect x="95" y="47" width="15" height="3" rx="1" fill="#00c3f5" opacity="0.7"/>
-          <rect x="95" y="57" width="15" height="3" rx="1" fill="#00c3f5" opacity="0.7"/>
-          <rect x="95" y="67" width="15" height="3" rx="1" fill="#00c3f5" opacity="0.7"/>
-          <rect x="95" y="77" width="15" height="3" rx="1" fill="#00c3f5" opacity="0.7"/>
-          <rect x="37" y="10" width="3" height="15" rx="1" fill="#00f5a0" opacity="0.5"/>
-          <rect x="50" y="10" width="3" height="15" rx="1" fill="#00f5a0" opacity="0.5"/>
-          <rect x="63" y="10" width="3" height="15" rx="1" fill="#00c3f5" opacity="0.5"/>
-          <rect x="76" y="10" width="3" height="15" rx="1" fill="#00c3f5" opacity="0.5"/>
-          <rect x="37" y="95" width="3" height="15" rx="1" fill="#00f5a0" opacity="0.5"/>
-          <rect x="50" y="95" width="3" height="15" rx="1" fill="#00f5a0" opacity="0.5"/>
-          <rect x="63" y="95" width="3" height="15" rx="1" fill="#00c3f5" opacity="0.5"/>
-          <rect x="76" y="95" width="3" height="15" rx="1" fill="#00c3f5" opacity="0.5"/>
-        </svg>
+  <nav class="s-nav">
+    <div class="logo">SECURE<span>TECH</span></div>
+    <div class="nav-tag">VERIFIED STORE</div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-text">
+      <div class="tag-line">Digital Delivery — Instant</div>
+      <h1>ESP8266<br/>Deauther<br/>V2.6.1</h1>
+      <p class="hero-desc">DSTIKE Deauther OLED V6 — pre-compiled firmware, ready to flash. Stable build v2.6.1 for security research and educational purposes.</p>
+      <div class="price-block">
+        <div class="price">$40</div>
+        <div class="price-note">One-time payment<br/>Delivered to your email</div>
       </div>
-      <div class="spec-row"><span class="sk">FIRMWARE</span><span class="sv">v2.6.1 STABLE</span></div>
-      <div class="spec-row"><span class="sk">BOARD</span><span class="sv">DSTIKE OLED V6</span></div>
-      <div class="spec-row"><span class="sk">DELIVERY</span><span class="sv">EMAIL (DIGITAL)</span></div>
-      <div class="spec-row"><span class="sk">PRICE</span><span class="sv">$40 USD</span></div>
+      <button class="btn-order" onclick="openPay()">ORDER NOW →</button>
+    </div>
+    <div class="hero-visual">
+      <div class="glow"></div>
+      <div class="pcard">
+        <div class="pimg">
+          <span class="pbadge">IN STOCK</span>
+          <svg width="96" height="96" viewBox="0 0 120 120" fill="none">
+            <rect x="25" y="25" width="70" height="70" rx="4" fill="#111" stroke="#00f5a0" stroke-width="1.5"/>
+            <rect x="35" y="35" width="50" height="50" rx="2" fill="#0d1a15" stroke="#00c3f5" stroke-width="1"/>
+            <text x="60" y="57" text-anchor="middle" fill="#00f5a0" font-size="7" font-family="monospace">ESP8266</text>
+            <text x="60" y="68" text-anchor="middle" fill="#00c3f5" font-size="5.5" font-family="monospace">DEAUTHER</text>
+            <text x="60" y="78" text-anchor="middle" fill="#888" font-size="4.5" font-family="monospace">v2.6.1 OLED V6</text>
+            <rect x="10" y="38" width="15" height="3" rx="1" fill="#00f5a0" opacity="0.7"/>
+            <rect x="10" y="48" width="15" height="3" rx="1" fill="#00f5a0" opacity="0.7"/>
+            <rect x="10" y="58" width="15" height="3" rx="1" fill="#00f5a0" opacity="0.7"/>
+            <rect x="10" y="68" width="15" height="3" rx="1" fill="#00f5a0" opacity="0.7"/>
+            <rect x="10" y="78" width="15" height="3" rx="1" fill="#00f5a0" opacity="0.7"/>
+            <rect x="95" y="38" width="15" height="3" rx="1" fill="#00c3f5" opacity="0.7"/>
+            <rect x="95" y="48" width="15" height="3" rx="1" fill="#00c3f5" opacity="0.7"/>
+            <rect x="95" y="58" width="15" height="3" rx="1" fill="#00c3f5" opacity="0.7"/>
+            <rect x="95" y="68" width="15" height="3" rx="1" fill="#00c3f5" opacity="0.7"/>
+            <rect x="95" y="78" width="15" height="3" rx="1" fill="#00c3f5" opacity="0.7"/>
+          </svg>
+        </div>
+        <div class="spec"><span class="sk">FIRMWARE</span><span class="sv">v2.6.1 STABLE</span></div>
+        <div class="spec"><span class="sk">BOARD</span><span class="sv">DSTIKE OLED V6</span></div>
+        <div class="spec"><span class="sk">DELIVERY</span><span class="sv">EMAIL</span></div>
+        <div class="spec"><span class="sk">PRICE</span><span class="sv">$40 USD</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="feats">
+    <div class="sec-lbl">What You Get</div>
+    <div class="feat-grid">
+      <div class="feat"><div class="fi">📦</div><div class="ft">Pre-Compiled .BIN</div><div class="fd">Ready-to-flash firmware sent to your inbox. No compiling needed.</div></div>
+      <div class="feat"><div class="fi">⚡</div><div class="ft">Fast Delivery</div><div class="fd">Digital product sent via email within 1–24 hours of payment verification.</div></div>
+      <div class="feat"><div class="fi">🔒</div><div class="ft">v2.6.1 Verified</div><div class="fd">Stable release for DSTIKE OLED V6 hardware. Tested and verified working.</div></div>
+    </div>
+  </section>
+
+</div><!-- /store -->
+
+<!-- ══════════════ RIGHT: ADMIN PANEL ══════════════ -->
+<div class="admin-panel">
+
+  <!-- LOCK SCREEN -->
+  <div class="admin-lock" id="admin-lock">
+    <div class="lock-icon">🔐</div>
+    <div class="lock-title">Admin Panel</div>
+    <div class="lock-sub">Enter password to view<br/>orders and send files</div>
+    <div class="lock-line"></div>
+    <label for="ap">Password</label>
+    <input type="password" id="ap" placeholder="••••••" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <button class="btn-main red" onclick="doLogin()">LOGIN →</button>
+    <div class="err-msg" id="lerr">Wrong password. Try again.</div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="admin-dash" id="admin-dash">
+    <div class="adash-head">
+      <div class="adash-top">
+        <div class="adash-logo">ADMIN <span>PANEL</span></div>
+        <button class="btn-logout" onclick="doLogout()">LOGOUT</button>
+      </div>
+      <div class="adash-stats">
+        <div class="stat"><div class="stat-l">Total</div><div class="stat-v" id="st">0</div></div>
+        <div class="stat"><div class="stat-l">Pending</div><div class="stat-v y" id="sp">0</div></div>
+        <div class="stat"><div class="stat-l">Sent</div><div class="stat-v" id="ss">0</div></div>
+      </div>
+    </div>
+    <div class="adash-body">
+      <button class="btn-refresh" onclick="loadOrders()">↻ REFRESH</button>
+      <div id="orders-list"><div class="no-orders">Loading...</div></div>
     </div>
   </div>
-</section>
 
-<section class="features">
-  <div class="sec-lbl">What You Get</div>
-  <div class="feat-grid">
-    <div class="feat">
-      <div class="fi">📦</div>
-      <div class="ft">Pre-Compiled .BIN</div>
-      <div class="fd">Ready-to-flash firmware file sent directly to your inbox. No compiling needed.</div>
-    </div>
-    <div class="feat">
-      <div class="fi">⚡</div>
-      <div class="ft">Fast Delivery</div>
-      <div class="fd">Digital product sent via email. Typically within 1–24 hours of payment verification.</div>
-    </div>
-    <div class="feat">
-      <div class="fi">🔒</div>
-      <div class="ft">v2.6.1 Verified Build</div>
-      <div class="fd">Specific stable release for DSTIKE OLED V6 hardware. Tested and verified working.</div>
-    </div>
-  </div>
-</section>
+</div><!-- /admin-panel -->
 
-<!-- Secret admin dot -->
-<div class="dot" onclick="openAlog()"></div>
+</div><!-- /app -->
 
-<!-- ═══ PAYMENT MODAL ═══ -->
+<!-- ══ PAYMENT MODAL ══ -->
 <div class="modal" id="pay-modal">
   <div class="mbg" onclick="closePay()"></div>
   <div class="mbox">
     <button class="mclose" onclick="closePay()">✕</button>
 
     <div id="s1">
-      <div class="steps">
-        <div class="step on">01 Payment</div>
-        <div class="step">02 Confirm</div>
-      </div>
+      <div class="steps-bar"><div class="stp on">01 Payment</div><div class="stp">02 Confirm</div></div>
       <div class="mtitle">Complete Order</div>
-      <div class="msub">Send exactly $40 via Binance Pay to the ID below, then click Next.</div>
+      <div class="msub">Send exactly $40 via Binance Pay, then click Next.</div>
       <div class="pinfo">
         <div class="pr"><span class="pl">Product</span><span>ESP8266 Deauther v2.6.1</span></div>
         <div class="pr"><span class="pl">Amount</span><span style="color:var(--accent);font-weight:700">$40.00 USD</span></div>
@@ -316,293 +352,208 @@ table.ot tr:hover td{background:var(--surface);}
         <div class="binid">894307667</div>
         <button class="copybtn" onclick="copyID(this)">📋 COPY ID</button>
       </div>
-      <button class="bsub" onclick="goS2()">I HAVE PAID → NEXT</button>
+      <button class="btn-main green" onclick="goS2()">I HAVE PAID → NEXT</button>
     </div>
 
     <div id="s2" style="display:none">
-      <div class="steps">
-        <div class="step ok">01 Paid ✓</div>
-        <div class="step on">02 Confirm</div>
-      </div>
+      <div class="steps-bar"><div class="stp ok">01 Paid ✓</div><div class="stp on">02 Confirm</div></div>
       <div class="mtitle">Your Email</div>
-      <div class="msub">Enter your email. We will send the .BIN file here after verifying payment.</div>
+      <div class="msub">We'll send the .BIN file here after verifying your payment.</div>
       <label for="be">Email Address *</label>
       <input type="email" id="be" placeholder="you@example.com"/>
       <label for="bt">Binance TX Reference (optional)</label>
-      <input type="text" id="bt" placeholder="Transaction ID or any note"/>
-      <button class="bsub" id="sbtn" onclick="submitOrder()">SUBMIT ORDER →</button>
-      <div class="err" id="serr"></div>
+      <input type="text" id="bt" placeholder="Transaction ID or note"/>
+      <button class="btn-main green" id="sbtn" onclick="submitOrder()">SUBMIT ORDER →</button>
+      <div class="err-msg" id="serr"></div>
     </div>
 
     <div id="s3" style="display:none">
-      <div class="ok-msg">
+      <div class="ok-wrap">
         <div class="ok-icon">✅</div>
-        <div class="ok-title">Order Received!</div>
-        <div class="ok-desc">
-          Thank you for your purchase!<br/><br/>
-          Your order is saved. We will verify your Binance<br/>
-          payment and send the <strong style="color:var(--accent)">.BIN file</strong><br/>
-          to your email within <strong style="color:var(--accent)">1–24 hours</strong>.
-        </div>
+        <div class="ok-t">Order Received!</div>
+        <div class="ok-d">Thank you! We will verify your Binance<br/>payment and send the <strong style="color:var(--accent)">.BIN file</strong><br/>to your email within <strong style="color:var(--accent)">1–24 hours</strong>.</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══ ADMIN LOGIN ═══ -->
-<div id="alog">
-  <div class="lbox">
-    <h2>Admin Access</h2>
-    <p>Enter password to view all orders</p>
-    <label for="ap">Password</label>
-    <input type="password" id="ap" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/>
-    <button class="bsub" style="background:var(--danger);margin-top:14px" onclick="doLogin()">LOGIN →</button>
-    <div class="err" id="lerr">Wrong password.</div>
-    <button class="bback" onclick="closeAlog()">← Back to Store</button>
-  </div>
-</div>
-
-<!-- ═══ ADMIN PANEL ═══ -->
-<div id="apanel">
-  <div class="anav">
-    <div class="alogo">ADMIN <span>PANEL</span></div>
-    <div class="abtns">
-      <button onclick="renderOrders()">↻ REFRESH</button>
-      <button onclick="exportCSV()">⬇ EXPORT CSV</button>
-      <button class="lo" onclick="doLogout()">LOGOUT →</button>
-    </div>
-  </div>
-  <div class="abody">
-    <div class="ahdr">
-      <h2>Order Dashboard</h2>
-      <p>All buyer orders saved in this browser. Click 📧 SEND EMAIL → mark ✓ SENT after you attach and send the file.</p>
-    </div>
-
-    <div class="notice">
-      <strong>How to send file:</strong> Click 📧 SEND EMAIL — your email app will open with buyer's address &amp; message pre-filled. 
-      Attach the <strong>.bin file</strong> and send. Then click ✓ MARK SENT here.
-    </div>
-
-    <div class="stats">
-      <div class="sc"><div class="sl">Total Orders</div><div class="sv2" id="st">0</div></div>
-      <div class="sc"><div class="sl">Pending</div><div class="sv2 y" id="sp">0</div></div>
-      <div class="sc"><div class="sl">File Sent</div><div class="sv2" id="ss">0</div></div>
-    </div>
-
-    <div class="sec-lbl">All Orders</div>
-    <div class="twrap" id="twrap">
-      <div class="empty">No orders yet.</div>
-    </div>
-  </div>
-</div>
+<div class="toast" id="toast"></div>
 
 <script>
-const PASS = '308580';
-const KEY  = 'esp_orders_v1';
+// ══ CONFIG ══════════════════════════════════════════════
+const CFG = {
+  PASS      : '3085',
+  DB        : 'https://jhasdjhbjhdcbnwdced-default-rtdb.firebaseio.com',
+  EJ_KEY    : 'YOUR_PUBLIC_KEY',    // emailjs.com → Account → Public Key
+  EJ_SVC    : 'YOUR_SERVICE_ID',    // emailjs.com → Email Services
+  EJ_TPL    : 'YOUR_TEMPLATE_ID',   // emailjs.com → Email Templates
+};
+// ════════════════════════════════════════════════════════
 
-// ── ORDER STORAGE ──────────────────────────────────────
-function getOrders(){
-  try{ return JSON.parse(localStorage.getItem(KEY)||'[]'); }
-  catch(e){ return []; }
-}
-function saveOrders(arr){
-  localStorage.setItem(KEY, JSON.stringify(arr));
-}
-function addOrder(o){
-  const arr = getOrders();
-  arr.unshift(o);
-  saveOrders(arr);
-}
-function updateOrder(id, patch){
-  const arr = getOrders().map(o => o.id===id ? {...o,...patch} : o);
-  saveOrders(arr);
-}
-function deleteOrder(id){
-  saveOrders(getOrders().filter(o => o.id!==id));
-}
+const EJ_OK = CFG.EJ_KEY !== 'YOUR_PUBLIC_KEY';
+if(EJ_OK) emailjs.init({publicKey: CFG.EJ_KEY});
 
-// ── PAYMENT MODAL ──────────────────────────────────────
-function openPay(){
-  document.getElementById('pay-modal').classList.add('active');
-  show('s1'); hide('s2'); hide('s3');
-  document.getElementById('be').value='';
-  document.getElementById('bt').value='';
-  document.getElementById('serr').classList.remove('show');
-  const sb=document.getElementById('sbtn');
-  sb.disabled=false; sb.textContent='SUBMIT ORDER →';
-}
-function closePay(){ document.getElementById('pay-modal').classList.remove('active'); }
-function goS2(){ hide('s1'); show('s2'); }
-function show(id){ document.getElementById(id).style.display='block'; }
-function hide(id){ document.getElementById(id).style.display='none'; }
-
-function copyID(btn){
-  const txt='894307667';
-  navigator.clipboard.writeText(txt).catch(()=>{
-    const t=document.createElement('textarea');
-    t.value=txt; document.body.appendChild(t); t.select();
-    document.execCommand('copy'); document.body.removeChild(t);
-  });
-  btn.textContent='✓ COPIED!';
-  setTimeout(()=>btn.textContent='📋 COPY ID', 2000);
-}
-
-function submitOrder(){
-  const email = document.getElementById('be').value.trim();
-  const txid  = document.getElementById('bt').value.trim();
-  const err   = document.getElementById('serr');
-  const btn   = document.getElementById('sbtn');
-
-  if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
-    err.textContent='⚠ Please enter a valid email address.';
-    err.classList.add('show'); return;
-  }
-  err.classList.remove('show');
-  btn.disabled=true; btn.textContent='SAVING...';
-
-  const order = {
-    id       : 'ORD-' + Date.now(),
-    email    : email,
-    txid     : txid || 'Not provided',
-    product  : 'ESP8266 Deauther v2.6.1',
-    price    : '$40',
-    status   : 'pending',
-    timestamp: new Date().toISOString(),
-    tsMs     : Date.now()
-  };
-  addOrder(order);
-
-  // Show success
-  setTimeout(()=>{ hide('s2'); show('s3'); }, 400);
-}
-
-// ── ADMIN ──────────────────────────────────────────────
-function openAlog(){
-  document.getElementById('alog').classList.add('show');
-  setTimeout(()=>document.getElementById('ap').focus(), 100);
-}
-function closeAlog(){
-  document.getElementById('alog').classList.remove('show');
-  document.getElementById('ap').value='';
-  document.getElementById('lerr').classList.remove('show');
-}
+// ── ADMIN LOGIN ─────────────────────────────────────────
 function doLogin(){
-  const p=document.getElementById('ap').value;
-  if(p===PASS){
-    closeAlog();
-    document.getElementById('apanel').style.display='block';
-    renderOrders();
+  const p = document.getElementById('ap').value;
+  if(p === CFG.PASS){
+    document.getElementById('admin-lock').style.display = 'none';
+    document.getElementById('admin-dash').classList.add('active');
+    loadOrders();
   } else {
     document.getElementById('lerr').classList.add('show');
-    document.getElementById('ap').value='';
+    document.getElementById('ap').value = '';
     document.getElementById('ap').focus();
   }
 }
 function doLogout(){
-  document.getElementById('apanel').style.display='none';
+  document.getElementById('admin-lock').style.display = 'flex';
+  document.getElementById('admin-dash').classList.remove('active');
+  document.getElementById('ap').value = '';
+  document.getElementById('lerr').classList.remove('show');
 }
 
-// ── RENDER ORDERS TABLE ────────────────────────────────
-function renderOrders(){
-  const orders = getOrders();
-  const total  = orders.length;
-  const pend   = orders.filter(o=>o.status==='pending').length;
-  const sent   = orders.filter(o=>o.status==='sent').length;
+// ── FIREBASE REST ───────────────────────────────────────
+async function fbGet(p){ const r=await fetch(`${CFG.DB}${p}.json`); return r.json(); }
+async function fbPost(p,d){ const r=await fetch(`${CFG.DB}${p}.json`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)}); return r.json(); }
+async function fbPatch(p,d){ const r=await fetch(`${CFG.DB}${p}.json`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)}); return r.json(); }
+async function fbDel(p){ await fetch(`${CFG.DB}${p}.json`,{method:'DELETE'}); }
 
-  document.getElementById('st').textContent = total;
-  document.getElementById('sp').textContent = pend;
-  document.getElementById('ss').textContent = sent;
+// ── LOAD ORDERS ─────────────────────────────────────────
+async function loadOrders(){
+  const list = document.getElementById('orders-list');
+  list.innerHTML = '<div class="no-orders" style="animation:gs 1s infinite">Loading...</div>';
+  try{
+    const data = await fbGet('/orders');
+    if(!data || data.error){
+      list.innerHTML = `<div class="no-orders">${data&&data.error?'⚠ Firebase: '+data.error:'No orders yet.'}<br/><br/><span style="font-size:0.6rem;color:var(--danger)">${data&&data.error?'Set Firebase Rules → read/write: true':''}</span></div>`;
+      setStats(0,0,0); return;
+    }
+    const orders = Object.entries(data).map(([id,v])=>({id,...v})).sort((a,b)=>(b.tsMs||0)-(a.tsMs||0));
+    setStats(orders.length, orders.filter(o=>o.status==='pending').length, orders.filter(o=>o.status==='sent').length);
 
-  const wrap = document.getElementById('twrap');
-  if(!total){
-    wrap.innerHTML='<div class="empty">No orders yet. Share your store!</div>';
-    return;
+    list.innerHTML = orders.map((o,i)=>{
+      const dt = new Date(o.timestamp||Date.now()).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+      const sent = o.status==='sent';
+      const sub  = encodeURIComponent('Your ESP8266 Deauther v2.6.1 File');
+      const body = encodeURIComponent(`Hi,\n\nThank you for your purchase!\n\nPlease find your ESP8266 Deauther v2.6.1 .BIN file attached to this email.\n\nFlashing Instructions:\n1. Flash the .bin file to your DSTIKE OLED V6 board\n2. Power cycle after flashing\n3. Connect to the WiFi AP\n\nOrder: ${o.id}\n\nBest regards,\nSecureTech Store`);
+      const href = `mailto:${esc(o.email)}?subject=${sub}&body=${body}`;
+      return `<div class="ocard ${o.status}" id="oc-${o.id}">
+        <div class="o-num">#${orders.length-i} · ${dt}</div>
+        <div class="o-email">${esc(o.email)}</div>
+        <div class="o-tx">TX: ${esc(o.txid||'—')}</div>
+        <span class="o-pill ${sent?'pill-s':'pill-p'}">${sent?'✓ SENT':'PENDING'}</span>
+        <div class="o-btns">
+          <button class="btn-accept" ${sent?'disabled':''} onclick="acceptOrder('${o.id}','${esc(o.email)}',this)">
+            ${EJ_OK?'⚡ SEND FILE':'✓ MARK SENT'}
+          </button>
+          <a class="btn-email" href="${href}">📧</a>
+          <button class="btn-del" onclick="delOrder('${o.id}')">✕</button>
+        </div>
+      </div>`;
+    }).join('');
+  }catch(e){
+    list.innerHTML=`<div class="no-orders">⚠ ${e.message}</div>`;
+    setStats(0,0,0);
   }
+}
+function setStats(t,p,s){
+  document.getElementById('st').textContent=t;
+  document.getElementById('sp').textContent=p;
+  document.getElementById('ss').textContent=s;
+}
 
-  let html=`<table class="ot">
-    <thead><tr>
-      <th>#</th><th>Order ID</th><th>Email</th><th>TX Ref</th><th>Date</th><th>Status</th><th>Actions</th>
-    </tr></thead><tbody>`;
+// ── ACCEPT = SEND EMAIL AUTO ────────────────────────────
+async function acceptOrder(id, email, btn){
+  const card = document.getElementById('oc-'+id);
+  if(!EJ_OK){
+    if(!confirm('EmailJS not set up. Just mark as sent?')) return;
+    await fbPatch('/orders/'+id,{status:'sent',sentAt:new Date().toISOString()});
+    toast('✓ Marked as sent'); loadOrders(); return;
+  }
+  if(!confirm('Auto-send .BIN file email to:\n'+email)) return;
+  const ov=document.createElement('div');
+  ov.className='send-overlay';
+  ov.innerHTML='<span class="spin">⟳</span> Sending...';
+  card.appendChild(ov);
+  btn.disabled=true;
+  try{
+    await emailjs.send(CFG.EJ_SVC, CFG.EJ_TPL,{
+      to_email:email, buyer_email:email,
+      order_id:id, product:'ESP8266 Deauther v2.6.1',
+      txid:'See order', time:new Date().toLocaleString()
+    });
+    await fbPatch('/orders/'+id,{status:'sent',sentAt:new Date().toISOString()});
+    toast('✅ File sent to '+email); loadOrders();
+  }catch(e){
+    ov.remove(); btn.disabled=false;
+    toast('⚠ Email error: '+(e.text||e.message),'err');
+  }
+}
 
-  orders.forEach((o,i)=>{
-    const dt = new Date(o.timestamp).toLocaleString('en-GB',{
-      day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
-    const pc = o.status==='sent' ? 'pill ps' : 'pill pp';
-    const pt = o.status==='sent' ? '✓ SENT'  : 'PENDING';
-    const md = o.status==='sent' ? 'disabled' : '';
+// ── DELETE ──────────────────────────────────────────────
+async function delOrder(id){
+  if(!confirm('Delete this order?')) return;
+  await fbDel('/orders/'+id);
+  toast('Deleted'); loadOrders();
+}
 
-    // Mailto — opens email client with pre-filled fields
-    const sub  = encodeURIComponent('Your ESP8266 Deauther v2.6.1 Firmware File');
-    const body = encodeURIComponent(
-`Hi,
+// ── PAYMENT MODAL ───────────────────────────────────────
+function openPay(){
+  document.getElementById('pay-modal').classList.add('active');
+  show('s1');hide('s2');hide('s3');
+  document.getElementById('be').value='';
+  document.getElementById('bt').value='';
+  document.getElementById('serr').classList.remove('show');
+  const b=document.getElementById('sbtn');b.disabled=false;b.textContent='SUBMIT ORDER →';
+}
+function closePay(){ document.getElementById('pay-modal').classList.remove('active'); }
+function goS2(){ hide('s1');show('s2'); }
+function show(id){ document.getElementById(id).style.display='block'; }
+function hide(id){ document.getElementById(id).style.display='none'; }
 
-Thank you for your purchase from SecureTech Store!
-
-Please find your ESP8266 Deauther v2.6.1 .BIN firmware file attached to this email.
-
-Flashing Instructions:
-1. Download the attached .bin file
-2. Use ESP8266 Flasher or esptool.py to flash to your DSTIKE OLED V6 board
-3. Power cycle the board after flashing
-4. Connect to the WiFi AP to access the deauther interface
-
-Order ID  : ${o.id}
-TX Ref    : ${o.txid}
-Purchase  : ${dt}
-
-If you have any questions, just reply to this email.
-
-Best regards,
-SecureTech Store`);
-    const href = `mailto:${o.email}?subject=${sub}&body=${body}`;
-
-    html+=`<tr>
-      <td style="color:var(--muted)">${total-i}</td>
-      <td style="color:var(--muted);font-size:0.65rem">${o.id}</td>
-      <td style="color:var(--accent2)">${esc(o.email)}</td>
-      <td style="color:var(--muted);font-size:0.68rem">${esc(o.txid)}</td>
-      <td style="color:var(--muted);font-size:0.68rem">${dt}</td>
-      <td><span class="${pc}">${pt}</span></td>
-      <td>
-        <a class="bmail" href="${href}">📧 SEND EMAIL</a>
-        <button class="bmark" ${md} onclick="markSent('${o.id}',this)">✓ MARK SENT</button>
-        <button class="bdel" onclick="delOrder('${o.id}')">✕</button>
-      </td>
-    </tr>`;
+function copyID(btn){
+  navigator.clipboard.writeText('894307667').catch(()=>{
+    const t=document.createElement('textarea');t.value='894307667';
+    document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);
   });
-  html+='</tbody></table>';
-  wrap.innerHTML=html;
+  btn.textContent='✓ COPIED!';setTimeout(()=>btn.textContent='📋 COPY ID',2000);
 }
 
-function markSent(id, btn){
-  updateOrder(id, {status:'sent', sentAt: new Date().toISOString()});
-  renderOrders();
-}
-function delOrder(id){
-  if(confirm('Delete this order?')){ deleteOrder(id); renderOrders(); }
+async function submitOrder(){
+  const email=document.getElementById('be').value.trim();
+  const txid=document.getElementById('bt').value.trim();
+  const err=document.getElementById('serr');
+  const btn=document.getElementById('sbtn');
+  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    err.textContent='⚠ Please enter a valid email.';err.classList.add('show');return;
+  }
+  err.classList.remove('show');btn.disabled=true;btn.textContent='SAVING...';
+  const order={id:'ORD-'+Date.now(),email,txid:txid||'Not provided',
+    product:'ESP8266 Deauther v2.6.1',price:'$40',status:'pending',
+    timestamp:new Date().toISOString(),tsMs:Date.now()};
+  try{
+    const r=await fbPost('/orders',order);
+    if(r&&r.error) throw new Error(r.error);
+    hide('s2');show('s3');
+    // refresh admin panel live
+    const dash=document.getElementById('admin-dash');
+    if(dash.classList.contains('active')) loadOrders();
+  }catch(e){
+    btn.disabled=false;btn.textContent='SUBMIT ORDER →';
+    err.textContent='⚠ Error: '+e.message+' → Set Firebase rules to true';
+    err.classList.add('show');
+  }
 }
 
-// ── EXPORT CSV ─────────────────────────────────────────
-function exportCSV(){
-  const orders = getOrders();
-  if(!orders.length){ alert('No orders to export.'); return; }
-  let csv = 'Order ID,Email,TX Ref,Product,Price,Status,Date\n';
-  orders.forEach(o=>{
-    csv += `"${o.id}","${o.email}","${o.txid}","${o.product}","${o.price}","${o.status}","${o.timestamp}"\n`;
-  });
-  const a = document.createElement('a');
-  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
-  a.download = 'orders_' + new Date().toISOString().slice(0,10) + '.csv';
-  a.click();
+// ── TOAST ───────────────────────────────────────────────
+function toast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast show '+(type||'');
+  setTimeout(()=>t.className='toast',3200);
 }
-
-// ── HELPERS ────────────────────────────────────────────
-function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){ closePay(); closeAlog(); }
-});
+function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closePay(); });
 </script>
 </body>
 </html>
-
