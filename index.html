@@ -49,7 +49,6 @@ input,textarea,select{font-family:var(--font)}
 ::-webkit-scrollbar-thumb{background:var(--border3);border-radius:4px}
 ::-webkit-scrollbar-thumb:hover{background:var(--accent2)}
 
-/* GRID LINES BG */
 .grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.025) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
 
 /* NAV */
@@ -81,7 +80,6 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
 .inbox-btn svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2}
 .inbox-badge{position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;font-size:.58rem;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg);display:none}
 
-/* PAGES */
 .page{display:none;position:relative;z-index:1}.page.active{display:block}
 
 /* HERO */
@@ -106,7 +104,6 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
 .hstat:last-child::after{display:none}
 .hstat-val{font-size:1.55rem;font-weight:700;color:var(--accent);font-family:var(--mono);line-height:1}
 .hstat-lbl{font-size:.68rem;color:var(--text3);margin-top:4px;text-transform:uppercase;letter-spacing:.6px}
-/* terminal */
 .hero-terminal{background:var(--surface);border:1px solid var(--border2);border-radius:12px;overflow:hidden;box-shadow:var(--shadow2),0 0 0 1px rgba(0,212,255,.05)}
 .term-bar{background:var(--bg2);padding:12px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
 .tdot{width:10px;height:10px;border-radius:50%}
@@ -137,8 +134,8 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
 .fsort:focus{border-color:var(--accent)}
 option{background:var(--bg2)}
 
-/* LAYOUT */
-.mlayout{max-width:1160px;margin:0 auto;padding:28px 32px 80px;display:grid;grid-template-columns:200px 1fr;gap:24px;position:relative;z-index:1}
+/* ========= MAIN LAYOUT ========= */
+.mlayout{max-width:1260px;margin:0 auto;padding:32px 32px 80px;display:grid;grid-template-columns:220px 1fr;gap:28px;position:relative;z-index:1}
 
 /* SIDEBAR */
 .sb-sec{margin-bottom:20px}
@@ -151,33 +148,230 @@ option{background:var(--bg2)}
 .sb-cnt{background:var(--surface3);color:var(--text3);font-size:.65rem;padding:1px 6px;border-radius:4px;font-weight:600;font-family:var(--mono)}
 .sb-item.on .sb-cnt{background:rgba(0,212,255,.15);color:var(--accent)}
 
-/* SCRIPTS */
-.stitle-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-.stitle-row h2{font-size:.95rem;font-weight:600;color:var(--text);letter-spacing:-.01em}
-.scount{font-size:.75rem;color:var(--text3);font-family:var(--mono)}
-.sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+/* ========= SCRIPTS SECTION ========= */
+.stitle-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.stitle-row h2{font-size:1rem;font-weight:700;color:var(--text);letter-spacing:-.01em;display:flex;align-items:center;gap:8px}
+.stitle-row h2::before{content:'//';color:var(--accent);font-family:var(--mono);font-size:.85rem}
+.scount{font-size:.75rem;color:var(--text3);font-family:var(--mono);background:var(--surface2);padding:3px 10px;border-radius:4px;border:1px solid var(--border)}
 
-/* CARD */
-.sc{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:all .2s;cursor:pointer}
-.sc:hover{border-color:var(--border3);transform:translateY(-2px);box-shadow:var(--shadow2)}
-.sc-img{width:100%;height:148px;background:linear-gradient(135deg,var(--bg2),var(--surface2));display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
-.sc-img img{width:100%;height:148px;object-fit:cover;display:block}
-.sc-img-placeholder{display:flex;flex-direction:column;align-items:center;gap:6px}
-.sc-img-placeholder svg{width:32px;height:32px;fill:none;stroke:var(--border3);stroke-width:1.5}
-.sc-img-placeholder span{font-size:.65rem;color:var(--text4);font-family:var(--mono)}
-.sc-lang{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.7);border:1px solid var(--border3);border-radius:4px;padding:2px 7px;font-size:.65rem;font-weight:600;color:var(--accent);font-family:var(--mono)}
-.sc-type-badge{position:absolute;top:8px;left:8px;border-radius:4px;padding:2px 6px;font-size:.62rem;font-weight:700;font-family:var(--mono);border:1px solid}
-.sc-type-badge.file{background:rgba(124,58,237,.15);border-color:rgba(124,58,237,.3);color:#a78bfa}
-.sc-type-badge.code{background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.25);color:#34d399}
-.sc-body{padding:14px}
-.sc-cat{display:inline-flex;align-items:center;gap:4px;color:var(--text3);font-size:.68rem;font-weight:600;margin-bottom:7px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.4px}
-.sc-name{font-size:.9rem;font-weight:600;color:var(--text);margin-bottom:5px;line-height:1.3;letter-spacing:-.01em}
-.sc-desc{font-size:.76rem;color:var(--text2);line-height:1.55;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.sc-foot{display:flex;align-items:center;justify-content:space-between}
-.sc-price{font-size:1rem;font-weight:700;color:var(--accent);font-family:var(--mono)}
-.sc-buy{background:var(--accent);color:#000;border:none;padding:6px 14px;border-radius:5px;font-size:.75rem;font-weight:700;transition:all .15s;letter-spacing:.02em;display:flex;align-items:center;gap:5px}
-.sc-buy:hover{background:#22dfff;box-shadow:0 4px 12px rgba(0,212,255,.25)}
-.sc-buy svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.5}
+/* ========= PRODUCT GRID ========= */
+.sgrid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+  align-items:start;
+}
+
+/* ========= PRODUCT CARD — COMPLETE REDESIGN ========= */
+.sc{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  overflow:hidden;
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1),box-shadow .25s ease,border-color .25s ease;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
+.sc::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  border-radius:14px;
+  background:linear-gradient(135deg,rgba(0,212,255,.04),rgba(124,58,237,.04));
+  opacity:0;
+  transition:opacity .25s;
+  pointer-events:none;
+  z-index:0;
+}
+.sc:hover{
+  transform:translateY(-6px) scale(1.01);
+  box-shadow:0 12px 40px rgba(0,0,0,.5),0 0 0 1px rgba(0,212,255,.2),0 0 24px rgba(0,212,255,.08);
+  border-color:rgba(0,212,255,.3);
+}
+.sc:hover::before{opacity:1}
+
+/* Card Image Area */
+.sc-img{
+  width:100%;
+  height:180px;
+  background:linear-gradient(135deg,var(--bg2) 0%,var(--surface2) 100%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  position:relative;
+  flex-shrink:0;
+}
+.sc-img img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  transition:transform .4s ease;
+}
+.sc:hover .sc-img img{transform:scale(1.06)}
+
+/* placeholder when no image */
+.sc-img-placeholder{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  width:100%;
+  height:100%;
+  background:linear-gradient(135deg,var(--bg2),var(--surface2));
+}
+.sc-img-placeholder svg{
+  width:36px;height:36px;
+  fill:none;stroke:var(--border3);stroke-width:1.5;
+  opacity:.7;
+}
+.sc-img-placeholder span{
+  font-size:.65rem;
+  color:var(--text4);
+  font-family:var(--mono);
+  text-transform:uppercase;
+  letter-spacing:.5px;
+}
+
+/* image overlay gradient */
+.sc-img::after{
+  content:'';
+  position:absolute;
+  bottom:0;left:0;right:0;
+  height:50%;
+  background:linear-gradient(to top,rgba(8,12,20,.7),transparent);
+  pointer-events:none;
+}
+
+/* badges on image */
+.sc-lang{
+  position:absolute;top:10px;right:10px;z-index:2;
+  background:rgba(0,0,0,.75);
+  border:1px solid rgba(0,212,255,.3);
+  border-radius:5px;
+  padding:3px 8px;
+  font-size:.63rem;font-weight:700;
+  color:var(--accent);
+  font-family:var(--mono);
+  backdrop-filter:blur(4px);
+}
+.sc-type-badge{
+  position:absolute;top:10px;left:10px;z-index:2;
+  border-radius:5px;
+  padding:3px 7px;
+  font-size:.6rem;font-weight:700;
+  font-family:var(--mono);
+  border:1px solid;
+  backdrop-filter:blur(4px);
+}
+.sc-type-badge.file{background:rgba(124,58,237,.2);border-color:rgba(124,58,237,.4);color:#c4b5fd}
+.sc-type-badge.code{background:rgba(16,185,129,.15);border-color:rgba(16,185,129,.3);color:#34d399}
+
+/* Card Body */
+.sc-body{
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+  flex:1;
+  position:relative;
+  z-index:1;
+}
+.sc-cat{
+  display:inline-flex;align-items:center;gap:4px;
+  color:var(--text3);
+  font-size:.65rem;font-weight:700;
+  margin-bottom:8px;
+  font-family:var(--mono);
+  text-transform:uppercase;
+  letter-spacing:.5px;
+}
+.sc-name{
+  font-size:.95rem;font-weight:700;
+  color:var(--text);
+  margin-bottom:6px;
+  line-height:1.3;
+  letter-spacing:-.02em;
+}
+.sc-desc{
+  font-size:.78rem;
+  color:var(--text2);
+  line-height:1.6;
+  margin-bottom:14px;
+  flex:1;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+/* Card Footer */
+.sc-foot{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding-top:12px;
+  border-top:1px solid var(--border);
+  margin-top:auto;
+}
+.sc-price{
+  font-size:1.1rem;font-weight:800;
+  color:var(--accent);
+  font-family:var(--mono);
+  letter-spacing:-.02em;
+}
+.sc-price-label{font-size:.65rem;color:var(--text3);font-weight:400;margin-left:2px}
+
+/* Buy Button */
+.sc-buy{
+  background:var(--accent);
+  color:#000;
+  border:none;
+  padding:8px 16px;
+  border-radius:7px;
+  font-size:.76rem;font-weight:800;
+  transition:all .2s cubic-bezier(.34,1.56,.64,1);
+  letter-spacing:.04em;
+  display:flex;align-items:center;gap:5px;
+  white-space:nowrap;
+  position:relative;
+  overflow:hidden;
+}
+.sc-buy::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.2),transparent);
+  opacity:0;transition:opacity .2s;
+}
+.sc-buy:hover{
+  background:#22dfff;
+  box-shadow:0 6px 20px rgba(0,212,255,.4);
+  transform:translateY(-1px);
+}
+.sc-buy:hover::before{opacity:1}
+.sc-buy svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.5}
+
+/* See More Button */
+.sc-seemore{
+  display:inline-flex;align-items:center;gap:5px;
+  background:none;
+  border:none;
+  color:var(--accent);
+  font-size:.74rem;font-weight:600;
+  font-family:var(--mono);
+  padding:4px 0;
+  margin-bottom:12px;
+  letter-spacing:.02em;
+  transition:all .15s;
+  cursor:pointer;
+  text-decoration:none;
+}
+.sc-seemore svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.5;transition:transform .2s}
+.sc-seemore:hover{color:#22dfff}
+.sc-seemore:hover svg{transform:translateX(3px)}
 
 /* EMPTY */
 .empty{background:var(--surface);border:1px dashed var(--border2);border-radius:10px;padding:60px 20px;text-align:center;grid-column:1/-1}
@@ -220,7 +414,6 @@ option{background:var(--bg2)}
 .copybtn svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2}
 .copybtn:hover{border-color:var(--accent4);color:var(--accent4)}
 .copybtn.ok{border-color:var(--accent4);color:var(--accent4);background:rgba(16,185,129,.07)}
-/* guide */
 .gtabs{display:flex;gap:5px;margin-bottom:14px}
 .gtab{flex:1;padding:8px;background:var(--bg2);border:1px solid var(--border2);border-radius:6px;font-size:.74rem;font-weight:600;color:var(--text3);transition:all .15s;font-family:var(--mono)}
 .gtab.on{background:rgba(0,212,255,.1);color:var(--accent);border-color:rgba(0,212,255,.25)}
@@ -230,7 +423,6 @@ option{background:var(--bg2)}
 .gnum{width:22px;height:22px;border-radius:50%;background:rgba(0,212,255,.1);color:var(--accent);font-size:.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-family:var(--mono)}
 .gtxt{font-size:.81rem;color:var(--text2);line-height:1.6}
 .gtxt strong{color:var(--text);font-weight:600}
-/* file tree reveal */
 .rftree{background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:12px;margin-bottom:11px;font-family:var(--mono);font-size:.72rem;max-height:150px;overflow-y:auto}
 .rft{display:flex;align-items:center;gap:6px;padding:2px 0;color:var(--text2)}
 .rft.rfol{color:var(--text);font-weight:600}
@@ -292,7 +484,6 @@ option{background:var(--bg2)}
 .atabrow{display:flex;border:1px solid var(--border2);border-radius:6px;overflow:hidden;margin-bottom:12px}
 .atabtn{flex:1;padding:9px;background:none;border:none;font-size:.77rem;font-weight:600;color:var(--text3);transition:all .15s;font-family:var(--mono)}
 .atabtn.on{background:rgba(0,212,255,.1);color:var(--accent)}
-/* folder builder */
 .ftbuild{background:var(--bg2);border:1px solid var(--border2);border-radius:7px;padding:12px;margin-bottom:8px;font-family:var(--mono);font-size:.72rem;min-height:80px;max-height:180px;overflow-y:auto}
 .ftbuild .ftr{display:flex;align-items:center;gap:5px;padding:2px 0;color:var(--text2)}
 .ftbuild .ftr.fol{color:var(--text);font-weight:600}
@@ -300,7 +491,6 @@ option{background:var(--bg2)}
 .ftdelbtn{background:none;border:none;color:var(--text3);font-size:.73rem;opacity:0;padding:1px 4px;transition:opacity .15s}
 .ftbuild .ftr:hover .ftdelbtn{opacity:1;color:var(--red)}
 .fnote{font-size:.72rem;color:var(--text3);background:var(--bg2);padding:8px 11px;border-radius:5px;line-height:1.6;margin-bottom:8px;border:1px solid var(--border)}
-/* admin list */
 .alist{max-height:78vh;overflow-y:auto;padding-right:4px}
 .ai{background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:13px;margin-bottom:8px;transition:border-color .15s}
 .ai:hover{border-color:var(--border2)}
@@ -323,7 +513,7 @@ option{background:var(--bg2)}
 .logout-btn{background:none;border:1px solid var(--border2);color:var(--text3);padding:7px 15px;border-radius:6px;font-size:.81rem;transition:all .15s;font-family:var(--mono)}
 .logout-btn:hover{border-color:rgba(239,68,68,.3);color:var(--red)}
 
-/* INBOX CHAT SYSTEM */
+/* CHAT */
 .chat-overlay{display:none;position:fixed;inset:0;z-index:400;pointer-events:none}
 .chat-overlay.open{display:block}
 .chat-panel{position:fixed;bottom:24px;right:24px;width:360px;height:480px;background:var(--surface);border:1px solid var(--border2);border-radius:14px;box-shadow:var(--shadow2),0 0 0 1px rgba(0,212,255,.06);display:flex;flex-direction:column;pointer-events:all;overflow:hidden;z-index:401}
@@ -347,11 +537,9 @@ option{background:var(--bg2)}
 .chat-msg.theirs .chat-bubble{background:var(--surface3);color:var(--text);border-radius:10px 10px 10px 2px;border:1px solid var(--border)}
 .chat-time{font-size:.62rem;color:var(--text3);margin-top:3px;font-family:var(--mono)}
 .chat-day{text-align:center;font-size:.65rem;color:var(--text3);font-family:var(--mono);margin:4px 0}
-.chat-typing{display:flex;align-items:center;gap:4px;padding:8px 12px;background:var(--surface3);border-radius:10px;width:fit-content;border:1px solid var(--border)}
-.chat-typing span{width:5px;height:5px;border-radius:50%;background:var(--text3);animation:typing .8s infinite}
-.chat-typing span:nth-child(2){animation-delay:.15s}
-.chat-typing span:nth-child(3){animation-delay:.3s}
-@keyframes typing{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(-4px);opacity:1}}
+.chat-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--text3)}
+.chat-empty svg{width:36px;height:36px;fill:none;stroke:var(--text4);stroke-width:1.5}
+.chat-empty p{font-size:.78rem;text-align:center;line-height:1.55;max-width:200px}
 .chat-input-row{padding:12px 14px;border-top:1px solid var(--border);display:flex;align-items:flex-end;gap:8px;flex-shrink:0;background:var(--bg2)}
 .chat-input{flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:9px 12px;font-size:.8rem;color:var(--text);outline:none;resize:none;max-height:90px;min-height:36px;font-family:var(--font);transition:border-color .15s;line-height:1.4}
 .chat-input:focus{border-color:var(--accent)}
@@ -359,15 +547,10 @@ option{background:var(--bg2)}
 .chat-send{width:34px;height:34px;background:var(--accent);border:none;border-radius:7px;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
 .chat-send:hover{background:#22dfff;box-shadow:0 4px 12px rgba(0,212,255,.3)}
 .chat-send svg{width:15px;height:15px;fill:none;stroke:#000;stroke-width:2.5}
-.chat-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--text3)}
-.chat-empty svg{width:36px;height:36px;fill:none;stroke:var(--text4);stroke-width:1.5}
-.chat-empty p{font-size:.78rem;text-align:center;line-height:1.55;max-width:200px}
-/* chat float btn */
 .chat-fab{position:fixed;bottom:24px;right:24px;width:52px;height:52px;background:linear-gradient(135deg,var(--accent3),var(--accent));border:none;border-radius:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,212,255,.25);z-index:399;transition:all .2s}
 .chat-fab:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,212,255,.35)}
 .chat-fab svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:2}
 .chat-fab-badge{position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;font-size:.6rem;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg);display:none;font-family:var(--mono)}
-/* ADMIN INBOX VIEW */
 .inbox-list{list-style:none;margin-bottom:14px}
 .inbox-item{display:flex;align-items:center;gap:10px;padding:10px;border-radius:7px;cursor:pointer;transition:background .15s;border:1px solid transparent}
 .inbox-item:hover{background:var(--surface2);border-color:var(--border)}
@@ -387,12 +570,55 @@ option{background:var(--bg2)}
 .adm-chat-input-row{padding:10px 12px;border-top:1px solid var(--border);display:flex;gap:8px;background:var(--bg2);flex-shrink:0}
 .adm-chat-empty{flex:1;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:.8rem;font-family:var(--mono)}
 
+/* ========= CARD LOAD ANIMATION ========= */
+@keyframes cardFadeIn{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.sc{
+  animation:cardFadeIn .35s ease both;
+}
+.sc:nth-child(1){animation-delay:.05s}
+.sc:nth-child(2){animation-delay:.1s}
+.sc:nth-child(3){animation-delay:.15s}
+.sc:nth-child(4){animation-delay:.2s}
+.sc:nth-child(5){animation-delay:.25s}
+.sc:nth-child(6){animation-delay:.3s}
+.sc:nth-child(7){animation-delay:.35s}
+.sc:nth-child(8){animation-delay:.4s}
+.sc:nth-child(9){animation-delay:.45s}
+
 footer{background:var(--bg2);border-top:1px solid var(--border);padding:22px 32px;text-align:center;font-size:.76rem;color:var(--text3);position:relative;z-index:1}
 footer a{color:var(--accent)}
 footer::before{content:'';display:block;width:200px;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);margin:0 auto 18px}
 
-@media(max-width:960px){.sgrid{grid-template-columns:repeat(2,1fr)}.hero-inner{grid-template-columns:1fr}.hero-terminal{display:none}.admgrid{grid-template-columns:1fr}.adm-chat-wrap{grid-template-columns:1fr;height:auto}}
-@media(max-width:660px){.mlayout{grid-template-columns:1fr;padding:14px 16px}.sidebar{display:none}.sgrid{grid-template-columns:repeat(2,1fr)}.hero{padding:32px 16px 28px}.hero h1{font-size:2rem}nav{padding:0 14px}.nav-search{max-width:none;flex:1}.fbar{padding:9px 16px}.chat-panel{width:calc(100vw - 32px);right:16px}}
+/* ========= RESPONSIVE ========= */
+@media(max-width:1100px){
+  .sgrid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:960px){
+  .hero-inner{grid-template-columns:1fr}
+  .hero-terminal{display:none}
+  .admgrid{grid-template-columns:1fr}
+  .adm-chat-wrap{grid-template-columns:1fr;height:auto}
+  .sgrid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:720px){
+  .mlayout{grid-template-columns:1fr;padding:16px 16px 60px}
+  .sidebar{display:none}
+  .sgrid{grid-template-columns:repeat(2,1fr);gap:14px}
+  .sc-img{height:150px}
+}
+@media(max-width:520px){
+  .sgrid{grid-template-columns:1fr;gap:14px}
+  .hero{padding:28px 16px 24px}
+  .hero h1{font-size:1.9rem}
+  nav{padding:0 14px}
+  .nav-search{max-width:none;flex:1}
+  .fbar{padding:9px 16px}
+  .chat-panel{width:calc(100vw - 32px);right:16px}
+  .sc-img{height:180px}
+}
 </style>
 </head>
 <body>
@@ -496,7 +722,12 @@ footer::before{content:'';display:block;width:200px;height:1px;background:linear
         <h2 id="sec-title">All Scripts</h2>
         <span class="scount" id="scount">0 results</span>
       </div>
-      <div class="sgrid" id="sgrid"><div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><p>No scripts yet. Admin panel থেকে publish করুন।</p></div></div>
+      <div class="sgrid" id="sgrid">
+        <div class="empty">
+          <div class="empty-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+          <p>No scripts yet. Admin panel থেকে publish করুন।</p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -553,7 +784,6 @@ footer::before{content:'';display:block;width:200px;height:1px;background:linear
       <h2><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg> Admin Panel</h2>
       <button class="logout-btn" onclick="adminLogout()">logout</button>
     </div>
-    <!-- Admin tabs -->
     <div style="display:flex;gap:5px;margin-bottom:18px">
       <button class="chip on" id="atab-scripts-btn" onclick="switchAdminTab('scripts',this)">Scripts</button>
       <button class="chip" id="atab-inbox-btn" onclick="switchAdminTab('inbox',this)">Inbox <span id="adm-unread-cnt" style="display:none;background:var(--red);color:#fff;border-radius:50%;padding:0 4px;font-size:.65rem;margin-left:3px">0</span></button>
@@ -727,7 +957,7 @@ footer::before{content:'';display:block;width:200px;height:1px;background:linear
   </div>
 </div>
 
-<!-- CHAT PANEL (User) -->
+<!-- CHAT PANEL -->
 <button class="chat-fab" id="chat-fab" onclick="openChat()" title="Open Chat" style="display:none">
   <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
   <span class="chat-fab-badge" id="fab-badge">0</span>
@@ -766,10 +996,8 @@ import{getDatabase,ref,set,push,onValue,remove,get,serverTimestamp}from"https://
 const app=initializeApp({databaseURL:"https://rb-pro-98d50-default-rtdb.firebaseio.com"});
 const db=getDatabase(app);
 
-/* UID */
 function genUID(){return String(Math.floor(10000+Math.random()*90000));}
 
-/* PROFILE */
 let prof=JSON.parse(localStorage.getItem('tdp_prof')||'null')||{name:'Guest User',uid:genUID(),pending:0,complete:0};
 function saveProfLS(){localStorage.setItem('tdp_prof',JSON.stringify(prof));}
 function renderProf(){
@@ -783,16 +1011,14 @@ window.cancelProfEd=()=>{document.getElementById('prof-disp').style.display='blo
 window.saveProfName=()=>{const n=document.getElementById('edit-name').value.trim();if(n){prof.name=n;saveProfLS();renderProf();}cancelProfEd();};
 renderProf();
 
-/* PAGES */
 window.showPage=(p)=>{
   document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.nbtn').forEach(x=>x.classList.remove('on'));
   const map={home:'page-home',about:'page-about',profile:'page-profile','admin-login':'page-admin-login',admin:'page-admin'};
   document.getElementById(map[p]).classList.add('active');
-  if(p==='admin' && isAdmin) renderAdmList();
+  if(p==='admin'&&isAdmin)renderAdmList();
 };
 
-/* ADMIN */
 const APWD='308580';let isAdmin=false;
 window.adminLogin=()=>{
   const v=document.getElementById('a-lpwd').value;
@@ -804,13 +1030,11 @@ window.adPrev=()=>{const u=document.getElementById('a-img').value.trim(),p=docum
 window.switchAdminTab=(t,btn)=>{
   document.querySelectorAll('#admin-scripts-tab,#admin-inbox-tab').forEach(el=>el.style.display='none');
   document.getElementById('admin-'+t+'-tab').style.display='block';
-  document.querySelectorAll('.atabrow .atabtn,.admgrid,.adm-chat-wrap').forEach(()=>{});
   ['atab-scripts-btn','atab-inbox-btn'].forEach(id=>document.getElementById(id)&&document.getElementById(id).classList.remove('on'));
   btn.classList.add('on');
   if(t==='inbox')renderAdmInbox();
 };
 
-/* ADMIN TABS (upload) */
 let admTab='code';
 window.swAdmTab=(t,btn)=>{
   admTab=t;document.querySelectorAll('.atabtn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');
@@ -818,7 +1042,6 @@ window.swAdmTab=(t,btn)=>{
   document.getElementById('atab-file').style.display=t==='file'?'block':'none';
 };
 
-/* FOLDER TREE */
 let ftItems=[];
 window.updRoot=(v)=>{document.getElementById('root-nm').textContent=(v||'project')+'/';}
 window.addFt=()=>{const nm=document.getElementById('ft-nm').value.trim(),ty=document.getElementById('ft-ty').value;if(!nm)return;ftItems.push({type:ty,name:nm});document.getElementById('ft-nm').value='';renderAdmFt();};
@@ -830,16 +1053,12 @@ function renderAdmFt(){
   document.getElementById('adm-ft').innerHTML=`<div class="ftr fol">📁 <span id="root-nm">${rn}</span></div>${rows}`;
 }
 
-/* DATA */
 let allCodes={},filterLang='all',filterCat='all',sortBy='newest',searchQ='';
 onValue(ref(db,'codes'),(snap)=>{allCodes=snap.val()||{};buildFilters();renderHome();if(isAdmin)renderAdmList();});
 
-/* PWD GEN */
 function getPwd(seed,iv=600000){const slot=Math.floor(Date.now()/iv),key=seed+':'+slot;let h=0;for(let i=0;i<key.length;i++){h=((h<<5)-h)+key.charCodeAt(i);h|=0;}const c='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789@#$!';let p='',n=Math.abs(h);for(let i=0;i<20;i++){p+=c[n%c.length];n=Math.abs((n*1103515245+12345)|0);}return p;}
 function msToNext(iv=600000){return(Math.floor(Date.now()/iv)+1)*iv-Date.now();}
 
-/* FILTERS */
-function getCatIcon(c){return{Web:'','Web App':'','Mobile App':'','E-Commerce':'','Admin Dashboard':'','API / Backend':'','Bot / Automation':'',Game:'','Tool / Utility':'',Template:'',Other:''}[c]||'';}
 function buildFilters(){
   const keys=Object.keys(allCodes);
   document.getElementById('total-count').textContent=keys.length;
@@ -855,7 +1074,7 @@ window.setCat=(c)=>{filterCat=c;buildFilters();renderHome();};
 window.setSort=(v)=>{sortBy=v;renderHome();};
 window.doSearch=(q)=>{searchQ=q.toLowerCase();renderHome();};
 
-/* RENDER HOME */
+/* ========= RENDER HOME — REDESIGNED CARDS ========= */
 function renderHome(){
   let keys=Object.keys(allCodes);
   if(filterLang!=='all')keys=keys.filter(k=>allCodes[k].lang===filterLang);
@@ -868,13 +1087,56 @@ function renderHome(){
   document.getElementById('scount').textContent=keys.length+' results';
   document.getElementById('sec-title').textContent=filterCat==='all'?'All Scripts':filterCat;
   const grid=document.getElementById('sgrid');
-  if(!keys.length){grid.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div><p>// no scripts found</p></div>';return;}
-  grid.innerHTML=keys.map(k=>{
-    const c=allCodes[k];const isF=c.type==='file';
-    const imgH=c.img?`<div class="sc-img"><img src="${c.img}" alt="${c.name}" onerror="this.parentNode.innerHTML='<div class=sc-img-placeholder><svg viewBox=\\"0 0 24 24\\" fill=\\"none\\" stroke=\\"currentColor\\" stroke-width=\\"1.5\\"><rect x=\\"2\\" y=\\"3\\" width=\\"20\\" height=\\"14\\" rx=\\"2\\"/><path d=\\"M8 21h8M12 17v4\\"/></svg><span>${c.name||'script'}</span></div>'" />${c.lang?`<span class="sc-lang">${c.lang}</span>`:''}<span class="sc-type-badge ${isF?'file':'code'}">${isF?'file':'code'}</span></div>`:`<div class="sc-img"><div class="sc-img-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg><span>${(c.lang||'script').toLowerCase()}</span></div>${c.lang?`<span class="sc-lang">${c.lang}</span>`:''}<span class="sc-type-badge ${isF?'file':'code'}">${isF?'file':'code'}</span></div>`;
-    return`<div class="sc">${imgH}<div class="sc-body">${c.cat?`<div class="sc-cat">${c.cat}</div>`:''}<div class="sc-name">${c.name}</div>${c.desc?`<div class="sc-desc">${c.desc}</div>`:''}<div class="sc-foot"><span class="sc-price">৳${c.price}</span><button class="sc-buy" onclick="openBuyM('${k}')"><svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Buy</button></div></div></div>`;
+  if(!keys.length){
+    grid.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div><p>// no scripts found</p></div>';
+    return;
+  }
+  grid.innerHTML=keys.map((k,idx)=>{
+    const c=allCodes[k];
+    const isF=c.type==='file';
+    // image block
+    const imgBlock=c.img
+      ?`<div class="sc-img">
+          <img src="${escAttr(c.img)}" alt="${escAttr(c.name)}" loading="lazy"
+            onerror="this.parentNode.innerHTML='<div class=sc-img-placeholder><svg viewBox=\\"0 0 24 24\\" fill=\\"none\\" stroke=\\"currentColor\\" stroke-width=\\"1.5\\"><rect x=\\"2\\" y=\\"3\\" width=\\"20\\" height=\\"14\\" rx=\\"2\\"/><path d=\\"M8 21h8M12 17v4\\"/></svg><span>${(c.lang||'script').toLowerCase()}</span></div>'" />
+          ${c.lang?`<span class="sc-lang">${escHtml(c.lang)}</span>`:''}
+          <span class="sc-type-badge ${isF?'file':'code'}">${isF?'📦 file':'⟨/⟩ code'}</span>
+        </div>`
+      :`<div class="sc-img">
+          <div class="sc-img-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <span>${escHtml((c.lang||'script').toLowerCase())}</span>
+          </div>
+          ${c.lang?`<span class="sc-lang">${escHtml(c.lang)}</span>`:''}
+          <span class="sc-type-badge ${isF?'file':'code'}">${isF?'📦 file':'⟨/⟩ code'}</span>
+        </div>`;
+    return`<div class="sc" style="animation-delay:${idx*0.06}s">
+      ${imgBlock}
+      <div class="sc-body">
+        ${c.cat?`<div class="sc-cat"># ${escHtml(c.cat)}</div>`:''}
+        <div class="sc-name">${escHtml(c.name)}</div>
+        ${c.desc?`<div class="sc-desc">${escHtml(c.desc)}</div>`:''}
+        <button class="sc-seemore" onclick="openBuyM('${k}')">
+          See More
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <div class="sc-foot">
+          <div>
+            <span class="sc-price">৳${escHtml(String(c.price))}</span>
+            <span class="sc-price-label">BDT</span>
+          </div>
+          <button class="sc-buy" onclick="openBuyM('${k}')">
+            <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            Buy Now
+          </button>
+        </div>
+      </div>
+    </div>`;
   }).join('');
 }
+
+function escHtml(t){return(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function escAttr(t){return(t||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 
 /* BUY/PWD */
 let curId=null;
@@ -948,57 +1210,36 @@ function renderAdmList(){
   if(!keys.length){list.innerHTML='<div style="color:var(--text3);font-size:.82rem;font-family:var(--mono)">// no scripts</div>';return;}
   const lo=LANGS.map(l=>`<option>${l}</option>`).join('');const co=CATS.map(c=>`<option>${c}</option>`).join('');
   list.innerHTML=keys.map(k=>{const c=allCodes[k],pwd=c.seed?getPwd(c.seed):'N/A',isF=c.type==='file';
-    return`<div class="ai"><div class="aitop"><span class="ainame">${isF?'[file] ':'[code] '}${c.name}</span><span class="ailang">${c.lang||''}</span></div><div class="aiprice">৳${c.price} BDT</div><div class="aicat">${c.cat||''} ${c.desc?'· '+c.desc.substring(0,45)+'...':''}</div><div class="aipwd"><div class="plbl">// password:</div>${pwd}</div><div class="aiacts"><button class="abtn abedit" onclick="toggleEdit('${k}')">edit</button><button class="abtn abdel" onclick="deleteCode('${k}')">delete</button></div><div class="editform" id="ef-${k}"><input class="ainp" id="en-${k}" value="${(c.name||'').replace(/"/g,'&quot;')}" placeholder="Name" /><input class="ainp" id="ep-${k}" value="${c.price||''}" type="number" placeholder="Price" /><input class="ainp" id="ei-${k}" value="${(c.img||'').replace(/"/g,'&quot;')}" placeholder="Image URL" /><select class="asel" id="ecat-${k}"><option value="">Category</option>${co}</select><select class="asel" id="elang-${k}"><option value="">Language</option>${lo}</select><textarea class="ata" id="edesc-${k}" placeholder="Description" style="min-height:50px">${c.desc||''}</textarea>${isF?`<input class="ainp" id="efl-${k}" value="${(c.filelink||'').replace(/"/g,'&quot;')}" placeholder="File Link" />`:`<textarea class="ata" id="ec-${k}" style="min-height:65px">${(c.code||'').replace(/</g,'&lt;')}</textarea>`}<div class="efbtns"><button class="efsave" onclick="saveEdit('${k}')">Save</button><button class="efcancel" onclick="toggleEdit('${k}')">Cancel</button></div></div></div>`;
+    return`<div class="ai"><div class="aitop"><span class="ainame">${isF?'[file] ':'[code] '}${escHtml(c.name)}</span><span class="ailang">${escHtml(c.lang||'')}</span></div><div class="aiprice">৳${c.price} BDT</div><div class="aicat">${escHtml(c.cat||'')} ${c.desc?'· '+c.desc.substring(0,45)+'...':''}</div><div class="aipwd"><div class="plbl">// password:</div>${pwd}</div><div class="aiacts"><button class="abtn abedit" onclick="toggleEdit('${k}')">edit</button><button class="abtn abdel" onclick="deleteCode('${k}')">delete</button></div><div class="editform" id="ef-${k}"><input class="ainp" id="en-${k}" value="${escAttr(c.name||'')}" placeholder="Name" /><input class="ainp" id="ep-${k}" value="${c.price||''}" type="number" placeholder="Price" /><input class="ainp" id="ei-${k}" value="${escAttr(c.img||'')}" placeholder="Image URL" /><select class="asel" id="ecat-${k}"><option value="">Category</option>${co}</select><select class="asel" id="elang-${k}"><option value="">Language</option>${lo}</select><textarea class="ata" id="edesc-${k}" placeholder="Description" style="min-height:50px">${escHtml(c.desc||'')}</textarea>${isF?`<input class="ainp" id="efl-${k}" value="${escAttr(c.filelink||'')}" placeholder="File Link" />`:`<textarea class="ata" id="ec-${k}" style="min-height:65px">${escHtml(c.code||'')}</textarea>`}<div class="efbtns"><button class="efsave" onclick="saveEdit('${k}')">Save</button><button class="efcancel" onclick="toggleEdit('${k}')">Cancel</button></div></div></div>`;
   }).join('');
   keys.forEach(k=>{const c=allCodes[k];const ce=document.getElementById('ecat-'+k);if(ce&&c.cat)ce.value=c.cat;const le=document.getElementById('elang-'+k);if(le&&c.lang)le.value=c.lang;});
 }
 setInterval(()=>{if(isAdmin)renderAdmList();},60000);
 
-/* ========================
-   CHAT / INBOX SYSTEM
-   ======================== */
+/* CHAT */
 let chatOpen=false;
 const CHAT_UID=prof.uid;
 let currentAdmConvId=null;
-let userMsgListener=null;
+let lastAdminMsgTs=Date.now();
 
-/* Show FAB after page load */
 setTimeout(()=>{document.getElementById('chat-fab').style.display='flex';},1000);
 
-window.openChat=()=>{
-  chatOpen=true;
-  document.getElementById('chat-fab').style.display='none';
-  document.getElementById('chat-overlay').classList.add('open');
-  loadUserChat();
-};
-window.closeChat=()=>{
-  chatOpen=false;
-  document.getElementById('chat-fab').style.display='flex';
-  document.getElementById('chat-overlay').classList.remove('open');
-};
+window.openChat=()=>{chatOpen=true;document.getElementById('chat-fab').style.display='none';document.getElementById('chat-overlay').classList.add('open');loadUserChat();};
+window.closeChat=()=>{chatOpen=false;document.getElementById('chat-fab').style.display='flex';document.getElementById('chat-overlay').classList.remove('open');};
 
 function fmtTime(ts){if(!ts)return'';const d=new Date(ts);return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');}
 
 function loadUserChat(){
   const convRef=ref(db,'chats/'+CHAT_UID+'/messages');
   onValue(convRef,(snap)=>{
-    const msgs=snap.val()||{};
-    const keys=Object.keys(msgs).sort((a,b)=>msgs[a].ts-msgs[b].ts);
-    const msgsEl=document.getElementById('chat-msgs');
-    const emptyEl=document.getElementById('chat-empty-msg');
+    const msgs=snap.val()||{};const keys=Object.keys(msgs).sort((a,b)=>msgs[a].ts-msgs[b].ts);
+    const msgsEl=document.getElementById('chat-msgs');const emptyEl=document.getElementById('chat-empty-msg');
     if(!keys.length){if(emptyEl)emptyEl.style.display='flex';return;}
     if(emptyEl)emptyEl.style.display='none';
-    // mark user msgs as read
-    let unread=0;
-    keys.forEach(k=>{if(msgs[k].from==='admin'&&!msgs[k].read)unread++;});
-    msgsEl.innerHTML=keys.map(k=>{
-      const m=msgs[k];const mine=m.from==='user';
-      return`<div class="chat-msg ${mine?'mine':'theirs'}"><div class="chat-bubble">${escHtml(m.text)}</div><div class="chat-time">${fmtTime(m.ts)}</div></div>`;
-    }).join('');
+    let unread=0;keys.forEach(k=>{if(msgs[k].from==='admin'&&!msgs[k].read)unread++;});
+    msgsEl.innerHTML=keys.map(k=>{const m=msgs[k];const mine=m.from==='user';return`<div class="chat-msg ${mine?'mine':'theirs'}"><div class="chat-bubble">${escHtml(m.text)}</div><div class="chat-time">${fmtTime(m.ts)}</div></div>`;}).join('');
     msgsEl.scrollTop=msgsEl.scrollHeight;
-    // clear badge
     updateUserBadge(0);
-    // save meta
     set(ref(db,'chats/'+CHAT_UID+'/meta'),{uid:CHAT_UID,name:prof.name,lastMsg:msgs[keys[keys.length-1]].text,lastTs:msgs[keys[keys.length-1]].ts,unreadAdmin:unread});
   });
 }
@@ -1008,7 +1249,6 @@ window.sendUserMsg=()=>{
   inp.value='';inp.style.height='';
   const msg={text,from:'user',ts:Date.now(),read:false};
   push(ref(db,'chats/'+CHAT_UID+'/messages'),msg);
-  // update meta
   set(ref(db,'chats/'+CHAT_UID+'/meta'),{uid:CHAT_UID,name:prof.name,lastMsg:text,lastTs:Date.now(),unreadAdmin:1});
   document.getElementById('chat-empty-msg').style.display='none';
 };
@@ -1021,10 +1261,7 @@ function updateUserBadge(n){
   if(n>0){badge.style.display='flex';badge.textContent=n;fabBadge.style.display='flex';fabBadge.textContent=n;}
   else{badge.style.display='none';fabBadge.style.display='none';}
 }
-function escHtml(t){return(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
-// Listen for admin replies (new messages from admin)
-let lastAdminMsgTs=Date.now();
 onValue(ref(db,'chats/'+CHAT_UID+'/messages'),(snap)=>{
   if(chatOpen)return;
   const msgs=snap.val()||{};const keys=Object.keys(msgs).sort((a,b)=>msgs[a].ts-msgs[b].ts);
@@ -1032,71 +1269,39 @@ onValue(ref(db,'chats/'+CHAT_UID+'/messages'),(snap)=>{
   if(unread>0)updateUserBadge(unread);
 });
 
-/* ADMIN CHAT */
 let allConvs={};
 function startAdminChatListener(){
   onValue(ref(db,'chats'),(snap)=>{
     allConvs=snap.val()||{};
-    // count total unread for admin (user messages unread by admin)
-    let total=0;
-    Object.keys(allConvs).forEach(uid=>{
-      const meta=allConvs[uid].meta||{};
-      if(meta.unreadAdmin)total++;
-    });
+    let total=0;Object.keys(allConvs).forEach(uid=>{const meta=allConvs[uid].meta||{};if(meta.unreadAdmin)total++;});
     const cnt=document.getElementById('adm-unread-cnt');
-    if(total>0){cnt.style.display='inline';cnt.textContent=total;}
-    else cnt.style.display='none';
+    if(total>0){cnt.style.display='inline';cnt.textContent=total;}else cnt.style.display='none';
     if(currentAdmConvId)renderAdmConvMsgs(currentAdmConvId);
     renderAdmInbox();
   });
 }
 
 function renderAdmInbox(){
-  const list=document.getElementById('adm-chat-list');
-  const uids=Object.keys(allConvs);
+  const list=document.getElementById('adm-chat-list');const uids=Object.keys(allConvs);
   if(!uids.length){list.innerHTML='<div style="color:var(--text3);font-size:.78rem;font-family:var(--mono);text-align:center;padding:20px">// No conversations</div>';return;}
   const sorted=uids.sort((a,b)=>(allConvs[b].meta?.lastTs||0)-(allConvs[a].meta?.lastTs||0));
   list.innerHTML=sorted.map(uid=>{
-    const meta=allConvs[uid].meta||{};const isUnread=meta.unreadAdmin;
-    const av=(meta.name||uid).substring(0,2).toUpperCase();
-    return`<div class="inbox-item${currentAdmConvId===uid?' active':''}${isUnread?' unread':''}" onclick="selectAdmConv('${uid}')">
-      <div class="inbox-av">${av}</div>
-      <div style="flex:1;min-width:0">
-        <div class="inbox-nm">${escHtml(meta.name||uid)}</div>
-        <div class="inbox-preview">${escHtml(meta.lastMsg||'')}</div>
-      </div>
-      <div class="inbox-time">${meta.lastTs?fmtTime(meta.lastTs):''}</div>
-    </div>`;
+    const meta=allConvs[uid].meta||{};const isUnread=meta.unreadAdmin;const av=(meta.name||uid).substring(0,2).toUpperCase();
+    return`<div class="inbox-item${currentAdmConvId===uid?' active':''}${isUnread?' unread':''}" onclick="selectAdmConv('${uid}')"><div class="inbox-av">${av}</div><div style="flex:1;min-width:0"><div class="inbox-nm">${escHtml(meta.name||uid)}</div><div class="inbox-preview">${escHtml(meta.lastMsg||'')}</div></div><div class="inbox-time">${meta.lastTs?fmtTime(meta.lastTs):''}</div></div>`;
   }).join('');
 }
 
 window.selectAdmConv=(uid)=>{
   currentAdmConvId=uid;
-  // mark as read
   if(allConvs[uid]&&allConvs[uid].meta){set(ref(db,'chats/'+uid+'/meta'),{...allConvs[uid].meta,unreadAdmin:0});}
-  renderAdmInbox();
-  renderAdmConvMsgs(uid);
+  renderAdmInbox();renderAdmConvMsgs(uid);
 };
 
 function renderAdmConvMsgs(uid){
   const wrap=document.getElementById('adm-chat-msgs');
   const msgs=allConvs[uid]?.messages||{};const meta=allConvs[uid]?.meta||{};
   const keys=Object.keys(msgs).sort((a,b)=>msgs[a].ts-msgs[b].ts);
-  wrap.innerHTML=`
-    <div class="adm-chat-hdr">
-      <div class="adm-chat-hdr-name">${escHtml(meta.name||uid)} <span style="font-size:.65rem;color:var(--text3);font-family:var(--mono)">uid::${uid}</span></div>
-    </div>
-    <div class="adm-chat-body" id="adm-body">
-      ${!keys.length?'<div style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:.78rem;font-family:var(--mono)">// No messages yet</div>':
-      keys.map(k=>{const m=msgs[k];const mine=m.from==='admin';
-        return`<div class="chat-msg ${mine?'mine':'theirs'}"><div class="chat-bubble">${escHtml(m.text)}</div><div class="chat-time">${fmtTime(m.ts)}</div></div>`;
-      }).join('')}
-    </div>
-    <div class="adm-chat-input-row">
-      <textarea class="chat-input" id="adm-reply-in" placeholder="Reply to ${escHtml(meta.name||uid)}..." rows="1" onkeydown="admReplyKey(event,'${uid}')" oninput="autoResize(this)"></textarea>
-      <button class="chat-send" onclick="sendAdminReply('${uid}')"><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><path d="M22 2 11 13M22 2 15 22l-4-9-9-4 20-7z"/></svg></button>
-    </div>
-  `;
+  wrap.innerHTML=`<div class="adm-chat-hdr"><div class="adm-chat-hdr-name">${escHtml(meta.name||uid)} <span style="font-size:.65rem;color:var(--text3);font-family:var(--mono)">uid::${uid}</span></div></div><div class="adm-chat-body" id="adm-body">${!keys.length?'<div style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:.78rem;font-family:var(--mono)">// No messages yet</div>':keys.map(k=>{const m=msgs[k];const mine=m.from==='admin';return`<div class="chat-msg ${mine?'mine':'theirs'}"><div class="chat-bubble">${escHtml(m.text)}</div><div class="chat-time">${fmtTime(m.ts)}</div></div>`;}).join('')}</div><div class="adm-chat-input-row"><textarea class="chat-input" id="adm-reply-in" placeholder="Reply to ${escHtml(meta.name||uid)}..." rows="1" onkeydown="admReplyKey(event,'${uid}')" oninput="autoResize(this)"></textarea><button class="chat-send" onclick="sendAdminReply('${uid}')"><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><path d="M22 2 11 13M22 2 15 22l-4-9-9-4 20-7z"/></svg></button></div>`;
   const body=document.getElementById('adm-body');if(body)body.scrollTop=body.scrollHeight;
 }
 
@@ -1104,11 +1309,9 @@ window.sendAdminReply=(uid)=>{
   const inp=document.getElementById('adm-reply-in');if(!inp)return;
   const text=inp.value.trim();if(!text)return;
   inp.value='';inp.style.height='';
-  const msg={text,from:'admin',ts:Date.now(),read:false};
-  push(ref(db,'chats/'+uid+'/messages'),msg);
+  push(ref(db,'chats/'+uid+'/messages'),{text,from:'admin',ts:Date.now(),read:false});
 };
 window.admReplyKey=(e,uid)=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendAdminReply(uid);}};
-
 </script>
 </body>
 </html>
