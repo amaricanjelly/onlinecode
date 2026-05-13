@@ -36,6 +36,7 @@
   --font:'Space Grotesk','Hind Siliguri',sans-serif;
   --mono:'Fira Code',monospace;
   --r:8px;
+  --card-radius:16px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -78,7 +79,7 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
 .inbox-btn{background:none;border:1px solid var(--border2);color:var(--text2);padding:6px 13px;border-radius:6px;font-size:.82rem;font-weight:500;transition:all .15s;display:flex;align-items:center;gap:6px;position:relative}
 .inbox-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(0,212,255,.05)}
 .inbox-btn svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2}
-.inbox-badge{position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;font-size:.58rem;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg);display:none}
+.inbox-badge{position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;font-size:.58rem;font-weight:700;width:16px;height:16px;border-radius:50%;display:none;align-items:center;justify-content:center;border:2px solid var(--bg)}
 
 .page{display:none;position:relative;z-index:1}.page.active{display:block}
 
@@ -148,235 +149,290 @@ option{background:var(--bg2)}
 .sb-cnt{background:var(--surface3);color:var(--text3);font-size:.65rem;padding:1px 6px;border-radius:4px;font-weight:600;font-family:var(--mono)}
 .sb-item.on .sb-cnt{background:rgba(0,212,255,.15);color:var(--accent)}
 
-/* ========= SCRIPTS SECTION ========= */
+/* ========= SECTION TITLE ROW ========= */
 .stitle-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid var(--border)}
 .stitle-row h2{font-size:1rem;font-weight:700;color:var(--text);letter-spacing:-.01em;display:flex;align-items:center;gap:8px}
 .stitle-row h2::before{content:'//';color:var(--accent);font-family:var(--mono);font-size:.85rem}
 .scount{font-size:.75rem;color:var(--text3);font-family:var(--mono);background:var(--surface2);padding:3px 10px;border-radius:4px;border:1px solid var(--border)}
 
-/* ========= PRODUCT GRID ========= */
+/* ========================================================
+   PRODUCT GRID — COMPLETE REDESIGN
+   Uses CSS Grid with fixed 3-col layout, cards never break
+   ======================================================== */
 .sgrid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:20px;
-  align-items:start;
+  gap:22px;
+  align-items:stretch; /* all rows same height */
 }
 
-/* ========= PRODUCT CARD — COMPLETE REDESIGN ========= */
+/* ========================================================
+   PRODUCT CARD
+   ======================================================== */
 .sc{
   background:var(--surface);
   border:1px solid var(--border);
-  border-radius:14px;
+  border-radius:var(--card-radius);
   overflow:hidden;
-  transition:transform .25s cubic-bezier(.34,1.56,.64,1),box-shadow .25s ease,border-color .25s ease;
-  cursor:pointer;
   display:flex;
-  flex-direction:column;
+  flex-direction:column;   /* vertical stack: image → body → footer */
   position:relative;
+  cursor:pointer;
+  transition:
+    transform .28s cubic-bezier(.34,1.56,.64,1),
+    box-shadow .28s ease,
+    border-color .28s ease;
+  animation:cardIn .4s ease both;
 }
-.sc::before{
+.sc:nth-child(1){animation-delay:.04s}
+.sc:nth-child(2){animation-delay:.08s}
+.sc:nth-child(3){animation-delay:.12s}
+.sc:nth-child(4){animation-delay:.16s}
+.sc:nth-child(5){animation-delay:.20s}
+.sc:nth-child(6){animation-delay:.24s}
+.sc:nth-child(7){animation-delay:.28s}
+.sc:nth-child(8){animation-delay:.32s}
+.sc:nth-child(9){animation-delay:.36s}
+@keyframes cardIn{
+  from{opacity:0;transform:translateY(20px) scale(.97)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.sc::after{
   content:'';
   position:absolute;
   inset:0;
-  border-radius:14px;
-  background:linear-gradient(135deg,rgba(0,212,255,.04),rgba(124,58,237,.04));
+  border-radius:var(--card-radius);
+  background:linear-gradient(135deg,rgba(0,212,255,.05),rgba(124,58,237,.04));
   opacity:0;
-  transition:opacity .25s;
+  transition:opacity .28s;
   pointer-events:none;
-  z-index:0;
 }
 .sc:hover{
-  transform:translateY(-6px) scale(1.01);
-  box-shadow:0 12px 40px rgba(0,0,0,.5),0 0 0 1px rgba(0,212,255,.2),0 0 24px rgba(0,212,255,.08);
+  transform:translateY(-8px) scale(1.015);
+  box-shadow:
+    0 24px 48px rgba(0,0,0,.55),
+    0 0 0 1px rgba(0,212,255,.25),
+    0 0 32px rgba(0,212,255,.1);
   border-color:rgba(0,212,255,.3);
 }
-.sc:hover::before{opacity:1}
+.sc:hover::after{opacity:1}
 
-/* Card Image Area */
+/* ── IMAGE BLOCK ── */
 .sc-img{
   width:100%;
-  height:180px;
-  background:linear-gradient(135deg,var(--bg2) 0%,var(--surface2) 100%);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  overflow:hidden;
+  height:190px;
+  flex-shrink:0;         /* never shrink the image */
   position:relative;
-  flex-shrink:0;
+  overflow:hidden;
+  background:linear-gradient(135deg,var(--bg2),var(--surface2));
 }
 .sc-img img{
   width:100%;
   height:100%;
   object-fit:cover;
   display:block;
-  transition:transform .4s ease;
+  transition:transform .45s ease;
 }
-.sc:hover .sc-img img{transform:scale(1.06)}
+.sc:hover .sc-img img{transform:scale(1.08)}
+
+/* gradient fade at bottom of image */
+.sc-img-fade{
+  position:absolute;
+  bottom:0;left:0;right:0;
+  height:55%;
+  background:linear-gradient(to top,rgba(8,12,20,.8),transparent);
+  pointer-events:none;
+  z-index:1;
+}
 
 /* placeholder when no image */
 .sc-img-placeholder{
+  width:100%;
+  height:100%;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
   gap:10px;
-  width:100%;
-  height:100%;
-  background:linear-gradient(135deg,var(--bg2),var(--surface2));
 }
 .sc-img-placeholder svg{
-  width:36px;height:36px;
-  fill:none;stroke:var(--border3);stroke-width:1.5;
-  opacity:.7;
+  width:38px;height:38px;
+  fill:none;stroke:var(--border3);stroke-width:1.4;
+  opacity:.6;
 }
 .sc-img-placeholder span{
-  font-size:.65rem;
+  font-size:.62rem;
   color:var(--text4);
   font-family:var(--mono);
   text-transform:uppercase;
-  letter-spacing:.5px;
+  letter-spacing:.6px;
 }
 
-/* image overlay gradient */
-.sc-img::after{
-  content:'';
-  position:absolute;
-  bottom:0;left:0;right:0;
-  height:50%;
-  background:linear-gradient(to top,rgba(8,12,20,.7),transparent);
-  pointer-events:none;
-}
-
-/* badges on image */
+/* badges overlaid on image */
 .sc-lang{
-  position:absolute;top:10px;right:10px;z-index:2;
-  background:rgba(0,0,0,.75);
-  border:1px solid rgba(0,212,255,.3);
+  position:absolute;top:10px;right:10px;z-index:3;
+  background:rgba(8,12,20,.82);
+  border:1px solid rgba(0,212,255,.35);
   border-radius:5px;
   padding:3px 8px;
-  font-size:.63rem;font-weight:700;
+  font-size:.62rem;font-weight:700;
   color:var(--accent);
   font-family:var(--mono);
-  backdrop-filter:blur(4px);
+  backdrop-filter:blur(6px);
+  letter-spacing:.03em;
 }
 .sc-type-badge{
-  position:absolute;top:10px;left:10px;z-index:2;
+  position:absolute;top:10px;left:10px;z-index:3;
   border-radius:5px;
   padding:3px 7px;
-  font-size:.6rem;font-weight:700;
+  font-size:.59rem;font-weight:700;
   font-family:var(--mono);
   border:1px solid;
-  backdrop-filter:blur(4px);
+  backdrop-filter:blur(6px);
+  letter-spacing:.02em;
 }
-.sc-type-badge.file{background:rgba(124,58,237,.2);border-color:rgba(124,58,237,.4);color:#c4b5fd}
-.sc-type-badge.code{background:rgba(16,185,129,.15);border-color:rgba(16,185,129,.3);color:#34d399}
+.sc-type-badge.file{background:rgba(124,58,237,.2);border-color:rgba(124,58,237,.45);color:#c4b5fd}
+.sc-type-badge.code{background:rgba(16,185,129,.15);border-color:rgba(16,185,129,.35);color:#34d399}
 
-/* Card Body */
+/* ── CARD BODY ── */
 .sc-body{
-  padding:16px;
+  padding:16px 18px;
   display:flex;
   flex-direction:column;
-  flex:1;
-  position:relative;
-  z-index:1;
+  flex:1;           /* fills remaining space so footer always at bottom */
+  gap:0;
 }
+
 .sc-cat{
   display:inline-flex;align-items:center;gap:4px;
   color:var(--text3);
-  font-size:.65rem;font-weight:700;
-  margin-bottom:8px;
+  font-size:.63rem;font-weight:700;
+  margin-bottom:7px;
   font-family:var(--mono);
   text-transform:uppercase;
   letter-spacing:.5px;
 }
+.sc-cat::before{content:'#';color:var(--accent3);font-size:.65rem}
+
 .sc-name{
-  font-size:.95rem;font-weight:700;
-  color:var(--text);
-  margin-bottom:6px;
+  font-size:.97rem;font-weight:700;
+  color:var(--white);
+  margin-bottom:7px;
   line-height:1.3;
   letter-spacing:-.02em;
-}
-.sc-desc{
-  font-size:.78rem;
-  color:var(--text2);
-  line-height:1.6;
-  margin-bottom:14px;
-  flex:1;
+  /* prevent text overflow */
   display:-webkit-box;
   -webkit-line-clamp:2;
   -webkit-box-orient:vertical;
   overflow:hidden;
 }
 
-/* Card Footer */
+.sc-desc{
+  font-size:.78rem;
+  color:var(--text2);
+  line-height:1.65;
+  margin-bottom:14px;
+  flex:1;            /* pushes footer down */
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+/* ── SEE MORE BUTTON ── */
+.sc-seemore{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(0,212,255,.07);
+  border:1px solid rgba(0,212,255,.18);
+  border-radius:6px;
+  color:var(--accent);
+  font-size:.74rem;font-weight:600;
+  font-family:var(--mono);
+  padding:6px 12px;
+  margin-bottom:14px;
+  letter-spacing:.02em;
+  transition:all .2s cubic-bezier(.34,1.56,.64,1);
+  width:fit-content;
+}
+.sc-seemore svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.5;transition:transform .2s}
+.sc-seemore:hover{
+  background:rgba(0,212,255,.14);
+  border-color:rgba(0,212,255,.35);
+  color:#22dfff;
+  transform:translateX(2px);
+}
+.sc-seemore:hover svg{transform:translateX(4px)}
+
+/* ── CARD FOOTER ── */
 .sc-foot{
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:10px;
-  padding-top:12px;
+  padding-top:13px;
   border-top:1px solid var(--border);
-  margin-top:auto;
+  margin-top:auto;    /* always sticks to bottom */
 }
+
+.sc-price-wrap{}
 .sc-price{
-  font-size:1.1rem;font-weight:800;
+  font-size:1.2rem;font-weight:800;
   color:var(--accent);
   font-family:var(--mono);
-  letter-spacing:-.02em;
+  letter-spacing:-.03em;
+  display:block;
+  line-height:1;
 }
-.sc-price-label{font-size:.65rem;color:var(--text3);font-weight:400;margin-left:2px}
+.sc-price-label{
+  font-size:.62rem;color:var(--text3);font-weight:500;
+  display:block;
+  margin-top:2px;
+  font-family:var(--mono);
+  letter-spacing:.04em;
+}
 
-/* Buy Button */
+/* ── BUY BUTTON ── */
 .sc-buy{
-  background:var(--accent);
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
   color:#000;
   border:none;
-  padding:8px 16px;
-  border-radius:7px;
+  padding:9px 18px;
+  border-radius:8px;
   font-size:.76rem;font-weight:800;
-  transition:all .2s cubic-bezier(.34,1.56,.64,1);
   letter-spacing:.04em;
   display:flex;align-items:center;gap:5px;
   white-space:nowrap;
+  flex-shrink:0;
+  transition:all .22s cubic-bezier(.34,1.56,.64,1);
   position:relative;
   overflow:hidden;
 }
 .sc-buy::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(255,255,255,.2),transparent);
-  opacity:0;transition:opacity .2s;
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.25),transparent);
+  opacity:0;
+  transition:opacity .2s;
 }
 .sc-buy:hover{
-  background:#22dfff;
-  box-shadow:0 6px 20px rgba(0,212,255,.4);
-  transform:translateY(-1px);
+  background:linear-gradient(135deg,#22dfff,var(--accent));
+  box-shadow:0 8px 24px rgba(0,212,255,.45);
+  transform:translateY(-2px) scale(1.04);
 }
 .sc-buy:hover::before{opacity:1}
 .sc-buy svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.5}
 
-/* See More Button */
-.sc-seemore{
-  display:inline-flex;align-items:center;gap:5px;
-  background:none;
-  border:none;
-  color:var(--accent);
-  font-size:.74rem;font-weight:600;
-  font-family:var(--mono);
-  padding:4px 0;
-  margin-bottom:12px;
-  letter-spacing:.02em;
-  transition:all .15s;
-  cursor:pointer;
-  text-decoration:none;
+/* EMPTY STATE */
+.empty{
+  background:var(--surface);
+  border:1px dashed var(--border2);
+  border-radius:12px;
+  padding:64px 20px;
+  text-align:center;
+  grid-column:1/-1;
 }
-.sc-seemore svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.5;transition:transform .2s}
-.sc-seemore:hover{color:#22dfff}
-.sc-seemore:hover svg{transform:translateX(3px)}
-
-/* EMPTY */
-.empty{background:var(--surface);border:1px dashed var(--border2);border-radius:10px;padding:60px 20px;text-align:center;grid-column:1/-1}
-.empty-icon svg{width:40px;height:40px;fill:none;stroke:var(--text4);stroke-width:1.5;margin-bottom:12px}
-.empty p{color:var(--text3);font-size:.85rem;font-family:var(--mono)}
+.empty-icon svg{width:42px;height:42px;fill:none;stroke:var(--text4);stroke-width:1.4;margin-bottom:14px}
+.empty p{color:var(--text3);font-size:.84rem;font-family:var(--mono)}
 
 /* MODALS */
 .overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(4,8,16,.7);backdrop-filter:blur(8px);align-items:center;justify-content:center}
@@ -550,7 +606,7 @@ option{background:var(--bg2)}
 .chat-fab{position:fixed;bottom:24px;right:24px;width:52px;height:52px;background:linear-gradient(135deg,var(--accent3),var(--accent));border:none;border-radius:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,212,255,.25);z-index:399;transition:all .2s}
 .chat-fab:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,212,255,.35)}
 .chat-fab svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:2}
-.chat-fab-badge{position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;font-size:.6rem;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg);display:none;font-family:var(--mono)}
+.chat-fab-badge{position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;font-size:.6rem;font-weight:700;width:18px;height:18px;border-radius:50%;display:none;align-items:center;justify-content:center;border:2px solid var(--bg);font-family:var(--mono)}
 .inbox-list{list-style:none;margin-bottom:14px}
 .inbox-item{display:flex;align-items:center;gap:10px;padding:10px;border-radius:7px;cursor:pointer;transition:background .15s;border:1px solid transparent}
 .inbox-item:hover{background:var(--surface2);border-color:var(--border)}
@@ -570,46 +626,33 @@ option{background:var(--bg2)}
 .adm-chat-input-row{padding:10px 12px;border-top:1px solid var(--border);display:flex;gap:8px;background:var(--bg2);flex-shrink:0}
 .adm-chat-empty{flex:1;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:.8rem;font-family:var(--mono)}
 
-/* ========= CARD LOAD ANIMATION ========= */
-@keyframes cardFadeIn{
-  from{opacity:0;transform:translateY(16px)}
-  to{opacity:1;transform:translateY(0)}
-}
-.sc{
-  animation:cardFadeIn .35s ease both;
-}
-.sc:nth-child(1){animation-delay:.05s}
-.sc:nth-child(2){animation-delay:.1s}
-.sc:nth-child(3){animation-delay:.15s}
-.sc:nth-child(4){animation-delay:.2s}
-.sc:nth-child(5){animation-delay:.25s}
-.sc:nth-child(6){animation-delay:.3s}
-.sc:nth-child(7){animation-delay:.35s}
-.sc:nth-child(8){animation-delay:.4s}
-.sc:nth-child(9){animation-delay:.45s}
-
 footer{background:var(--bg2);border-top:1px solid var(--border);padding:22px 32px;text-align:center;font-size:.76rem;color:var(--text3);position:relative;z-index:1}
 footer a{color:var(--accent)}
 footer::before{content:'';display:block;width:200px;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);margin:0 auto 18px}
 
-/* ========= RESPONSIVE ========= */
+/* ========================================================
+   RESPONSIVE
+   ======================================================== */
+/* 3-col → 2-col at 1100px */
 @media(max-width:1100px){
   .sgrid{grid-template-columns:repeat(2,1fr)}
 }
+/* hero layout collapses, admin grid collapses */
 @media(max-width:960px){
   .hero-inner{grid-template-columns:1fr}
   .hero-terminal{display:none}
   .admgrid{grid-template-columns:1fr}
   .adm-chat-wrap{grid-template-columns:1fr;height:auto}
-  .sgrid{grid-template-columns:repeat(2,1fr)}
 }
+/* sidebar hides, 2-col product grid, padding tightens */
 @media(max-width:720px){
   .mlayout{grid-template-columns:1fr;padding:16px 16px 60px}
   .sidebar{display:none}
   .sgrid{grid-template-columns:repeat(2,1fr);gap:14px}
   .sc-img{height:150px}
 }
-@media(max-width:520px){
+/* single column on very small screens */
+@media(max-width:480px){
   .sgrid{grid-template-columns:1fr;gap:14px}
   .hero{padding:28px 16px 24px}
   .hero h1{font-size:1.9rem}
@@ -617,7 +660,7 @@ footer::before{content:'';display:block;width:200px;height:1px;background:linear
   .nav-search{max-width:none;flex:1}
   .fbar{padding:9px 16px}
   .chat-panel{width:calc(100vw - 32px);right:16px}
-  .sc-img{height:180px}
+  .sc-img{height:200px}
 }
 </style>
 </head>
@@ -685,7 +728,7 @@ footer::before{content:'';display:block;width:200px;height:1px;background:linear
           <div class="tl"><span class="tout"><span class="tdir">drwxr</span> <span class="tkey">Python/</span></span></div>
           <div class="tl"><span class="tout"><span class="tdir">drwxr</span> <span class="tkey">Flutter/</span></span></div>
           <div class="tl"><span class="tout"><span class="tdir">-rw-r</span> <span class="tfile">ecommerce.zip</span></span></div>
-          <div class="tl"><span class="tout"><span class="tdir">-rw-r</span> <span class="tphy">dashboard.js</span></span></div>
+          <div class="tl"><span class="tout"><span class="tdir">-rw-r</span> <span class="tphp">dashboard.js</span></span></div>
           <div class="tl"><span class="tprompt">$</span><span class="tcmd"> cat stats.json</span></div>
           <div class="tl"><span class="tout"><span class="tval">{</span> <span class="tkey">"secure"</span>: <span class="tval">true</span>, <span class="tkey">"instant"</span>: <span class="tval">true</span> <span class="tval">}</span></span></div>
           <div class="tl"><span class="tprompt">$</span><span class="tcursor"></span></div>
@@ -722,6 +765,7 @@ footer::before{content:'';display:block;width:200px;height:1px;background:linear
         <h2 id="sec-title">All Scripts</h2>
         <span class="scount" id="scount">0 results</span>
       </div>
+      <!-- PRODUCT GRID -->
       <div class="sgrid" id="sgrid">
         <div class="empty">
           <div class="empty-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
@@ -957,7 +1001,7 @@ footer::before{content:'';display:block;width:200px;height:1px;background:linear
   </div>
 </div>
 
-<!-- CHAT PANEL -->
+<!-- CHAT FAB -->
 <button class="chat-fab" id="chat-fab" onclick="openChat()" title="Open Chat" style="display:none">
   <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
   <span class="chat-fab-badge" id="fab-badge">0</span>
@@ -1074,7 +1118,10 @@ window.setCat=(c)=>{filterCat=c;buildFilters();renderHome();};
 window.setSort=(v)=>{sortBy=v;renderHome();};
 window.doSearch=(q)=>{searchQ=q.toLowerCase();renderHome();};
 
-/* ========= RENDER HOME — REDESIGNED CARDS ========= */
+/* ================================================================
+   RENDER HOME — FIXED PRODUCT GRID CARDS
+   Each card: flex column → image (fixed height) → body (flex:1) → footer (auto)
+   ================================================================ */
 function renderHome(){
   let keys=Object.keys(allCodes);
   if(filterLang!=='all')keys=keys.filter(k=>allCodes[k].lang===filterLang);
@@ -1088,32 +1135,40 @@ function renderHome(){
   document.getElementById('sec-title').textContent=filterCat==='all'?'All Scripts':filterCat;
   const grid=document.getElementById('sgrid');
   if(!keys.length){
-    grid.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div><p>// no scripts found</p></div>';
+    grid.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div><p>// no scripts found</p></div>';
     return;
   }
   grid.innerHTML=keys.map((k,idx)=>{
     const c=allCodes[k];
     const isF=c.type==='file';
-    // image block
+    const typeBadge=`<span class="sc-type-badge ${isF?'file':'code'}">${isF?'📦 file':'⟨/⟩ code'}</span>`;
+    const langBadge=c.lang?`<span class="sc-lang">${escHtml(c.lang)}</span>`:'';
+
+    /* image or placeholder */
     const imgBlock=c.img
       ?`<div class="sc-img">
           <img src="${escAttr(c.img)}" alt="${escAttr(c.name)}" loading="lazy"
-            onerror="this.parentNode.innerHTML='<div class=sc-img-placeholder><svg viewBox=\\"0 0 24 24\\" fill=\\"none\\" stroke=\\"currentColor\\" stroke-width=\\"1.5\\"><rect x=\\"2\\" y=\\"3\\" width=\\"20\\" height=\\"14\\" rx=\\"2\\"/><path d=\\"M8 21h8M12 17v4\\"/></svg><span>${(c.lang||'script').toLowerCase()}</span></div>'" />
-          ${c.lang?`<span class="sc-lang">${escHtml(c.lang)}</span>`:''}
-          <span class="sc-type-badge ${isF?'file':'code'}">${isF?'📦 file':'⟨/⟩ code'}</span>
+            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="sc-img-placeholder" style="display:none;position:absolute;inset:0">
+            <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <span>${escHtml((c.lang||'script').toLowerCase())}</span>
+          </div>
+          <div class="sc-img-fade"></div>
+          ${langBadge}${typeBadge}
         </div>`
       :`<div class="sc-img">
           <div class="sc-img-placeholder">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
             <span>${escHtml((c.lang||'script').toLowerCase())}</span>
           </div>
-          ${c.lang?`<span class="sc-lang">${escHtml(c.lang)}</span>`:''}
-          <span class="sc-type-badge ${isF?'file':'code'}">${isF?'📦 file':'⟨/⟩ code'}</span>
+          <div class="sc-img-fade"></div>
+          ${langBadge}${typeBadge}
         </div>`;
-    return`<div class="sc" style="animation-delay:${idx*0.06}s">
+
+    return`<div class="sc" style="animation-delay:${idx*0.055}s">
       ${imgBlock}
       <div class="sc-body">
-        ${c.cat?`<div class="sc-cat"># ${escHtml(c.cat)}</div>`:''}
+        ${c.cat?`<div class="sc-cat">${escHtml(c.cat)}</div>`:''}
         <div class="sc-name">${escHtml(c.name)}</div>
         ${c.desc?`<div class="sc-desc">${escHtml(c.desc)}</div>`:''}
         <button class="sc-seemore" onclick="openBuyM('${k}')">
@@ -1121,7 +1176,7 @@ function renderHome(){
           <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
         <div class="sc-foot">
-          <div>
+          <div class="sc-price-wrap">
             <span class="sc-price">৳${escHtml(String(c.price))}</span>
             <span class="sc-price-label">BDT</span>
           </div>
@@ -1138,7 +1193,7 @@ function renderHome(){
 function escHtml(t){return(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function escAttr(t){return(t||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 
-/* BUY/PWD */
+/* BUY / PWD */
 let curId=null;
 window.openBuyM=(id)=>{curId=id;const c=allCodes[id];document.getElementById('buy-lbl').textContent=c?`// ${c.name}`:'';document.getElementById('buy-modal').classList.add('open');};
 window.closeM=(id)=>document.getElementById(id).classList.remove('open');
