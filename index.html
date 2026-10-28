@@ -74,6 +74,22 @@ select{background:#fff;border:1px solid var(--line);padding:.6rem;border-radius:
 #mm{position:fixed;background:var(--card);border-radius:12px;box-shadow:0 6px 20px #0003;padding:.3rem;z-index:12;display:grid;min-width:180px}
 #mm button{background:none;color:var(--tx);text-align:left;box-shadow:none;border-radius:8px;padding:.5rem .7rem}#mm button:hover{background:#e9ecdf}
 .mr{display:flex;align-items:center;gap:.2rem;align-self:flex-start;max-width:82%}.mr.mine{align-self:flex-end}.mr .m{max-width:none}.icn{display:flex;align-items:center;justify-content:center;gap:.4rem}.icn svg{width:20px;height:20px}
+/* reply + reactions */
+.col{display:flex;flex-direction:column;min-width:0}.mr.mine .col{align-items:flex-end}
+.acts{display:flex;align-items:center;flex:none}.acts a{cursor:pointer;color:var(--mut);padding:0 .2rem;user-select:none;line-height:1;font-size:1.1rem;transition:transform .15s}.acts a:hover{transform:scale(1.25)}
+.m{-webkit-touch-callout:none;cursor:pointer}@media(hover:none){.m{-webkit-user-select:none;user-select:none}}
+.q{border-left:3px solid var(--pri);background:#4f6b4322;border-radius:8px;padding:.25rem .5rem;margin-bottom:.35rem;cursor:pointer;white-space:normal}
+.m.mine .q{border-left-color:#fff;background:#ffffff30}.q b{display:block;font-size:.72rem}
+.q span{display:block;opacity:.8;font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:min(240px,55vw)}.q.gone span{font-style:italic}
+.mr.hl .m{animation:hl 1.6s ease-out}@keyframes hl{0%,55%{box-shadow:0 0 0 4px var(--pri)}100%{box-shadow:0 0 0 0 transparent}}
+.rxs{display:flex;gap:.25rem;flex-wrap:wrap;margin-top:-.25rem;position:relative;z-index:1;padding:0 .4rem}
+.rx{background:#fff;color:var(--tx);border:1px solid var(--line);box-shadow:0 1px 4px #0002;padding:.1rem .5rem;border-radius:99px;font-size:.8rem;font-weight:700;animation:pop .18s}
+.rx:hover{background:#e6eadb}.rx.on{border-color:var(--pri);background:#e6eadb}
+@keyframes pop{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+#rpk{position:fixed;z-index:13;display:flex;gap:.1rem;background:var(--card);padding:.3rem .4rem;border-radius:99px;box-shadow:0 8px 24px #0004;animation:pop .15s;max-width:calc(100vw - 16px)}
+#rpk button{background:none;box-shadow:none;padding:.2rem .3rem;font-size:1.4rem;border-radius:50%;transition:transform .12s}#rpk button:hover{background:#e9ecdf;transform:scale(1.3)}#rpk button.sel{background:#dfe6d3}
+#rbar{display:flex;align-items:center;gap:.6rem;padding:.5rem 1rem;background:#e6eadb;border-top:1px solid var(--line);animation:pop .18s}
+#rbar .qb{flex:1;min-width:0;border-left:3px solid var(--pri);padding-left:.6rem}#rbar small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--mut)}#rb-x{cursor:pointer;padding:.3rem}
 </style></head><body>
 <section id="boot" class="center"><div class="logo">ARA</div><p class="soon">Loading…</p></section>
 <section id="login" class="center" hidden><div class="logo">ARA</div><p>A New Way to Connect.</p>
@@ -90,6 +106,7 @@ select{background:#fff;border:1px solid var(--line);padding:.6rem;border-radius:
 <aside><button id="g-new" class="ghost">👥 Group call (create / join)</button><input id="q" placeholder="Search username or nickname…"><div id="results"></div><h4>Conversations</h4><div id="convs"><i class="soon">No conversations yet</i></div></aside>
 <main><div id="head"><button id="back" class="ic">←</button><img id="h-av" hidden><div><b id="h-name">Select a conversation</b><br><small id="h-seen" class="soon"></small></div><span id="h-dot" class="dot"></span><span class="sp"></span><button id="h-block" class="ic" title="Block user"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></button><button id="call-a" class="ic" title="Voice call"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><button id="call-v" class="ic" title="Video call"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></button></div>
 <div id="pinbar" hidden><span>📌</span><span id="pin-text"></span><a id="pin-x">✕</a></div><div id="msgs"><div class="empty">💬<h3>Start a conversation</h3><p>Search a username, say hi, or make a call.</p></div></div><div id="typing"></div>
+<div id="rbar" hidden><div class="qb"><b id="rb-name"></b><small id="rb-text"></small></div><a id="rb-x">✕</a></div>
 <form class="send" id="send" hidden><input id="text" placeholder="Type a message…" autocomplete="off"><button>Send</button></form></main>
 <section id="rp"><div id="rp-empty" class="soon">Select a conversation to see the profile.</div>
 <div id="rp-body" hidden><img id="rp-av"><h3 id="rp-name"></h3><small id="rp-user" class="soon"></small>
@@ -116,7 +133,7 @@ select{background:#fff;border:1px solid var(--line);padding:.6rem;border-radius:
 <div id="cctl"><button id="c-mute" class="cb"><i>🎤</i><span>Mic On</span></button><button id="c-cam" class="cb"><i>📷</i><span>Camera On</span></button><button id="c-fs" class="cb"><i>⛶</i><span>Full</span></button><button id="c-pip" class="cb"><i>🗗</i><span>PiP</span></button><button id="c-end" class="cb bad"><i>📞</i><span>End</span></button></div></div>
 <div id="gcall" hidden><div id="ginfo"><b>Group call</b><small>Room code: <b id="g-code"></b></small></div><div id="grid"></div>
 <div id="gctl"><button id="g-mute" class="cb"><i>🎤</i><span>Mic On</span></button><button id="g-cam" class="cb"><i>📷</i><span>Camera On</span></button><button id="g-copy" class="cb"><i>🔗</i><span>Invite</span></button><button id="g-end" class="cb bad"><i>📞</i><span>End</span></button></div></div>
-<div id="fm" hidden><div class="mod"><h3>Forward to…</h3><div id="f-list"></div><button id="f-x" class="ghost">Cancel</button></div></div><div id="mm" hidden></div><div id="toast" hidden></div>
+<div id="fm" hidden><div class="mod"><h3>Forward to…</h3><div id="f-list"></div><button id="f-x" class="ghost">Cancel</button></div></div><div id="mm" hidden></div><div id="rpk" hidden></div><div id="toast" hidden></div>
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {getAuth} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -136,7 +153,7 @@ const app=initializeApp(firebaseConfig);
 export const auth=getAuth(app),db=getFirestore(app),rtdb=getDatabase(app);
 
 import {GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import {doc,getDoc,getDocs,setDoc,addDoc,updateDoc,deleteDoc,runTransaction,serverTimestamp,collection,query,where,orderBy,limit,onSnapshot,arrayUnion,startAt,endAt} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {doc,getDoc,getDocs,setDoc,addDoc,updateDoc,deleteDoc,runTransaction,serverTimestamp,collection,query,where,orderBy,limit,onSnapshot,arrayUnion,startAt,endAt,deleteField} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import {ref,onValue,push,set,remove,update,get,onChildAdded,onChildRemoved,onDisconnect,serverTimestamp as rts} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 const $=id=>document.getElementById(id);
 const avatar=s=>`https://api.dicebear.com/7.x/thumbs/svg?seed=${encodeURIComponent(s)}`;
@@ -196,26 +213,42 @@ let t;$("q").oninput=e=>{clearTimeout(t);t=setTimeout(async()=>{
 
 async function openChat(u){peer=u;fillRp(u);
  const cid=[me.uid,u.uid].sort().join("_");activeCid=cid;unsub.forEach(f=>f());unsub=[];
+ replying=null;renderReply();$("msgs").innerHTML="";
  $("app").classList.add("chatting");$("back").style.display="";$("back").onclick=()=>$("app").classList.remove("chatting");
  $("h-av").src=u.photoURL;$("h-av").hidden=false;$("h-name").textContent=u.nickname;$("send").hidden=blocked.has(u.uid);syncBlockBtns();
  try{await setDoc(doc(db,"conversations",cid),{participants:[me.uid,u.uid]},{merge:true})}catch(e){}
  pin=null;renderPin();unsub.push(onSnapshot(doc(db,"conversations",cid),s=>{pin=s.data()?.pinned||null;renderPin()},()=>{}));ps={};unsub.push(onValue(ref(rtdb,`status/${u.uid}/connections`),s=>{ps.on=s.exists();renderSeen()},()=>{ps.on="hidden";renderSeen()}));unsub.push(onValue(ref(rtdb,`status/${u.uid}/lastSeen`),s=>{ps.ls=s.val();renderSeen()},()=>{ps.ls="hidden";renderSeen()}));
  unsub.push(onValue(ref(rtdb,`typing/${cid}/${u.uid}`),s=>$("typing").textContent=s.val()?u.nickname+" is typing…":""));
  unsub.push(onSnapshot(query(collection(db,"conversations",cid,"messages"),orderBy("createdAt","desc"),limit(50)),snap=>{
-  const box=$("msgs");box.innerHTML="";
+  const box=$("msgs"),st0=box.scrollTop,nb=box.scrollHeight-box.scrollTop-box.clientHeight<120;box.innerHTML="";
+  const ids=new Set(snap.docs.map(x=>x.id)),full=snap.size<50;
   snap.docs.reverse().forEach(d=>{const m=d.data(),mine=m.from===me.uid,el=document.createElement("div");if((m.deletedFor||[]).includes(me.uid))return;
    el.className="m"+(mine?" mine":"");el.textContent=(m.fwd?"↪ Forwarded\n":"")+m.text;
+   if(m.replyTo){const q=document.createElement("div"),rp=m.replyPreview||{},gone=full&&!ids.has(m.replyTo),qb=document.createElement("b"),qt=document.createElement("span");
+    q.className="q"+(gone?" gone":"");qb.textContent=rp.name||"";qt.textContent=gone?"Original message deleted":(rp.text||"");q.append(qb,qt);
+    q.onclick=ev=>{ev.stopPropagation();const tg=gone?null:$("msgs").querySelector('[data-id="'+m.replyTo+'"]');
+     if(tg){tg.scrollIntoView({behavior:"smooth",block:"center"});tg.classList.remove("hl");void tg.offsetWidth;tg.classList.add("hl")}};el.prepend(q)}
    const s=document.createElement("small"),tm=m.createdAt?.toDate().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})||"…";
    s.textContent=tm+(mine?(m.seenBy.length>1?" ✓✓ Seen":" ✓ Sent"):"");el.append(s);
-   const x=document.createElement("a");x.textContent="⋮";x.style.cssText="cursor:pointer;font-size:1.4rem;line-height:1;color:var(--mut);padding:0 .25rem;user-select:none";x.onclick=ev=>{ev.stopPropagation();msgMenu(x,d,m,mine)};
+   el.onclick=ev=>{ev.stopPropagation();if(String(getSelection()))return;msgMenu(el,d,m,mine,ev)};
+   const x=document.createElement("a");x.textContent="⋮";x.title="More";x.onclick=ev=>{ev.stopPropagation();msgMenu(x,d,m,mine)};
+   const rb=document.createElement("a");rb.textContent="☺";rb.title="React";rb.onclick=ev=>{ev.stopPropagation();picker(rb,d,m)};
+   const ac=document.createElement("div");ac.className="acts";mine?ac.append(rb,x):ac.append(x,rb);
    if(!mine&&priv.readReceipts&&!m.seenBy.includes(me.uid))updateDoc(d.ref,{seenBy:arrayUnion(me.uid)}).catch(()=>{});
-   const w=document.createElement("div");w.className="mr"+(mine?" mine":"");mine?w.append(x,el):w.append(el,x);box.append(w)});box.scrollTop=box.scrollHeight},e=>toast("Cannot load messages: "+e.code)))}
+   const col=document.createElement("div");col.className="col";col.append(el);
+   const g={};Object.entries(m.reactions||{}).forEach(([u,e])=>(g[e]=g[e]||[]).push(u));
+   if(Object.keys(g).length){const rx=document.createElement("div");rx.className="rxs";
+    Object.entries(g).forEach(([e,us])=>{const c=document.createElement("button");c.className="rx"+(us.includes(me.uid)?" on":"");c.textContent=e+" "+us.length;
+     c.title=us.map(u=>u===me.uid?"You":peer&&peer.uid===u?peer.nickname:"User").join(", ");c.onclick=ev=>{ev.stopPropagation();react(d,m,e)};rx.append(c)});col.append(rx)}
+   const w=document.createElement("div");w.className="mr"+(mine?" mine":"");w.dataset.id=d.id;mine?w.append(ac,col):w.append(col,ac);box.append(w)});box.scrollTop=nb?box.scrollHeight:st0},e=>toast("Cannot load messages: "+e.code)))}
 
 let tt;$("text").oninput=()=>{if(!activeCid)return;const r=ref(rtdb,`typing/${activeCid}/${me.uid}`);
  set(r,true);clearTimeout(tt);tt=setTimeout(()=>remove(r),2000)};
 $("send").onsubmit=async e=>{e.preventDefault();const text=$("text").value.trim();if(!text||!activeCid)return;
  if(!navigator.onLine)return toast("You are offline.");$("text").value="";
- try{await addDoc(collection(db,"conversations",activeCid,"messages"),{from:me.uid,text,createdAt:serverTimestamp(),seenBy:[me.uid]});
+ const rep=replying,extra=rep?{replyTo:rep.id,replyPreview:{name:rep.name,text:rep.text,from:rep.from}}:{};
+ try{await addDoc(collection(db,"conversations",activeCid,"messages"),{from:me.uid,text,createdAt:serverTimestamp(),seenBy:[me.uid],...extra});
+  replying=null;renderReply();
   await updateDoc(doc(db,"conversations",activeCid),{lastMessage:text.slice(0,80),updatedAt:serverTimestamp()})}
  catch(err){$("text").value=text;toast("Message failed to send: "+err.code)}};
 
@@ -386,18 +419,32 @@ $("rf").onsubmit=async e=>{e.preventDefault();if(!confirm(`Report ${peer.nicknam
   $("rm").hidden=true;toast("Report submitted. Thank you.",1)}
  catch(x){$("r-err").textContent=x.code==="permission-denied"?"You have already reported this user.":"Could not submit: "+(x.code||x.message)}};
 
-/* ===== message menu: pin, forward, delete ===== */
-let pin=null,convsData=[];
+/* ===== message menu: reply, react, copy, pin, forward, delete ===== */
+let pin=null,convsData=[],replying=null;
+const EMO=["❤️","😂","😮","😢","👍","👎","🔥","🎉"];
 function renderPin(){$("pinbar").hidden=!pin;$("pin-text").textContent=pin?.text||""}
-function msgMenu(btn,d,m,mine){const mm=$("mm");mm.innerHTML="";const cref=doc(db,"conversations",activeCid),pinned=pin?.id===d.id;
+function renderReply(){$("rbar").hidden=!replying;if(replying){$("rb-name").textContent="Replying to "+replying.name;$("rb-text").textContent=replying.text}}
+$("rb-x").onclick=()=>{replying=null;renderReply()};
+/* one reaction per user: reactions = {uid: emoji}; same emoji again removes it */
+function react(d,m,e){const cur=(m.reactions||{})[me.uid];
+ updateDoc(d.ref,{["reactions."+me.uid]:cur===e?deleteField():e}).catch(x=>toast("Reaction failed: "+x.code))}
+function picker(btn,d,m){const p=$("rpk");$("mm").hidden=true;p.innerHTML="";const cur=(m.reactions||{})[me.uid];
+ EMO.forEach(e=>{const b=document.createElement("button");b.textContent=e;if(e===cur)b.className="sel";b.onclick=()=>{p.hidden=true;react(d,m,e)};p.append(b)});
+ p.hidden=false;const r=btn.getBoundingClientRect(),h=p.offsetHeight;
+ p.style.top=(r.top-h-6<8?Math.min(r.bottom+6,innerHeight-h-8):r.top-h-6)+"px";
+ p.style.left=Math.max(8,Math.min(r.left,innerWidth-p.offsetWidth-8))+"px"}
+function msgMenu(btn,d,m,mine,ev){const mm=$("mm");$("rpk").hidden=true;mm.innerHTML="";const cref=doc(db,"conversations",activeCid),pinned=pin?.id===d.id;
  const add=(t,f)=>{const b=document.createElement("button");b.textContent=t;b.onclick=()=>{mm.hidden=true;f()};mm.append(b)};
+ add("Reply",()=>{replying={id:d.id,from:m.from,name:mine?me.nickname:(peer?.nickname||"User"),text:(m.text||"").slice(0,100)};renderReply();$("text").focus()});
+ add("React",()=>setTimeout(()=>picker(btn,d,m),0));
+ add("Copy Message",()=>navigator.clipboard?.writeText(m.text).then(()=>toast("Copied.",1),()=>toast("Could not copy.")));
  add(pinned?"Unpin":"Pin",()=>updateDoc(cref,{pinned:pinned?null:{id:d.id,text:m.text.slice(0,120),by:me.uid}}).catch(e=>toast("Pin failed: "+e.code)));
  add("Forward",()=>fwd(m.text));
  add("Delete for me",()=>confirm("Delete this message for you only?")&&updateDoc(d.ref,{deletedFor:arrayUnion(me.uid)}).catch(e=>toast("Delete failed: "+e.code)));
  if(mine)add("Delete for everyone",async()=>{if(!confirm("Delete for everyone? This can't be undone."))return;
   try{await deleteDoc(d.ref);if(pinned)await updateDoc(cref,{pinned:null})}catch(e){toast("Delete failed: "+e.code)}});
- const r=btn.getBoundingClientRect();mm.hidden=false;mm.style.top=Math.max(8,Math.min(r.bottom+4,innerHeight-mm.offsetHeight-8))+"px";mm.style.left=Math.max(8,Math.min(r.left-120,innerWidth-mm.offsetWidth-8))+"px"}
-document.addEventListener("click",()=>{$("mm").hidden=true});
+ const r=btn.getBoundingClientRect(),px=ev?ev.clientX:r.left;mm.hidden=false;mm.style.top=Math.max(8,Math.min((ev?ev.clientY:r.bottom)+4,innerHeight-mm.offsetHeight-8))+"px";mm.style.left=Math.max(8,Math.min(px-20,innerWidth-mm.offsetWidth-8))+"px"}
+document.addEventListener("click",()=>{$("mm").hidden=true;$("rpk").hidden=true});
 $("pin-x").onclick=()=>activeCid&&updateDoc(doc(db,"conversations",activeCid),{pinned:null}).catch(e=>toast("Unpin failed: "+e.code));
 $("f-x").onclick=()=>$("fm").hidden=true;
 function fwd(text){const l=$("f-list");l.innerHTML=convsData.length?"":'<i class="soon">No conversations to forward to.</i>';
