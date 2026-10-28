@@ -1,292 +1,214 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ARA — A New Way to Connect</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ARA – A New Way to Connect.</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #090B13;
-    --bg-2: #141827;
-    --primary: #7767FF;
-    --accent: #45D9F5;
-    --success: #38D996;
-    --text: #F5F6FF;
-    --muted: #8A8FA8;
-    --radius: 16px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body {
-    height: 100%;
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Manrope', system-ui, sans-serif;
-    -webkit-font-smoothing: antialiased;
-  }
-  body {
-    display: grid;
-    place-items: center;
-    overflow: hidden;
-    position: relative;
-  }
-  /* Animated aurora background */
-  .aurora {
-    position: fixed;
-    inset: -20%;
-    background:
-      radial-gradient(40% 30% at 20% 20%, rgba(119,103,255,0.35), transparent 60%),
-      radial-gradient(35% 30% at 80% 30%, rgba(69,217,245,0.25), transparent 60%),
-      radial-gradient(45% 35% at 50% 85%, rgba(119,103,255,0.22), transparent 60%);
-    filter: blur(40px);
-    animation: drift 18s ease-in-out infinite alternate;
-    z-index: 0;
-  }
-  @keyframes drift {
-    0%   { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(-3%, 2%) scale(1.08); }
-  }
-
-  .card {
-    position: relative;
-    z-index: 1;
-    width: min(420px, 92vw);
-    background: linear-gradient(180deg, rgba(20,24,39,0.92), rgba(9,11,19,0.92));
-    border: 1px solid rgba(119,103,255,0.18);
-    border-radius: 24px;
-    padding: 40px 32px 32px;
-    box-shadow:
-      0 30px 80px rgba(0,0,0,0.55),
-      inset 0 1px 0 rgba(255,255,255,0.04);
-    backdrop-filter: blur(20px);
-    animation: rise 0.7s cubic-bezier(.2,.9,.3,1) both;
-  }
-  @keyframes rise {
-    from { opacity: 0; transform: translateY(16px) scale(0.98); }
-    to   { opacity: 1; transform: translateY(0) scale(1); }
-  }
-
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    justify-content: center;
-    margin-bottom: 8px;
-  }
-  .logo-mark {
-    width: 44px; height: 44px;
-    border-radius: 12px;
-    background: conic-gradient(from 220deg, var(--primary), var(--accent), var(--primary));
-    display: grid; place-items: center;
-    font-weight: 800; font-size: 20px;
-    color: #0B0D17;
-    box-shadow: 0 8px 30px rgba(119,103,255,0.55);
-  }
-  .logo-text {
-    font-size: 28px; font-weight: 800; letter-spacing: 0.5px;
-    background: linear-gradient(90deg, var(--text), var(--accent));
-    -webkit-background-clip: text; background-clip: text;
-    color: transparent;
-  }
-  .tagline {
-    text-align: center;
-    color: var(--muted);
-    font-size: 14px;
-    margin-bottom: 32px;
-  }
-
-  .welcome {
-    text-align: center;
-    font-size: 22px;
-    font-weight: 700;
-    margin-bottom: 6px;
-  }
-  .welcome-sub {
-    text-align: center;
-    color: var(--muted);
-    font-size: 14px;
-    margin-bottom: 28px;
-  }
-
-  .btn-google {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    padding: 14px 18px;
-    border-radius: var(--radius);
-    border: 1px solid rgba(255,255,255,0.08);
-    background: linear-gradient(180deg, #1B2033, #151928);
-    color: var(--text);
-    font-family: inherit;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-  }
-  .btn-google:hover:not(:disabled) {
-    transform: translateY(-1px);
-    border-color: rgba(119,103,255,0.5);
-    box-shadow: 0 10px 30px rgba(119,103,255,0.25);
-  }
-  .btn-google:active:not(:disabled) { transform: translateY(0); }
-  .btn-google:disabled { opacity: 0.6; cursor: not-allowed; }
-
-  .btn-google svg { width: 20px; height: 20px; flex-shrink: 0; }
-
-  .spinner {
-    width: 18px; height: 18px;
-    border: 2px solid rgba(255,255,255,0.25);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    display: none;
-  }
-  .btn-google.loading .spinner { display: inline-block; }
-  .btn-google.loading .g-icon { display: none; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .error {
-    margin-top: 16px;
-    padding: 10px 12px;
-    border-radius: 10px;
-    background: rgba(255,80,80,0.1);
-    border: 1px solid rgba(255,80,80,0.3);
-    color: #FF8080;
-    font-size: 13px;
-    display: none;
-  }
-  .error.show { display: block; }
-
-  .footer-note {
-    margin-top: 28px;
-    text-align: center;
-    font-size: 12px;
-    color: var(--muted);
-    line-height: 1.6;
-  }
-  .footer-note a { color: var(--accent); text-decoration: none; }
-</style>
-</head>
-<body>
-  <div class="aurora"></div>
-
-  <main class="card">
-    <div class="logo">
-      <div class="logo-mark">A</div>
-      <div class="logo-text">ARA</div>
-    </div>
-    <p class="tagline">A New Way to Connect.</p>
-
-    <h1 class="welcome">Welcome back</h1>
-    <p class="welcome-sub">Sign in to continue to your conversations.</p>
-
-    <button id="googleBtn" class="btn-google" type="button">
-      <span class="spinner" aria-hidden="true"></span>
-      <svg class="g-icon" viewBox="0 0 48 48" aria-hidden="true">
-        <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.5-.4-3.5z"/>
-        <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/>
-        <path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.3 35.1 26.8 36 24 36c-5.2 0-9.6-3.1-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/>
-        <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.2 4.2-4.1 5.6l6.2 5.2C41 35.6 44 30.3 44 24c0-1.3-.1-2.5-.4-3.5z"/>
-      </svg>
-      <span class="label">Continue with Google</span>
-    </button>
-
-    <div id="errorBox" class="error" role="alert"></div>
-
-    <p class="footer-note">
-      By continuing you agree to ARA's<br>
-      <a href="#">Terms</a> &amp; <a href="#">Privacy Policy</a>.
-    </p>
-  </main>
-
+:root{--bg:#090B13;--bg2:#141827;--pri:#7767FF;--acc:#45D9F5;--ok:#38D996;--tx:#F5F6FF}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;height:100dvh;background:radial-gradient(circle at 20% 0,#1a1740,var(--bg) 55%);color:var(--tx);font-family:Manrope,Inter,system-ui,sans-serif}
+button,input{font:inherit}input{background:var(--bg2);border:1px solid #2a3050;color:var(--tx);padding:.7rem .9rem;border-radius:12px;width:100%}
+button{background:linear-gradient(135deg,var(--pri),var(--acc));border:0;color:#fff;padding:.7rem 1.1rem;border-radius:12px;cursor:pointer;font-weight:700}
+.center{height:100%;display:grid;place-content:center;gap:1rem;text-align:center;max-width:340px;margin:auto}
+.logo{font-size:3rem;font-weight:800;letter-spacing:.3em;background:linear-gradient(135deg,var(--pri),var(--acc));-webkit-background-clip:text;color:transparent}
+#app{display:grid;grid-template-columns:320px 1fr;height:100%}
+aside{background:var(--bg2);padding:1rem;overflow:auto;display:flex;flex-direction:column;gap:.6rem}
+.row{display:flex;gap:.6rem;align-items:center;padding:.6rem;border-radius:12px;cursor:pointer}.row:hover{background:#1e2440}
+.row img{width:40px;height:40px;border-radius:50%;background:#222}
+.dot{width:10px;height:10px;border-radius:50%;background:#555;margin-left:auto}.dot.on{background:var(--ok)}
+main{display:flex;flex-direction:column;min-width:0}
+#msgs{flex:1;overflow:auto;padding:1rem;display:flex;flex-direction:column;gap:.4rem}
+.m{max-width:70%;padding:.55rem .8rem;border-radius:14px;background:var(--bg2);word-break:break-word}
+.m.mine{align-self:flex-end;background:var(--pri)}.m small{display:block;opacity:.6;font-size:.7rem}
+form.send{display:flex;gap:.5rem;padding:.8rem}#typing{padding:0 1rem;height:1.2rem;font-size:.8rem;color:var(--acc)}
+#toast{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);background:#c0392b;padding:.7rem 1rem;border-radius:12px}
+.err{color:#ff7b7b}.soon{opacity:.5}
+@media(max-width:700px){#app{grid-template-columns:1fr}#app.chatting aside{display:none}#app:not(.chatting) main{display:none}}
+#callui{position:fixed;inset:0;background:#000;z-index:9}#rv{width:100%;height:100%;object-fit:cover}
+#lv{position:absolute;right:1rem;top:1rem;width:140px;border-radius:12px;background:#222}
+#cinfo{position:absolute;top:1rem;left:1rem;display:flex;gap:.6rem;text-shadow:0 0 6px #000}
+#cctl{position:absolute;bottom:1.5rem;left:0;right:0;display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+#incoming{position:fixed;top:1rem;left:50%;transform:translateX(-50%);background:var(--bg2);padding:1rem;border-radius:16px;z-index:10;display:grid;gap:.6rem;border:1px solid var(--pri)}
+.bad{background:#c0392b}
+</style></head><body>
+<section id="login" class="center"><div class="logo">ARA</div><p>A New Way to Connect.</p>
+<button id="gbtn">Continue with Google</button></section>
+<section id="setup" class="center" hidden><div class="logo">ARA</div><p>Set up your profile</p>
+<input id="su-user" placeholder="Unique username (a-z, 0-9, _)" maxlength="20">
+<input id="su-nick" placeholder="Nickname" maxlength="30">
+<button id="su-go">Create profile</button><div id="su-err" class="err"></div></section>
+<div id="app" hidden>
+<aside><div class="row me"><img id="me-av"><b id="me-name"></b><button id="out" style="margin-left:auto;padding:.4rem .7rem">Logout</button></div>
+<input id="q" placeholder="Search username or nickname"><div id="results"></div>
+<b>Conversations</b><div id="convs"><i class="soon">No conversations yet</i></div>
+<small class="soon">Voice/video calls &amp; uploads: coming soon</small></aside>
+<main><div id="head" class="row"><button id="back" style="display:none">←</button><img id="h-av" hidden width="40"><b id="h-name">Select a conversation</b><span id="h-dot" class="dot"></span><button id="call-a" title="Voice call">📞</button><button id="call-v" title="Video call">🎥</button></div>
+<div id="msgs"></div><div id="typing"></div>
+<form class="send" id="send" hidden><input id="text" placeholder="Type a message" autocomplete="off"><button>Send</button></form></main></div>
+<div id="incoming" hidden><b id="inc-name"></b><div style="display:flex;gap:.5rem"><button id="acc">Accept</button><button id="rej" class="bad">Reject</button></div></div>
+<div id="callui" hidden><video id="rv" autoplay playsinline></video><video id="lv" autoplay playsinline muted></video>
+<div id="cinfo"><b id="cname"></b><span id="cstat"></span><span id="cdur"></span></div>
+<div id="cctl"><button id="c-mute">Mute</button><button id="c-cam">Camera off</button><button id="c-fs">Fullscreen</button><button id="c-pip">PiP</button><button id="c-end" class="bad">End</button></div></div>
+<div id="toast" hidden></div>
 <script type="module">
-  // ============================================================
-  // IMPORTANT: Paste your real Firebase Web API key below.
-  // Get it from: Firebase Console → Project Settings → Your apps
-  // → ARA → SDK setup and configuration → apiKey
-  // The login button will NOT work until this is set.
-  // ============================================================
-  const firebaseConfig = {
-    apiKey: "PASTE_YOUR_ACTUAL_API_KEY_HERE",
-    authDomain: "my-fb-11e21.firebaseapp.com",
-    databaseURL: "https://my-fb-11e21-default-rtdb.firebaseio.com",
-    projectId: "my-fb-11e21",
-    storageBucket: "my-fb-11e21.firebasestorage.app",
-    messagingSenderId: "247599477955",
-    appId: "1:247599477955:web:41e1d732dd537c97441e76"
-  };
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getAuth} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {getFirestore} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {getDatabase} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+export const firebaseConfig={
+  apiKey:"PASTE_YOUR_FIREBASE_WEB_API_KEY_HERE",
+  authDomain:"my-fb-11e21.firebaseapp.com",
+  databaseURL:"https://my-fb-11e21-default-rtdb.firebaseio.com",
+  projectId:"my-fb-11e21",
+  storageBucket:"my-fb-11e21.firebasestorage.app",
+  messagingSenderId:"247599477955",
+  appId:"1:247599477955:web:41e1d732dd537c97441e76",
+  measurementId:"G-NQCNECDYWS"
+};
+const app=initializeApp(firebaseConfig);
+export const auth=getAuth(app),db=getFirestore(app),rtdb=getDatabase(app);
 
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import {
-    getAuth,
-    GoogleAuthProvider,
-    signInWithPopup,
-    onAuthStateChanged,
-    setPersistence,
-    browserLocalPersistence
-  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import {GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {doc,getDoc,getDocs,setDoc,addDoc,updateDoc,deleteDoc,runTransaction,serverTimestamp,collection,query,where,orderBy,limit,onSnapshot,arrayUnion,startAt,endAt} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {ref,onValue,push,set,remove,update,get,onChildAdded,onDisconnect,serverTimestamp as rts} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+const $=id=>document.getElementById(id);
+const avatar=s=>`https://api.dicebear.com/7.x/thumbs/svg?seed=${encodeURIComponent(s)}`;
+const show=id=>["login","setup","app"].forEach(s=>$(s).hidden=s!==id);
+const toast=m=>{$("toast").textContent=m;$("toast").hidden=false;setTimeout(()=>$("toast").hidden=true,4500)};
+let me,activeCid,unsub=[],cache={},started=false;
+const getUser=async uid=>cache[uid]||(cache[uid]=(await getDoc(doc(db,"users",uid))).data());
 
-  const btn      = document.getElementById("googleBtn");
-  const label    = btn.querySelector(".label");
-  const errorBox = document.getElementById("errorBox");
+$("gbtn").onclick=async()=>{try{await signInWithPopup(auth,new GoogleAuthProvider())}
+ catch(e){toast(e.code==="auth/popup-closed-by-user"?"Login cancelled.":"Google login failed: "+e.code)}};
+$("out").onclick=()=>signOut(auth);
+onAuthStateChanged(auth,async u=>{
+ if(!u){me=null;started=false;show("login");return}
+ try{const s=await getDoc(doc(db,"users",u.uid));
+  if(!s.exists()){show("setup");return}
+  me=s.data();startApp()}
+ catch(e){toast("Database unavailable or rules not deployed ("+e.code+").")}});
 
-  function showError(msg) {
-    errorBox.textContent = msg;
-    errorBox.classList.add("show");
-  }
-  function clearError() {
-    errorBox.classList.remove("show");
-    errorBox.textContent = "";
-  }
-  function setLoading(on) {
-    btn.disabled = on;
-    btn.classList.toggle("loading", on);
-    label.textContent = on ? "Signing in…" : "Continue with Google";
-  }
+$("su-go").onclick=async()=>{
+ const name=$("su-user").value.trim().toLowerCase(),nick=$("su-nick").value.trim(),err=$("su-err");err.textContent="";
+ if(!/^[a-z0-9_]{3,20}$/.test(name))return err.textContent="Username: 3-20 chars, a-z 0-9 _";
+ if(!nick)return err.textContent="Nickname required";
+ const uid=auth.currentUser.uid,p={uid,username:name,usernameLower:name,nickname:nick,nicknameLower:nick.toLowerCase(),
+  photoURL:avatar(name),coverURL:"",bio:"",createdAt:serverTimestamp()};
+ try{await runTransaction(db,async tx=>{const r=doc(db,"usernames",name);
+   if((await tx.get(r)).exists())throw new Error("taken");
+   tx.set(r,{uid});tx.set(doc(db,"users",uid),p)});
+  me=p;startApp()}
+ catch(e){err.textContent=e.message==="taken"?"Username already taken.":"Could not save profile: "+(e.code||e.message)}};
 
-  // If the API key isn't set, fail fast with a clear message.
-  if (!firebaseConfig.apiKey || firebaseConfig.apiKey.includes("PASTE_YOUR")) {
-    showError("Firebase API key is missing. Open this file and paste your real API key into firebaseConfig.apiKey.");
-    btn.disabled = true;
-  } else {
-    const app      = initializeApp(firebaseConfig);
-    const auth     = getAuth(app);
-    const provider = new GoogleAuthProvider();
+function startApp(){
+ if(started)return;started=true;show("app");listenIncoming();
+ $("me-av").src=me.photoURL;$("me-name").textContent=me.nickname;
+ onValue(ref(rtdb,".info/connected"),s=>{if(!s.val())return;const conn=push(ref(rtdb,`status/${me.uid}/connections`));
+  onDisconnect(conn).remove();set(conn,true);onDisconnect(ref(rtdb,`status/${me.uid}/lastSeen`)).set(rts())});
+ onSnapshot(query(collection(db,"conversations"),where("participants","array-contains",me.uid)),async snap=>{
+  const list=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.updatedAt?.seconds||0)-(a.updatedAt?.seconds||0));
+  const box=$("convs");box.innerHTML=list.length?"":'<i class="soon">No conversations yet</i>';
+  for(const c of list){const o=c.participants.find(x=>x!==me.uid),u=await getUser(o);if(!u)continue;
+   const r=row(u);r.querySelector("small").textContent=c.lastMessage||"@"+u.username;box.append(r)}},
+  e=>toast("Cannot load conversations: "+e.code))}
 
-    setPersistence(auth, browserLocalPersistence).catch(() => {});
+function row(u){const r=document.createElement("div");r.className="row";
+ r.innerHTML=`<img src="${u.photoURL}"><div><b></b><br><small></small></div><span class="dot"></span>`;
+ r.querySelector("b").textContent=u.nickname;r.querySelector("small").textContent="@"+u.username;
+ onValue(ref(rtdb,`status/${u.uid}/connections`),s=>r.querySelector(".dot").classList.toggle("on",s.exists()));
+ r.onclick=()=>openChat(u);return r}
 
-    // If already signed in, redirect straight to dashboard.
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        window.location.replace("dashboard.html");
-      }
-    });
+let t;$("q").oninput=e=>{clearTimeout(t);t=setTimeout(async()=>{
+ const q=e.target.value.trim().toLowerCase(),box=$("results");box.innerHTML="";if(!q)return;
+ try{const[a,b]=await Promise.all([
+  getDocs(query(collection(db,"users"),where("usernameLower","==",q))),
+  getDocs(query(collection(db,"users"),orderBy("nicknameLower"),startAt(q),endAt(q+"\uf8ff"),limit(10)))]);
+  const seen=new Set();[...a.docs,...b.docs].forEach(d=>{const u=d.data();
+   if(u.uid===me.uid||seen.has(u.uid))return;seen.add(u.uid);cache[u.uid]=u;box.append(row(u))});
+  if(!seen.size)box.innerHTML='<i class="soon">No users found</i>'}catch(e){toast("Search failed: "+e.code)}},300)};
 
-    btn.addEventListener("click", async () => {
-      clearError();
-      setLoading(true);
-      try {
-        await signInWithPopup(auth, provider);
-        // onAuthStateChanged will handle the redirect.
-      } catch (err) {
-        setLoading(false);
-        const map = {
-          "auth/popup-blocked":          "Your browser blocked the sign-in popup. Allow popups for this site and try again.",
-          "auth/popup-closed-by-user":   "Sign-in was cancelled. Please try again.",
-          "auth/cancelled-popup-request":"Another sign-in is already in progress.",
-          "auth/network-request-failed": "Network error. Check your internet connection.",
-          "auth/unauthorized-domain":    "This domain is not authorized in Firebase. Add it under Authentication → Settings → Authorized domains.",
-          "auth/operation-not-allowed":  "Google sign-in is not enabled in your Firebase project."
-        };
-        showError(map[err.code] || ("Sign-in failed: " + (err.message || err.code)));
-        console.error("Login error:", err);
-      }
-    });
-  }
-</script>
-</body>
-</html>
+async function openChat(u){peer=u;
+ const cid=[me.uid,u.uid].sort().join("_");activeCid=cid;unsub.forEach(f=>f());unsub=[];
+ $("app").classList.add("chatting");$("back").style.display="";$("back").onclick=()=>$("app").classList.remove("chatting");
+ $("h-av").src=u.photoURL;$("h-av").hidden=false;$("h-name").textContent=u.nickname;$("send").hidden=false;
+ try{await setDoc(doc(db,"conversations",cid),{participants:[me.uid,u.uid]},{merge:true})}catch(e){return toast("Cannot open chat: "+e.code)}
+ unsub.push(onValue(ref(rtdb,`status/${u.uid}/connections`),s=>$("h-dot").classList.toggle("on",s.exists())));
+ unsub.push(onValue(ref(rtdb,`typing/${cid}/${u.uid}`),s=>$("typing").textContent=s.val()?u.nickname+" is typing…":""));
+ unsub.push(onSnapshot(query(collection(db,"conversations",cid,"messages"),orderBy("createdAt","desc"),limit(50)),snap=>{
+  const box=$("msgs");box.innerHTML="";
+  snap.docs.reverse().forEach(d=>{const m=d.data(),mine=m.from===me.uid,el=document.createElement("div");
+   el.className="m"+(mine?" mine":"");el.textContent=m.text;
+   const s=document.createElement("small"),tm=m.createdAt?.toDate().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})||"…";
+   s.textContent=tm+(mine?(m.seenBy.length>1?" ✓✓ Seen":" ✓ Sent"):"");el.append(s);
+   if(mine){const x=document.createElement("a");x.textContent=" delete";x.style.cursor="pointer";x.onclick=()=>deleteDoc(d.ref).catch(e=>toast("Delete failed: "+e.code));s.append(x)}
+   if(!mine&&!m.seenBy.includes(me.uid))updateDoc(d.ref,{seenBy:arrayUnion(me.uid)}).catch(()=>{});
+   box.append(el)});box.scrollTop=box.scrollHeight},e=>toast("Cannot load messages: "+e.code)))}
+
+let tt;$("text").oninput=()=>{if(!activeCid)return;const r=ref(rtdb,`typing/${activeCid}/${me.uid}`);
+ set(r,true);clearTimeout(tt);tt=setTimeout(()=>remove(r),2000)};
+$("send").onsubmit=async e=>{e.preventDefault();const text=$("text").value.trim();if(!text||!activeCid)return;
+ if(!navigator.onLine)return toast("You are offline.");$("text").value="";
+ try{await addDoc(collection(db,"conversations",activeCid,"messages"),{from:me.uid,text,createdAt:serverTimestamp(),seenBy:[me.uid]});
+  await updateDoc(doc(db,"conversations",activeCid),{lastMessage:text.slice(0,80),updatedAt:serverTimestamp()})}
+ catch(err){$("text").value=text;toast("Message failed to send: "+err.code)}};
+
+/* ===== WebRTC calls (signaling via Realtime Database) ===== */
+const ICE=[{urls:"stun:stun.l.google.com:19302"}];
+const TURN_ENDPOINT=""; // optional: your backend URL returning {iceServers:[...]} with temporary TURN credentials
+let call=null,inc=null,peer=null;
+async function iceServers(){if(!TURN_ENDPOINT)return ICE;try{const r=await fetch(TURN_ENDPOINT,{headers:{Authorization:"Bearer "+await auth.currentUser.getIdToken()}});return [...ICE,...(await r.json()).iceServers]}catch{return ICE}}
+async function media(video){try{return await navigator.mediaDevices.getUserMedia({audio:true,video})}catch(e){toast(e.name==="NotAllowedError"?"Camera/microphone permission denied.":"Cannot access camera/microphone: "+e.name);return null}}
+function openCallUi(name,st,video){$("callui").hidden=false;$("cname").textContent=name;$("cstat").textContent="connecting…";$("cdur").textContent="00:00";
+ $("lv").srcObject=st;$("lv").hidden=!video;$("c-cam").hidden=!video;$("c-pip").hidden=!video}
+function setupPc(id,side){
+ const pc=new RTCPeerConnection({iceServers:call.ice});call.pc=pc;
+ call.stream.getTracks().forEach(t=>pc.addTrack(t,call.stream));
+ pc.ontrack=e=>{$("rv").srcObject=e.streams[0]};
+ pc.onicecandidate=e=>e.candidate&&push(ref(rtdb,`calls/${id}/ice/${side}`),e.candidate.toJSON());
+ pc.onconnectionstatechange=()=>{const s=pc.connectionState;if(!call)return;$("cstat").textContent=s;
+  if(s==="connected"&&!call.t0){call.t0=Date.now();call.tick=setInterval(()=>{const n=Math.floor((Date.now()-call.t0)/1e3);$("cdur").textContent=String(n/60|0).padStart(2,"0")+":"+String(n%60).padStart(2,"0")},1000)}
+  if(s==="failed")endCall("Connection failed (a TURN server may be needed).",true)};
+ call.unsubs.push(onChildAdded(ref(rtdb,`calls/${id}/ice/${side==="caller"?"callee":"caller"}`),s=>pc.addIceCandidate(s.val()).catch(()=>{})));
+ call.unsubs.push(onValue(ref(rtdb,`calls/${id}/state`),s=>{const v=s.val();
+  if(["rejected","ended","missed"].includes(v))endCall(v==="rejected"?"Call rejected.":v==="missed"?"No answer.":"Call ended.",false)}));
+}
+async function startCall(video){
+ if(!peer)return toast("Open a conversation first.");if(call)return;if(!navigator.onLine)return toast("You are offline.");
+ const st=await media(video?{facingMode:"user"}:false);if(!st)return;
+ const id=push(ref(rtdb,"calls")).key;call={id,video,stream:st,unsubs:[],ice:await iceServers(),role:"caller",other:peer.uid};
+ openCallUi(peer.nickname,st,video);setupPc(id,"caller");const pc=call.pc;
+ await pc.setLocalDescription(await pc.createOffer());
+ try{await set(ref(rtdb,`calls/${id}`),{from:me.uid,to:peer.uid,video,state:"ringing",offer:{type:pc.localDescription.type,sdp:pc.localDescription.sdp}});
+  await set(ref(rtdb,`incoming/${peer.uid}`),{callId:id,from:me.uid,video,name:me.nickname})}
+ catch(e){return endCall("Could not start call: "+e.code,false)}
+ call.unsubs.push(onValue(ref(rtdb,`calls/${id}/answer`),async s=>{const a=s.val();if(a&&!pc.currentRemoteDescription)await pc.setRemoteDescription(a)}));
+ call.to=setTimeout(()=>{if(!call?.t0)update(ref(rtdb,`calls/${id}`),{state:"missed"})},30000)}
+function listenIncoming(){onValue(ref(rtdb,`incoming/${me.uid}`),s=>{const v=s.val();
+ if(!v){$("incoming").hidden=true;inc=null;return}
+ if(call){update(ref(rtdb,`calls/${v.callId}`),{state:"rejected"});return}
+ inc=v;$("inc-name").textContent=`${v.name} is ${v.video?"video":"voice"} calling…`;$("incoming").hidden=false})}
+$("acc").onclick=async()=>{const v=inc;if(!v)return;$("incoming").hidden=true;
+ const c=(await get(ref(rtdb,`calls/${v.callId}`))).val();
+ if(!c||c.state!=="ringing"){remove(ref(rtdb,`incoming/${me.uid}`));return toast("Call is no longer available.")}
+ const st=await media(v.video?{facingMode:"user"}:false);
+ if(!st){update(ref(rtdb,`calls/${v.callId}`),{state:"rejected"});remove(ref(rtdb,`incoming/${me.uid}`));return}
+ call={id:v.callId,video:v.video,stream:st,unsubs:[],ice:await iceServers(),role:"callee",other:v.from};
+ openCallUi(v.name,st,v.video);setupPc(v.callId,"callee");const pc=call.pc;
+ try{await pc.setRemoteDescription(c.offer);await pc.setLocalDescription(await pc.createAnswer());
+  await update(ref(rtdb,`calls/${v.callId}`),{answer:{type:pc.localDescription.type,sdp:pc.localDescription.sdp},state:"active"})}
+ catch(e){endCall("Call setup failed: "+(e.code||e.name),true)}
+ remove(ref(rtdb,`incoming/${me.uid}`))};
+$("rej").onclick=()=>{if(!inc)return;update(ref(rtdb,`calls/${inc.callId}`),{state:"rejected"});remove(ref(rtdb,`incoming/${me.uid}`))};
+function endCall(msg,notify=true){if(!call)return;const c=call;call=null;
+ clearTimeout(c.to);clearInterval(c.tick);c.unsubs.forEach(f=>f());c.pc?.close();c.stream.getTracks().forEach(t=>t.stop());
+ $("rv").srcObject=null;$("lv").srcObject=null;$("callui").hidden=true;
+ if(document.pictureInPictureElement)document.exitPictureInPicture().catch(()=>{});
+ if(notify)update(ref(rtdb,`calls/${c.id}`),{state:"ended"}).catch(()=>{});
+ if(c.role==="caller"){remove(ref(rtdb,`incoming/${c.other}`)).catch(()=>{});setTimeout(()=>remove(ref(rtdb,`calls/${c.id}`)).catch(()=>{}),5000)}
+ if(msg)toast(msg)}
+$("call-a").onclick=()=>startCall(false);$("call-v").onclick=()=>startCall(true);
+$("c-end").onclick=()=>endCall("",true);
+$("c-mute").onclick=e=>{const t=call?.stream.getAudioTracks();t?.forEach(x=>x.enabled=!x.enabled);e.target.textContent=t?.[0]?.enabled?"Mute":"Unmute"};
+$("c-cam").onclick=e=>{const t=call?.stream.getVideoTracks();t?.forEach(x=>x.enabled=!x.enabled);e.target.textContent=t?.[0]?.enabled?"Camera off":"Camera on"};
+$("c-fs").onclick=()=>$("callui").requestFullscreen?.().catch(()=>{});
+$("c-pip").onclick=()=>$("rv").requestPictureInPicture?.().catch(()=>toast("Picture-in-Picture not supported here."));
+
+</script></body></html>
