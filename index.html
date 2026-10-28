@@ -61,6 +61,14 @@ form.send{display:flex;gap:.5rem;padding:.8rem}form.send input{border-radius:99p
 .tile{position:relative;background:#000;border-radius:16px;overflow:hidden;min-height:0}.tile video{width:100%;height:100%;object-fit:cover}
 .tile span{position:absolute;left:.6rem;bottom:.5rem;background:#0008;padding:.1rem .5rem;border-radius:8px;font-size:.8rem}
 #gctl{position:absolute;bottom:1.5rem;left:0;right:0;display:flex;gap:1rem;justify-content:center}
+#sm,#rm{position:fixed;inset:0;background:#0006;display:grid;place-items:center;z-index:11}
+.mod{background:var(--card);padding:1.4rem;border-radius:18px;width:min(92vw,420px);max-height:90vh;overflow:auto;display:grid;gap:.7rem}
+.mod label{display:grid;gap:.25rem;font-weight:600;font-size:.85rem}.mod h3,.mod h4{margin:0}.mod h4{color:var(--pri);margin-top:.5rem}
+select{background:#fff;border:1px solid var(--line);padding:.6rem;border-radius:12px;font:inherit;color:var(--tx)}
+.sw-row{display:flex!important;justify-content:space-between;align-items:center}
+.sw{appearance:none;-webkit-appearance:none;width:46px;height:26px;border-radius:99px;background:#b5bcae;position:relative;cursor:pointer;padding:0;border:0}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s}
+.sw:checked{background:var(--ok)}.sw:checked::after{left:23px}.brow{display:flex;align-items:center;gap:.6rem;justify-content:space-between}
 </style></head><body>
 <section id="boot" class="center"><div class="logo">ARA</div><p class="soon">Loading…</p></section>
 <section id="login" class="center" hidden><div class="logo">ARA</div><p>A New Way to Connect.</p>
@@ -72,22 +80,32 @@ form.send{display:flex;gap:.5rem;padding:.8rem}form.send input{border-radius:99p
 <div id="app" hidden>
 <header id="top"><div class="brand"><span class="lg">A</span><b>ARA</b><span class="pill"><i class="dot on"></i>Online</span></div>
 <nav><a class="act">Chats</a><a id="nav-prof">Profile</a></nav>
-<div class="me"><img id="me-av"><b id="me-name"></b><div id="menu" hidden><button id="menu-prof" class="ghost">Profile</button><button id="out" class="ghost">Logout</button></div></div></header>
+<div class="me"><img id="me-av"><b id="me-name"></b><div id="menu" hidden><button id="menu-prof" class="ghost">Profile</button><button id="menu-priv" class="ghost">Privacy &amp; Security</button><button id="out" class="ghost">Logout</button></div></div></header>
 <div id="cols">
 <aside><button id="g-new" class="ghost">👥 Group call (create / join)</button><input id="q" placeholder="Search username or nickname…"><div id="results"></div><h4>Conversations</h4><div id="convs"><i class="soon">No conversations yet</i></div></aside>
-<main><div id="head"><button id="back" class="ic">←</button><img id="h-av" hidden><b id="h-name">Select a conversation</b><span id="h-dot" class="dot"></span><span class="sp"></span><button id="call-a" class="ic" title="Voice call">📞</button><button id="call-v" class="ic" title="Video call">🎥</button></div>
+<main><div id="head"><button id="back" class="ic">←</button><img id="h-av" hidden><div><b id="h-name">Select a conversation</b><br><small id="h-seen" class="soon"></small></div><span id="h-dot" class="dot"></span><span class="sp"></span><button id="h-block" class="ic" title="Block user">⛔</button><button id="call-a" class="ic" title="Voice call">📞</button><button id="call-v" class="ic" title="Video call">🎥</button></div>
 <div id="msgs"><div class="empty">💬<h3>Start a conversation</h3><p>Search a username, say hi, or make a call.</p></div></div><div id="typing"></div>
 <form class="send" id="send" hidden><input id="text" placeholder="Type a message…" autocomplete="off"><button>Send</button></form></main>
 <section id="rp"><div id="rp-empty" class="soon">Select a conversation to see the profile.</div>
 <div id="rp-body" hidden><img id="rp-av"><h3 id="rp-name"></h3><small id="rp-user" class="soon"></small>
 <div class="two"><button id="rp-a" class="ghost">📞 Voice Call</button><button id="rp-v" class="ghost">🎥 Video Call</button></div>
 <div class="card"><b>About</b><p id="rp-bio"></p></div>
-<div class="card"><b>Settings</b><p class="soon">Block user, clear chat, report and media uploads: coming soon.</p></div></div></section>
+<div class="card"><b>Safety</b><div class="two"><button id="rp-block" class="ghost">⛔ Block</button><button id="rp-report" class="ghost">🚩 Report</button></div></div></div></section>
 </div></div>
 <div id="pm" hidden><form id="pf"><h3>Edit profile</h3>
 <label>Nickname<input id="pf-nick" maxlength="30"></label><label>Username (unique)<input id="pf-user" maxlength="20"></label>
 <label>Bio<input id="pf-bio" maxlength="140"></label><label>Profile photo<img id="pf-prev"><input id="pf-file" type="file" accept="image/*"></label>
 <div id="pf-err" class="err"></div><div class="two"><button>Save</button><button type="button" id="pf-x" class="ghost">Cancel</button></div></form></div>
+<div id="sm" hidden><div class="mod"><h3>Privacy &amp; Security</h3><h4>Privacy</h4>
+<label>Online status<select id="s-on"><option value="everyone">Everyone</option><option value="nobody">Nobody</option></select></label>
+<label>Last seen<select id="s-ls"><option value="everyone">Everyone</option><option value="nobody">Nobody</option></select></label>
+<label class="sw-row">Read receipts<input type="checkbox" id="s-rr" class="sw"></label>
+<h4>Safety: blocked users</h4><div id="s-blocked"></div>
+<h4>Security &amp; account</h4><p class="soon">Login sessions, chat lock, deactivate and delete account: not available yet (they need a backend).</p>
+<button id="s-x" class="ghost">Close</button></div></div>
+<div id="rm" hidden><form id="rf" class="mod"><h3>Report user</h3><label>Reason<select id="r-reason"><option value="Spam">Spam</option><option value="Harassment">Harassment</option><option value="Fake Account">Fake Account</option><option value="Inappropriate Content">Inappropriate Content</option><option value="Impersonation">Impersonation</option><option value="Other">Other</option></select></label>
+<label>Description (optional)<input id="r-desc" maxlength="500"></label><div id="r-err" class="err"></div>
+<div class="two"><button>Submit report</button><button type="button" id="r-x" class="ghost">Cancel</button></div></form></div>
 <div id="incoming" hidden><b id="inc-name"></b><div style="display:flex;gap:.5rem"><button id="acc">Accept</button><button id="rej" class="bad">Reject</button></div></div>
 <div id="callui" hidden><video id="rv" autoplay playsinline></video><video id="lv" autoplay playsinline muted></video>
 <div id="cinfo"><b id="cname"></b><small><span id="ctype"></span> <span id="cdur"></span> · <span id="cstat"></span></small></div>
@@ -119,7 +137,7 @@ import {ref,onValue,push,set,remove,update,get,onChildAdded,onChildRemoved,onDis
 const $=id=>document.getElementById(id);
 const avatar=s=>`https://api.dicebear.com/7.x/thumbs/svg?seed=${encodeURIComponent(s)}`;
 const show=id=>["boot","login","setup","app"].forEach(s=>$(s).hidden=s!==id);
-const toast=m=>{$("toast").textContent=m;$("toast").hidden=false;setTimeout(()=>$("toast").hidden=true,4500)};
+const toast=(m,ok)=>{$("toast").style.background=ok?"#3d8b37":"";$("toast").textContent=m;$("toast").hidden=false;setTimeout(()=>$("toast").hidden=true,4500)};
 let me,activeCid,unsub=[],cache={},started=false;
 const getUser=async uid=>cache[uid]||(cache[uid]=(await getDoc(doc(db,"users",uid))).data());
 
@@ -146,7 +164,7 @@ $("su-go").onclick=async()=>{
  catch(e){err.textContent=e.message==="taken"?"Username already taken.":"Could not save profile: "+(e.code||e.message)}};
 
 function startApp(){
- if(started)return;started=true;show("app");listenIncoming();
+ if(started)return;started=true;show("app");listenIncoming();initPrivacy();
  $("me-av").src=me.photoURL;$("me-name").textContent=me.nickname;
  onValue(ref(rtdb,".info/connected"),s=>{if(!s.val())return;const conn=push(ref(rtdb,`status/${me.uid}/connections`));
   onDisconnect(conn).remove();set(conn,true);onDisconnect(ref(rtdb,`status/${me.uid}/lastSeen`)).set(rts())});
@@ -160,7 +178,7 @@ function startApp(){
 function row(u){const r=document.createElement("div");r.className="row";
  r.innerHTML=`<img src="${u.photoURL}"><div><b></b><br><small></small></div><span class="dot"></span>`;
  r.querySelector("b").textContent=u.nickname;r.querySelector("small").textContent="@"+u.username;
- onValue(ref(rtdb,`status/${u.uid}/connections`),s=>r.querySelector(".dot").classList.toggle("on",s.exists()));
+ onValue(ref(rtdb,`status/${u.uid}/connections`),s=>r.querySelector(".dot").classList.toggle("on",s.exists()),()=>{});
  r.onclick=()=>openChat(u);return r}
 
 let t;$("q").oninput=e=>{clearTimeout(t);t=setTimeout(async()=>{
@@ -175,9 +193,9 @@ let t;$("q").oninput=e=>{clearTimeout(t);t=setTimeout(async()=>{
 async function openChat(u){peer=u;fillRp(u);
  const cid=[me.uid,u.uid].sort().join("_");activeCid=cid;unsub.forEach(f=>f());unsub=[];
  $("app").classList.add("chatting");$("back").style.display="";$("back").onclick=()=>$("app").classList.remove("chatting");
- $("h-av").src=u.photoURL;$("h-av").hidden=false;$("h-name").textContent=u.nickname;$("send").hidden=false;
- try{await setDoc(doc(db,"conversations",cid),{participants:[me.uid,u.uid]},{merge:true})}catch(e){return toast("Cannot open chat: "+e.code)}
- unsub.push(onValue(ref(rtdb,`status/${u.uid}/connections`),s=>$("h-dot").classList.toggle("on",s.exists())));
+ $("h-av").src=u.photoURL;$("h-av").hidden=false;$("h-name").textContent=u.nickname;$("send").hidden=blocked.has(u.uid);syncBlockBtns();
+ try{await setDoc(doc(db,"conversations",cid),{participants:[me.uid,u.uid]},{merge:true})}catch(e){}
+ ps={};unsub.push(onValue(ref(rtdb,`status/${u.uid}/connections`),s=>{ps.on=s.exists();renderSeen()},()=>{ps.on="hidden";renderSeen()}));unsub.push(onValue(ref(rtdb,`status/${u.uid}/lastSeen`),s=>{ps.ls=s.val();renderSeen()},()=>{ps.ls="hidden";renderSeen()}));
  unsub.push(onValue(ref(rtdb,`typing/${cid}/${u.uid}`),s=>$("typing").textContent=s.val()?u.nickname+" is typing…":""));
  unsub.push(onSnapshot(query(collection(db,"conversations",cid,"messages"),orderBy("createdAt","desc"),limit(50)),snap=>{
   const box=$("msgs");box.innerHTML="";
@@ -186,7 +204,7 @@ async function openChat(u){peer=u;fillRp(u);
    const s=document.createElement("small"),tm=m.createdAt?.toDate().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})||"…";
    s.textContent=tm+(mine?(m.seenBy.length>1?" ✓✓ Seen":" ✓ Sent"):"");el.append(s);
    if(mine){const x=document.createElement("a");x.textContent=" delete";x.style.cursor="pointer";x.onclick=()=>deleteDoc(d.ref).catch(e=>toast("Delete failed: "+e.code));s.append(x)}
-   if(!mine&&!m.seenBy.includes(me.uid))updateDoc(d.ref,{seenBy:arrayUnion(me.uid)}).catch(()=>{});
+   if(!mine&&priv.readReceipts&&!m.seenBy.includes(me.uid))updateDoc(d.ref,{seenBy:arrayUnion(me.uid)}).catch(()=>{});
    box.append(el)});box.scrollTop=box.scrollHeight},e=>toast("Cannot load messages: "+e.code)))}
 
 let tt;$("text").oninput=()=>{if(!activeCid)return;const r=ref(rtdb,`typing/${activeCid}/${me.uid}`);
@@ -218,7 +236,7 @@ function setupPc(id,side){
   if(["rejected","ended","missed"].includes(v))endCall(v==="rejected"?"Call rejected.":v==="missed"?"No answer.":"Call ended.",false)}));
 }
 async function startCall(video){
- if(!peer)return toast("Open a conversation first.");if(call)return;if(!navigator.onLine)return toast("You are offline.");
+ if(!peer)return toast("Open a conversation first.");if(blocked.has(peer.uid))return toast("You blocked this user. Unblock to call.");if(call)return;if(!navigator.onLine)return toast("You are offline.");
  const st=await media(video?{facingMode:"user"}:false);if(!st)return;
  const id=push(ref(rtdb,"calls")).key;call={id,video,stream:st,unsubs:[],ice:await iceServers(),role:"caller",other:peer.uid};
  openCallUi(peer.nickname,st,video);setupPc(id,"caller");const pc=call.pc;
@@ -326,5 +344,42 @@ $("g-mute").onclick=e=>e.currentTarget.querySelector("span").textContent=gtog("g
 $("g-cam").onclick=e=>e.currentTarget.querySelector("span").textContent=gtog("getVideoTracks")?"Camera On":"Camera Off";
 $("g-copy").onclick=()=>navigator.clipboard?.writeText(gr.code).then(()=>toast("Room code copied: "+gr.code),()=>toast("Room code: "+gr.code));
 $("g-end").onclick=()=>leaveRoom("");
+
+/* ===== Privacy, blocking, reports ===== */
+let priv={online:"everyone",lastSeen:"everyone",readReceipts:true},blocked=new Map(),ps={};
+function renderSeen(){$("h-dot").classList.toggle("on",ps.on===true);
+ $("h-seen").textContent=ps.on===true?"Online":ps.ls==="hidden"?"Last seen hidden":ps.ls?"Last seen "+new Date(ps.ls).toLocaleString([],{dateStyle:"short",timeStyle:"short"}):""}
+async function initPrivacy(){
+ try{const pr=doc(db,"privacy",me.uid),s=await getDoc(pr);
+  if(s.exists())priv={...priv,...s.data()};else await setDoc(pr,{readReceipts:true});
+  const r=(await get(ref(rtdb,`privacy/${me.uid}`))).val();
+  if(r)priv={...priv,...r};else await set(ref(rtdb,`privacy/${me.uid}`),{online:"everyone",lastSeen:"everyone"})}
+ catch(e){toast("Could not load privacy settings: "+(e.code||e.message))}
+ onSnapshot(collection(db,"blocks",me.uid,"users"),snap=>{blocked=new Map(snap.docs.map(d=>[d.id,d.data()]));
+  if(peer)$("send").hidden=blocked.has(peer.uid);renderBlocked();syncBlockBtns()},e=>toast("Cannot load blocked users: "+e.code))}
+$("menu-priv").onclick=()=>{$("menu").hidden=true;$("s-on").value=priv.online;$("s-ls").value=priv.lastSeen;$("s-rr").checked=priv.readReceipts;renderBlocked();$("sm").hidden=false};
+$("s-x").onclick=()=>$("sm").hidden=true;
+async function savePriv(k,v){const old=priv[k];priv[k]=v;
+ try{if(k==="readReceipts")await setDoc(doc(db,"privacy",me.uid),{readReceipts:v},{merge:true});else await update(ref(rtdb,`privacy/${me.uid}`),{[k]:v});toast("Saved.",1)}
+ catch(e){priv[k]=old;toast("Could not save: "+(e.code||e.message));$("s-on").value=priv.online;$("s-ls").value=priv.lastSeen;$("s-rr").checked=priv.readReceipts}}
+$("s-on").onchange=e=>savePriv("online",e.target.value);$("s-ls").onchange=e=>savePriv("lastSeen",e.target.value);$("s-rr").onchange=e=>savePriv("readReceipts",e.target.checked);
+function renderBlocked(){const b=$("s-blocked");b.innerHTML=blocked.size?"":'<i class="soon">No blocked users</i>';
+ blocked.forEach((v,uid)=>{const r=document.createElement("div");r.className="brow";const n=document.createElement("span");n.textContent=v.name||uid;
+  const x=document.createElement("button");x.className="ghost";x.textContent="Unblock";x.onclick=()=>unblock(uid);r.append(n,x);b.append(r)})}
+async function block(u){if(!confirm(`Block ${u.nickname}?\nThey won't be able to message or call you. Chat history is kept.`))return;
+ try{await setDoc(doc(db,"blocks",me.uid,"users",u.uid),{name:u.nickname,at:serverTimestamp()});await set(ref(rtdb,`blocks/${me.uid}/${u.uid}`),true);toast(u.nickname+" blocked.",1)}
+ catch(e){toast("Could not block: "+(e.code||e.message))}}
+async function unblock(uid){if(!confirm("Unblock this user?"))return;
+ try{await deleteDoc(doc(db,"blocks",me.uid,"users",uid));await remove(ref(rtdb,`blocks/${me.uid}/${uid}`));toast("Unblocked.",1)}
+ catch(e){toast("Could not unblock: "+(e.code||e.message))}}
+function syncBlockBtns(){const b=peer&&blocked.has(peer.uid);$("rp-block").textContent=b?"Unblock":"⛔ Block";$("h-block").title=b?"Unblock user":"Block user"}
+const toggleBlock=()=>{if(!peer)return;blocked.has(peer.uid)?unblock(peer.uid):block(peer)};
+$("rp-block").onclick=toggleBlock;$("h-block").onclick=toggleBlock;
+$("rp-report").onclick=()=>{if(!peer)return;$("r-err").textContent="";$("r-desc").value="";$("rm").hidden=false};
+$("r-x").onclick=()=>$("rm").hidden=true;
+$("rf").onsubmit=async e=>{e.preventDefault();if(!confirm(`Report ${peer.nickname}?`))return;
+ try{await setDoc(doc(db,"reports",me.uid+"_"+peer.uid),{reporter:me.uid,reported:peer.uid,reason:$("r-reason").value,description:$("r-desc").value.trim().slice(0,500),createdAt:serverTimestamp()});
+  $("rm").hidden=true;toast("Report submitted. Thank you.",1)}
+ catch(x){$("r-err").textContent=x.code==="permission-denied"?"You have already reported this user.":"Could not submit: "+(x.code||x.message)}};
 
 </script></body></html>
