@@ -74,6 +74,53 @@ select{background:#fff;border:1px solid var(--line);padding:.6rem;border-radius:
 #mm{position:fixed;background:var(--card);border-radius:12px;box-shadow:0 6px 20px #0003;padding:.3rem;z-index:12;display:grid;min-width:180px}
 #mm button{background:none;color:var(--tx);text-align:left;box-shadow:none;border-radius:8px;padding:.5rem .7rem}#mm button:hover{background:#e9ecdf}
 .mr{display:flex;align-items:center;gap:.2rem;align-self:flex-start;max-width:82%}.mr.mine{align-self:flex-end}.mr .m{max-width:none}.icn{display:flex;align-items:center;justify-content:center;gap:.4rem}.icn svg{width:20px;height:20px}
+
+/* ========== NEW: reply + reactions styles (additive only) ========== */
+.mr{position:relative;transition:background .18s ease;border-radius:18px}
+.mr:hover .msg-actions,.mr.active .msg-actions{opacity:1;pointer-events:auto;transform:translateY(0)}
+.msg-actions{display:flex;gap:.15rem;opacity:0;pointer-events:none;transform:translateY(4px);transition:opacity .18s ease,transform .18s ease;background:var(--card);border-radius:99px;padding:.15rem;box-shadow:0 2px 8px #0002;flex:none;align-self:center}
+.msg-actions button{background:none;color:var(--tx);padding:.25rem .4rem;border-radius:99px;font-size:1rem;line-height:1;box-shadow:none;min-width:0}
+.msg-actions button:hover{background:#e6eadb}
+@media(hover:none){.msg-actions{opacity:1;pointer-events:auto;transform:none;box-shadow:none;background:transparent;padding:0}}
+
+/* quoted reply block inside a bubble */
+.quote{display:block;border-left:3px solid #ffffff8a;background:#00000010;padding:.35rem .55rem;border-radius:8px;margin:-.1rem 0 .35rem;font-size:.82rem;line-height:1.25;cursor:pointer;max-width:100%;text-align:left}
+.mine .quote{border-left-color:#ffffffaa;background:#ffffff22}
+.quote b{display:block;font-size:.72rem;opacity:.75;font-weight:700;margin-bottom:.1rem;letter-spacing:.02em}
+.quote span{display:block;opacity:.9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.quote.deleted span{font-style:italic;opacity:.6}
+
+/* reply preview strip above input */
+#replybar{display:flex;gap:.6rem;align-items:center;padding:.55rem .8rem;background:#e6eadb;border-top:1px solid var(--line);border-bottom:1px solid var(--line);animation:slideDown .18s ease}
+@keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+#replybar .rp-accent{width:3px;height:34px;background:var(--pri);border-radius:3px;flex:none}
+#replybar .rp-body{flex:1;min-width:0}
+#replybar .rp-title{font-size:.72rem;font-weight:800;color:var(--pri);letter-spacing:.02em}
+#replybar .rp-text{font-size:.85rem;opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#replybar .rp-x{background:none;color:var(--tx);box-shadow:none;padding:.2rem .5rem;font-size:1.2rem;line-height:1;border-radius:8px}
+#replybar .rp-x:hover{background:#d8dec9}
+
+/* reaction picker (floating) */
+#react-picker{position:fixed;background:var(--card);border-radius:99px;padding:.35rem .5rem;box-shadow:0 8px 28px #0003;display:flex;gap:.15rem;z-index:13;animation:popIn .15s ease}
+#react-picker button{background:none;color:inherit;padding:.25rem .35rem;border-radius:99px;font-size:1.35rem;line-height:1;box-shadow:none;transition:transform .12s ease}
+#react-picker button:hover{transform:scale(1.22);background:#e6eadb}
+@keyframes popIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:none}}
+
+/* reaction badges under bubble */
+.reactions{display:flex;flex-wrap:wrap;gap:.25rem;margin-top:.25rem}
+.reactions .chip{display:inline-flex;align-items:center;gap:.2rem;background:#fff;border:1px solid var(--line);border-radius:99px;padding:.05rem .45rem;font-size:.78rem;cursor:pointer;color:var(--tx);transition:transform .1s ease,background .15s ease;box-shadow:0 1px 2px #0001}
+.mine+.reactions .chip,.mr.mine .reactions .chip{background:#fff}
+.reactions .chip:hover{transform:translateY(-1px)}
+.reactions .chip.me{background:#d7e3c8;border-color:var(--pri)}
+.reactions .chip.tip{position:relative}
+.reactions .chip .cnt{font-weight:700;font-size:.72rem;opacity:.85}
+
+/* highlight flash when jumping to quoted msg */
+@keyframes flashHl{0%,100%{background:transparent}30%{background:#ffe08a}}
+.mr.hl .m{animation:flashHl 1.2s ease}
+
+/* long-press ripple cue on mobile */
+@media(hover:none){.mr:active{background:#00000010}}
 </style></head><body>
 <section id="boot" class="center"><div class="logo">ARA</div><p class="soon">Loading…</p></section>
 <section id="login" class="center" hidden><div class="logo">ARA</div><p>A New Way to Connect.</p>
@@ -90,6 +137,8 @@ select{background:#fff;border:1px solid var(--line);padding:.6rem;border-radius:
 <aside><button id="g-new" class="ghost">👥 Group call (create / join)</button><input id="q" placeholder="Search username or nickname…"><div id="results"></div><h4>Conversations</h4><div id="convs"><i class="soon">No conversations yet</i></div></aside>
 <main><div id="head"><button id="back" class="ic">←</button><img id="h-av" hidden><div><b id="h-name">Select a conversation</b><br><small id="h-seen" class="soon"></small></div><span id="h-dot" class="dot"></span><span class="sp"></span><button id="h-block" class="ic" title="Block user"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></button><button id="call-a" class="ic" title="Voice call"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><button id="call-v" class="ic" title="Video call"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></button></div>
 <div id="pinbar" hidden><span>📌</span><span id="pin-text"></span><a id="pin-x">✕</a></div><div id="msgs"><div class="empty">💬<h3>Start a conversation</h3><p>Search a username, say hi, or make a call.</p></div></div><div id="typing"></div>
+<!-- NEW: reply preview strip -->
+<div id="replybar" hidden><div class="rp-accent"></div><div class="rp-body"><div class="rp-title" id="rp-title"></div><div class="rp-text" id="rp-text"></div></div><button type="button" class="rp-x" id="rp-x" title="Cancel reply">✕</button></div>
 <form class="send" id="send" hidden><input id="text" placeholder="Type a message…" autocomplete="off"><button>Send</button></form></main>
 <section id="rp"><div id="rp-empty" class="soon">Select a conversation to see the profile.</div>
 <div id="rp-body" hidden><img id="rp-av"><h3 id="rp-name"></h3><small id="rp-user" class="soon"></small>
@@ -196,32 +245,165 @@ let t;$("q").oninput=e=>{clearTimeout(t);t=setTimeout(async()=>{
 
 async function openChat(u){peer=u;fillRp(u);
  const cid=[me.uid,u.uid].sort().join("_");activeCid=cid;unsub.forEach(f=>f());unsub=[];
+ cancelReply();
  $("app").classList.add("chatting");$("back").style.display="";$("back").onclick=()=>$("app").classList.remove("chatting");
  $("h-av").src=u.photoURL;$("h-av").hidden=false;$("h-name").textContent=u.nickname;$("send").hidden=blocked.has(u.uid);syncBlockBtns();
  try{await setDoc(doc(db,"conversations",cid),{participants:[me.uid,u.uid]},{merge:true})}catch(e){}
  pin=null;renderPin();unsub.push(onSnapshot(doc(db,"conversations",cid),s=>{pin=s.data()?.pinned||null;renderPin()},()=>{}));ps={};unsub.push(onValue(ref(rtdb,`status/${u.uid}/connections`),s=>{ps.on=s.exists();renderSeen()},()=>{ps.on="hidden";renderSeen()}));unsub.push(onValue(ref(rtdb,`status/${u.uid}/lastSeen`),s=>{ps.ls=s.val();renderSeen()},()=>{ps.ls="hidden";renderSeen()}));
  unsub.push(onValue(ref(rtdb,`typing/${cid}/${u.uid}`),s=>$("typing").textContent=s.val()?u.nickname+" is typing…":""));
  unsub.push(onSnapshot(query(collection(db,"conversations",cid,"messages"),orderBy("createdAt","desc"),limit(50)),snap=>{
-  const box=$("msgs");box.innerHTML="";
-  snap.docs.reverse().forEach(d=>{const m=d.data(),mine=m.from===me.uid,el=document.createElement("div");if((m.deletedFor||[]).includes(me.uid))return;
-   el.className="m"+(mine?" mine":"");el.textContent=(m.fwd?"↪ Forwarded\n":"")+m.text;
-   const s=document.createElement("small"),tm=m.createdAt?.toDate().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})||"…";
-   s.textContent=tm+(mine?(m.seenBy.length>1?" ✓✓ Seen":" ✓ Sent"):"");el.append(s);
-   const x=document.createElement("a");x.textContent="⋮";x.style.cssText="cursor:pointer;font-size:1.4rem;line-height:1;color:var(--mut);padding:0 .25rem;user-select:none";x.onclick=ev=>{ev.stopPropagation();msgMenu(x,d,m,mine)};
-   if(!mine&&priv.readReceipts&&!m.seenBy.includes(me.uid))updateDoc(d.ref,{seenBy:arrayUnion(me.uid)}).catch(()=>{});
-   const w=document.createElement("div");w.className="mr"+(mine?" mine":"");mine?w.append(x,el):w.append(el,x);box.append(w)});box.scrollTop=box.scrollHeight},e=>toast("Cannot load messages: "+e.code)))}
+  const box=$("msgs");box.innerHTML="";lastMsgMap={};
+  snap.docs.reverse().forEach(d=>{const m=d.data();lastMsgMap[d.id]=m;if((m.deletedFor||[]).includes(me.uid))return;
+   box.append(renderMsg(d.id,m))});box.scrollTop=box.scrollHeight},e=>toast("Cannot load messages: "+e.code)))}
 
+/* ========== NEW: render message (reply quote + actions + reactions) ========== */
+let lastMsgMap={};
+function renderMsg(docId,m){
+ const mine=m.from===me.uid;
+ const wrap=document.createElement("div");
+ wrap.className="mr"+(mine?" mine":"");
+ wrap.dataset.mid=docId;
+ const bubble=document.createElement("div");bubble.className="m"+(mine?" mine":"");
+ if(m.fwd){const f=document.createElement("small");f.style.cssText="display:block;opacity:.6;font-size:.7rem;margin-bottom:.15rem";f.textContent="↪ Forwarded";bubble.append(f)}
+ // quoted reply block
+ if(m.replyTo){
+   const q=document.createElement("div");q.className="quote";q.dataset.jump=m.replyTo;
+   const p=m.replyPreview||{};
+   if(p.text!=null||p.name){
+     const b=document.createElement("b");b.textContent=p.name||"Original";
+     const s=document.createElement("span");s.textContent=p.text!=null?p.text:"(deleted)";
+     q.append(b,s);
+   }else{
+     q.classList.add("deleted");
+     const b=document.createElement("b");b.textContent="Original message";
+     const s=document.createElement("span");s.textContent="Original message deleted";
+     q.append(b,s);
+   }
+   q.onclick=e=>{e.stopPropagation();jumpTo(m.replyTo)};
+   bubble.append(q);
+ }
+ const txt=document.createElement("div");txt.textContent=m.text||"";bubble.append(txt);
+ const tm=m.createdAt?.toDate().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})||"…";
+ const meta=document.createElement("small");
+ meta.textContent=tm+(mine?(m.seenBy&&m.seenBy.length>1?" ✓✓ Seen":" ✓ Sent"):"");
+ bubble.append(meta);
+ // reactions row
+ if(m.reactions&&Object.keys(m.reactions).length){
+   const rr=document.createElement("div");rr.className="reactions";
+   for(const emoji in m.reactions){
+     const uids=Object.keys(m.reactions[emoji]||{});
+     if(!uids.length)continue;
+     const chip=document.createElement("span");chip.className="chip"+(uids.includes(me.uid)?" me":"");
+     chip.innerHTML=`<span>${emoji}</span><span class="cnt">${uids.length}</span>`;
+     chip.title=uids.map(u=>u===me.uid?"You":(peer&&u===peer.uid?peer.nickname:u)).join(", ");
+     chip.onclick=()=>toggleReaction(docId,emoji);
+     rr.append(chip);
+   }
+   bubble.append(rr);
+ }
+ // action bar
+ const acts=document.createElement("div");acts.className="msg-actions";
+ const mk=(icon,title,fn)=>{const b=document.createElement("button");b.textContent=icon;b.title=title;b.onclick=e=>{e.stopPropagation();fn()};return b};
+ acts.append(
+   mk("↩","Reply",()=>startReply(docId,m)),
+   mk("😊","React",e=>openReactPicker(docId)),
+   mk("⋮","More",()=>msgMenu(docId,m,mine,acts.lastChild))
+ );
+ if(mine)wrap.append(acts,bubble);else wrap.append(bubble,acts);
+ // long-press to open menu on mobile
+ let lpTimer=null;
+ wrap.addEventListener("touchstart",()=>{lpTimer=setTimeout(()=>{msgMenu(docId,m,mine,acts.lastChild)},480)},{passive:true});
+ wrap.addEventListener("touchend",()=>clearTimeout(lpTimer));
+ wrap.addEventListener("touchmove",()=>clearTimeout(lpTimer));
+ // double-click / dbl-tap = quick ❤️
+ wrap.addEventListener("dblclick",()=>toggleReaction(docId,"❤️"));
+ return wrap;
+}
+
+/* ========== NEW: reply flow ========== */
+let replyState=null; // {docId,name,text}
+function startReply(docId,m){
+ const mine=m.from===me.uid;
+ const who=mine?me.nickname:(peer?peer.nickname:"User");
+ replyState={docId,name:who,text:(m.text||"").slice(0,140)||"(no text)"};
+ $("rp-title").textContent="Replying to "+who;
+ $("rp-text").textContent=replyState.text;
+ $("replybar").hidden=false;
+ $("text").focus();
+}
+function cancelReply(){replyState=null;$("replybar").hidden=true}
+$("rp-x").onclick=()=>{cancelReply();$("text").focus()};
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&replyState)cancelReply()});
+function jumpTo(mid){
+ const el=document.querySelector(`.mr[data-mid="${mid}"]`);
+ if(!el){toast("Original message is not loaded here.");return}
+ el.scrollIntoView({behavior:"smooth",block:"center"});
+ el.classList.add("hl");setTimeout(()=>el.classList.remove("hl"),1300);
+}
+
+/* ========== NEW: reactions ========== */
+const DEFAULT_REACTIONS=["❤️","😂","😮","😢","👍","👎","🔥","🎉"];
+let reactTarget=null,reactBtn=null;
+function openReactPicker(docId){
+ reactTarget=docId;reactBtn=null;
+ let p=$("react-picker");
+ if(!p){p=document.createElement("div");p.id="react-picker";p.hidden=true;$("app").append(p);}
+ p.innerHTML="";
+ DEFAULT_REACTIONS.forEach(em=>{const b=document.createElement("button");b.textContent=em;b.onclick=async e=>{e.stopPropagation();await toggleReaction(docId,em);p.hidden=true};p.append(b)});
+ // position under the clicked message (fallback to center)
+ const target=document.querySelector(`.mr[data-mid="${docId}"] .m`);
+ const r=(target||document.body).getBoundingClientRect();
+ p.hidden=false;
+ // fit within viewport
+ const pr=p.getBoundingClientRect();
+ let top=r.bottom+6;if(top+pr.height>innerHeight-8)top=r.top-pr.height-6;
+ let left=Math.max(8,Math.min(r.left, innerWidth-pr.width-8));
+ p.style.top=top+"px";p.style.left=left+"px";
+}
+async function toggleReaction(docId,emoji){
+ if(!activeCid||!me)return;
+ const ref_=doc(db,"conversations",activeCid,"messages",docId);
+ try{
+  const snap=await getDoc(ref_);
+  if(!snap.exists())return;
+  const m=snap.data();
+  const reactions={...(m.reactions||{})};
+  // remove my existing reactions on this message (only one active per user)
+  for(const em in reactions){
+   if(reactions[em]&&reactions[em][me.uid]){delete reactions[em][me.uid];if(!Object.keys(reactions[em]).length)delete reactions[em]}
+  }
+  // toggle: if I clicked the same emoji I already had, we just removed it → done
+  let alreadyMine=false;
+  if(m.reactions&&m.reactions[emoji]&&m.reactions[emoji][me.uid])alreadyMine=true;
+  if(!alreadyMine){
+   reactions[emoji]=reactions[emoji]||{};
+   reactions[emoji][me.uid]=true;
+  }
+  await updateDoc(ref_,{reactions});
+ }catch(e){toast("Reaction failed: "+(e.code||e.message))}
+}
+// close picker on outside click / scroll
+document.addEventListener("click",e=>{const p=$("react-picker");if(p&&!p.hidden&&!p.contains(e.target))p.hidden=true});
+$("msgs").addEventListener("scroll",()=>{const p=$("react-picker");if(p)p.hidden=true});
+
+/* ========== MODIFIED: send message now carries replyTo/replyPreview ========== */
 let tt;$("text").oninput=()=>{if(!activeCid)return;const r=ref(rtdb,`typing/${activeCid}/${me.uid}`);
  set(r,true);clearTimeout(tt);tt=setTimeout(()=>remove(r),2000)};
 $("send").onsubmit=async e=>{e.preventDefault();const text=$("text").value.trim();if(!text||!activeCid)return;
- if(!navigator.onLine)return toast("You are offline.");$("text").value="";
- try{await addDoc(collection(db,"conversations",activeCid,"messages"),{from:me.uid,text,createdAt:serverTimestamp(),seenBy:[me.uid]});
+ if(!navigator.onLine)return toast("You are offline.");
+ const payload={from:me.uid,text,createdAt:serverTimestamp(),seenBy:[me.uid]};
+ if(replyState){
+   payload.replyTo=replyState.docId;
+   payload.replyPreview={name:replyState.name,text:replyState.text};
+ }
+ $("text").value="";cancelReply();
+ try{await addDoc(collection(db,"conversations",activeCid,"messages"),payload);
   await updateDoc(doc(db,"conversations",activeCid),{lastMessage:text.slice(0,80),updatedAt:serverTimestamp()})}
  catch(err){$("text").value=text;toast("Message failed to send: "+err.code)}};
 
 /* ===== WebRTC calls (signaling via Realtime Database) ===== */
 const ICE=[{urls:"stun:stun.l.google.com:19302"}];
-const TURN_ENDPOINT=""; // optional: your backend URL returning {iceServers:[...]} with temporary TURN credentials
+const TURN_ENDPOINT="";
 let call=null,inc=null,peer=null;
 async function iceServers(){if(!TURN_ENDPOINT)return ICE;try{const r=await fetch(TURN_ENDPOINT,{headers:{Authorization:"Bearer "+await auth.currentUser.getIdToken()}});return [...ICE,...(await r.json()).iceServers]}catch{return ICE}}
 async function media(video){try{return await navigator.mediaDevices.getUserMedia({audio:true,video})}catch(e){toast(e.name==="NotAllowedError"?"Camera/microphone permission denied.":"Cannot access camera/microphone: "+e.name);return null}}
@@ -386,17 +568,25 @@ $("rf").onsubmit=async e=>{e.preventDefault();if(!confirm(`Report ${peer.nicknam
   $("rm").hidden=true;toast("Report submitted. Thank you.",1)}
  catch(x){$("r-err").textContent=x.code==="permission-denied"?"You have already reported this user.":"Could not submit: "+(x.code||x.message)}};
 
-/* ===== message menu: pin, forward, delete ===== */
+/* ===== message menu: pin, forward, delete (kept, extended) ===== */
 let pin=null,convsData=[];
 function renderPin(){$("pinbar").hidden=!pin;$("pin-text").textContent=pin?.text||""}
-function msgMenu(btn,d,m,mine){const mm=$("mm");mm.innerHTML="";const cref=doc(db,"conversations",activeCid),pinned=pin?.id===d.id;
+function msgMenu(docId,d,m,mine,anchorBtn){const mm=$("mm");mm.innerHTML="";const cref=doc(db,"conversations",activeCid),pinned=pin?.id===docId;
+ const mref=doc(db,"conversations",activeCid,"messages",docId);
  const add=(t,f)=>{const b=document.createElement("button");b.textContent=t;b.onclick=()=>{mm.hidden=true;f()};mm.append(b)};
- add(pinned?"Unpin":"Pin",()=>updateDoc(cref,{pinned:pinned?null:{id:d.id,text:m.text.slice(0,120),by:me.uid}}).catch(e=>toast("Pin failed: "+e.code)));
- add("Forward",()=>fwd(m.text));
- add("Delete for me",()=>confirm("Delete this message for you only?")&&updateDoc(d.ref,{deletedFor:arrayUnion(me.uid)}).catch(e=>toast("Delete failed: "+e.code)));
+ add(pinned?"Unpin":"Pin",()=>updateDoc(cref,{pinned:pinned?null:{id:docId,text:(m.text||"").slice(0,120),by:me.uid}}).catch(e=>toast("Pin failed: "+e.code)));
+ add("↩ Reply",()=>startReply(docId,m));
+ add("😊 React",()=>openReactPicker(docId));
+ add("📋 Copy",()=>navigator.clipboard?.writeText(m.text||"").then(()=>toast("Copied.",1),()=>toast("Copy failed.")));
+ add("↪ Forward",()=>fwd(m.text));
+ add("Delete for me",()=>confirm("Delete this message for you only?")&&updateDoc(mref,{deletedFor:arrayUnion(me.uid)}).catch(e=>toast("Delete failed: "+e.code)));
  if(mine)add("Delete for everyone",async()=>{if(!confirm("Delete for everyone? This can't be undone."))return;
-  try{await deleteDoc(d.ref);if(pinned)await updateDoc(cref,{pinned:null})}catch(e){toast("Delete failed: "+e.code)}});
- const r=btn.getBoundingClientRect();mm.hidden=false;mm.style.top=Math.max(8,Math.min(r.bottom+4,innerHeight-mm.offsetHeight-8))+"px";mm.style.left=Math.max(8,Math.min(r.left-120,innerWidth-mm.offsetWidth-8))+"px"}
+  try{await deleteDoc(mref);if(pinned)await updateDoc(cref,{pinned:null})}catch(e){toast("Delete failed: "+e.code)}});
+ const r=(anchorBtn||document.body).getBoundingClientRect();
+ mm.hidden=false;
+ const mw=mm.offsetWidth,mh=mm.offsetHeight;
+ mm.style.top=Math.max(8,Math.min(r.bottom+4,innerHeight-mh-8))+"px";
+ mm.style.left=Math.max(8,Math.min(r.left-120,innerWidth-mw-8))+"px"}
 document.addEventListener("click",()=>{$("mm").hidden=true});
 $("pin-x").onclick=()=>activeCid&&updateDoc(doc(db,"conversations",activeCid),{pinned:null}).catch(e=>toast("Unpin failed: "+e.code));
 $("f-x").onclick=()=>$("fm").hidden=true;
