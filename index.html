@@ -51,6 +51,16 @@ form.send{display:flex;gap:.5rem;padding:.8rem}form.send input{border-radius:99p
 #incoming{position:fixed;top:1rem;left:50%;transform:translateX(-50%);background:var(--bg2);padding:1rem;border-radius:16px;z-index:10;display:grid;gap:.6rem;border:1px solid var(--pri)}
 .bad{background:#c0392b}
 .bad,.bad:hover{background:#c0392b;color:#fff}#incoming{color:var(--tx)}
+.me{position:relative}#menu{position:absolute;right:0;top:48px;background:var(--card);padding:.4rem;border-radius:14px;box-shadow:0 6px 20px #0003;display:grid;gap:.3rem;z-index:5;min-width:140px}
+#lv{right:1rem;bottom:8.5rem;top:auto;width:110px;height:150px;object-fit:cover;border:2px solid #fff6;border-radius:16px}
+#cinfo{flex-direction:column;gap:0;color:#fff}#cinfo small{opacity:.85}#cinfo b{font-size:1.2rem}
+.cb{display:grid;justify-items:center;gap:.3rem;background:none;box-shadow:none;padding:0;color:#fff;font-size:.75rem}.cb:hover,.cb.bad,.cb.bad:hover{background:none}
+.cb i{font-style:normal;width:54px;height:54px;border-radius:50%;background:#ffffff2e;display:grid;place-items:center;font-size:1.4rem}.cb.bad i{background:#e53b4f}
+#gcall{position:fixed;inset:0;background:#10140f;z-index:9;color:#fff}#ginfo{position:absolute;top:1rem;left:1rem;display:grid;z-index:2}
+#grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;padding:4rem .6rem 8rem;height:100%}#grid[data-n="1"]{grid-template-columns:1fr}
+.tile{position:relative;background:#000;border-radius:16px;overflow:hidden;min-height:0}.tile video{width:100%;height:100%;object-fit:cover}
+.tile span{position:absolute;left:.6rem;bottom:.5rem;background:#0008;padding:.1rem .5rem;border-radius:8px;font-size:.8rem}
+#gctl{position:absolute;bottom:1.5rem;left:0;right:0;display:flex;gap:1rem;justify-content:center}
 </style></head><body>
 <section id="boot" class="center"><div class="logo">ARA</div><p class="soon">Loading…</p></section>
 <section id="login" class="center" hidden><div class="logo">ARA</div><p>A New Way to Connect.</p>
@@ -61,10 +71,10 @@ form.send{display:flex;gap:.5rem;padding:.8rem}form.send input{border-radius:99p
 <button id="su-go">Create profile</button><div id="su-err" class="err"></div></section>
 <div id="app" hidden>
 <header id="top"><div class="brand"><span class="lg">A</span><b>ARA</b><span class="pill"><i class="dot on"></i>Online</span></div>
-<nav><a class="act">💬 Chats</a><a id="nav-prof">👤 Profile</a></nav>
-<div class="me"><img id="me-av"><b id="me-name"></b><button id="out" class="ghost">Logout</button></div></header>
+<nav><a class="act">Chats</a><a id="nav-prof">Profile</a></nav>
+<div class="me"><img id="me-av"><b id="me-name"></b><div id="menu" hidden><button id="menu-prof" class="ghost">Profile</button><button id="out" class="ghost">Logout</button></div></div></header>
 <div id="cols">
-<aside><input id="q" placeholder="Search username or nickname…"><div id="results"></div><h4>Conversations</h4><div id="convs"><i class="soon">No conversations yet</i></div></aside>
+<aside><button id="g-new" class="ghost">👥 Group call (create / join)</button><input id="q" placeholder="Search username or nickname…"><div id="results"></div><h4>Conversations</h4><div id="convs"><i class="soon">No conversations yet</i></div></aside>
 <main><div id="head"><button id="back" class="ic">←</button><img id="h-av" hidden><b id="h-name">Select a conversation</b><span id="h-dot" class="dot"></span><span class="sp"></span><button id="call-a" class="ic" title="Voice call">📞</button><button id="call-v" class="ic" title="Video call">🎥</button></div>
 <div id="msgs"><div class="empty">💬<h3>Start a conversation</h3><p>Search a username, say hi, or make a call.</p></div></div><div id="typing"></div>
 <form class="send" id="send" hidden><input id="text" placeholder="Type a message…" autocomplete="off"><button>Send</button></form></main>
@@ -80,8 +90,10 @@ form.send{display:flex;gap:.5rem;padding:.8rem}form.send input{border-radius:99p
 <div id="pf-err" class="err"></div><div class="two"><button>Save</button><button type="button" id="pf-x" class="ghost">Cancel</button></div></form></div>
 <div id="incoming" hidden><b id="inc-name"></b><div style="display:flex;gap:.5rem"><button id="acc">Accept</button><button id="rej" class="bad">Reject</button></div></div>
 <div id="callui" hidden><video id="rv" autoplay playsinline></video><video id="lv" autoplay playsinline muted></video>
-<div id="cinfo"><b id="cname"></b><span id="cstat"></span><span id="cdur"></span></div>
-<div id="cctl"><button id="c-mute">Mute</button><button id="c-cam">Camera off</button><button id="c-fs">Fullscreen</button><button id="c-pip">PiP</button><button id="c-end" class="bad">End</button></div></div>
+<div id="cinfo"><b id="cname"></b><small><span id="ctype"></span> <span id="cdur"></span> · <span id="cstat"></span></small></div>
+<div id="cctl"><button id="c-mute" class="cb"><i>🎤</i><span>Mic On</span></button><button id="c-cam" class="cb"><i>📷</i><span>Camera On</span></button><button id="c-fs" class="cb"><i>⛶</i><span>Full</span></button><button id="c-pip" class="cb"><i>🗗</i><span>PiP</span></button><button id="c-end" class="cb bad"><i>📞</i><span>End</span></button></div></div>
+<div id="gcall" hidden><div id="ginfo"><b>Group call</b><small>Room code: <b id="g-code"></b></small></div><div id="grid"></div>
+<div id="gctl"><button id="g-mute" class="cb"><i>🎤</i><span>Mic On</span></button><button id="g-cam" class="cb"><i>📷</i><span>Camera On</span></button><button id="g-copy" class="cb"><i>🔗</i><span>Invite</span></button><button id="g-end" class="cb bad"><i>📞</i><span>End</span></button></div></div>
 <div id="toast" hidden></div>
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -103,7 +115,7 @@ export const auth=getAuth(app),db=getFirestore(app),rtdb=getDatabase(app);
 
 import {GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {doc,getDoc,getDocs,setDoc,addDoc,updateDoc,deleteDoc,runTransaction,serverTimestamp,collection,query,where,orderBy,limit,onSnapshot,arrayUnion,startAt,endAt} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import {ref,onValue,push,set,remove,update,get,onChildAdded,onDisconnect,serverTimestamp as rts} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import {ref,onValue,push,set,remove,update,get,onChildAdded,onChildRemoved,onDisconnect,serverTimestamp as rts} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 const $=id=>document.getElementById(id);
 const avatar=s=>`https://api.dicebear.com/7.x/thumbs/svg?seed=${encodeURIComponent(s)}`;
 const show=id=>["boot","login","setup","app"].forEach(s=>$(s).hidden=s!==id);
@@ -191,7 +203,7 @@ const TURN_ENDPOINT=""; // optional: your backend URL returning {iceServers:[...
 let call=null,inc=null,peer=null;
 async function iceServers(){if(!TURN_ENDPOINT)return ICE;try{const r=await fetch(TURN_ENDPOINT,{headers:{Authorization:"Bearer "+await auth.currentUser.getIdToken()}});return [...ICE,...(await r.json()).iceServers]}catch{return ICE}}
 async function media(video){try{return await navigator.mediaDevices.getUserMedia({audio:true,video})}catch(e){toast(e.name==="NotAllowedError"?"Camera/microphone permission denied.":"Cannot access camera/microphone: "+e.name);return null}}
-function openCallUi(name,st,video){$("callui").hidden=false;$("cname").textContent=name;$("cstat").textContent="connecting…";$("cdur").textContent="00:00";
+function openCallUi(name,st,video){$("callui").hidden=false;$("cname").textContent=name;$("ctype").textContent=video?"Video Call":"Voice Call";$("cstat").textContent="connecting…";$("cdur").textContent="00:00";
  $("lv").srcObject=st;$("lv").hidden=!video;$("c-cam").hidden=!video;$("c-pip").hidden=!video}
 function setupPc(id,side){
  const pc=new RTCPeerConnection({iceServers:call.ice});call.pc=pc;
@@ -241,8 +253,8 @@ function endCall(msg,notify=true){if(!call)return;const c=call;call=null;
  if(msg)toast(msg)}
 $("call-a").onclick=()=>startCall(false);$("call-v").onclick=()=>startCall(true);
 $("c-end").onclick=()=>endCall("",true);
-$("c-mute").onclick=e=>{const t=call?.stream.getAudioTracks();t?.forEach(x=>x.enabled=!x.enabled);e.target.textContent=t?.[0]?.enabled?"Mute":"Unmute"};
-$("c-cam").onclick=e=>{const t=call?.stream.getVideoTracks();t?.forEach(x=>x.enabled=!x.enabled);e.target.textContent=t?.[0]?.enabled?"Camera off":"Camera on"};
+$("c-mute").onclick=e=>{const t=call?.stream.getAudioTracks();t?.forEach(x=>x.enabled=!x.enabled);e.currentTarget.querySelector("span").textContent=t?.[0]?.enabled?"Mic On":"Mic Off"};
+$("c-cam").onclick=e=>{const t=call?.stream.getVideoTracks();t?.forEach(x=>x.enabled=!x.enabled);e.currentTarget.querySelector("span").textContent=t?.[0]?.enabled?"Camera On":"Camera Off"};
 $("c-fs").onclick=()=>$("callui").requestFullscreen?.().catch(()=>{});
 $("c-pip").onclick=()=>$("rv").requestPictureInPicture?.().catch(()=>toast("Picture-in-Picture not supported here."));
 
@@ -250,7 +262,7 @@ $("c-pip").onclick=()=>$("rv").requestPictureInPicture?.().catch(()=>toast("Pict
 function fillRp(u){$("rp-empty").hidden=true;$("rp-body").hidden=false;$("rp-av").src=u.photoURL;$("rp-name").textContent=u.nickname;$("rp-user").textContent="@"+u.username;$("rp-bio").textContent=u.bio||"No bio yet."}
 $("rp-a").onclick=()=>startCall(false);$("rp-v").onclick=()=>startCall(true);
 const openPm=()=>{$("pf-nick").value=me.nickname;$("pf-user").value=me.username;$("pf-bio").value=me.bio||"";$("pf-prev").src=me.photoURL;newPhoto=null;$("pf-file").value="";$("pf-err").textContent="";$("pm").hidden=false};
-$("nav-prof").onclick=openPm;$("me-av").onclick=openPm;$("pf-x").onclick=()=>$("pm").hidden=true;
+$("nav-prof").onclick=openPm;$("me-av").onclick=()=>$("menu").hidden=!$("menu").hidden;$("menu-prof").onclick=()=>{$("menu").hidden=true;openPm()};$("pf-x").onclick=()=>$("pm").hidden=true;
 $("pf").onsubmit=async e=>{e.preventDefault();const err=$("pf-err");err.textContent="";
  const nick=$("pf-nick").value.trim(),name=$("pf-user").value.trim().toLowerCase(),bio=$("pf-bio").value.trim();
  if(!nick)return err.textContent="Nickname required.";
@@ -271,5 +283,48 @@ $("pf-file").onchange=e=>{const f=e.target.files[0];if(!f)return;
   c.getContext("2d").drawImage(img,(img.width-s)/2,(img.height-s)/2,s,s,0,0,160,160);
   newPhoto=c.toDataURL("image/jpeg",.82);$("pf-prev").src=newPhoto;$("pf-err").textContent="";URL.revokeObjectURL(u)};
  img.onerror=()=>$("pf-err").textContent="Could not read that image.";img.src=u};
+
+/* ===== Group calls (mesh, up to 4 people) ===== */
+let gr=null;
+const rnd=n=>Array.from(crypto.getRandomValues(new Uint8Array(n)),b=>"ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[b%32]).join("");
+$("g-new").onclick=()=>{if(gr||call)return;const v=prompt("Enter a room code to JOIN a group call.\nLeave it empty to START a new one.");if(v===null)return;
+ const code=v.trim().toUpperCase()||rnd(6);if(!/^[A-Z0-9]{4,12}$/.test(code))return toast("Invalid room code.");joinRoom(code)};
+function addTile(id,name,stream,mine){let t=$("t-"+id);if(!t){t=document.createElement("div");t.id="t-"+id;t.className="tile";t.innerHTML="<video autoplay playsinline></video><span></span>";$("grid").append(t)}
+ const v=t.firstChild;v.srcObject=stream;v.muted=mine;t.lastChild.textContent=name;$("grid").dataset.n=$("grid").children.length}
+async function joinRoom(code){
+ const st=await media({facingMode:"user"});if(!st)return;
+ const R=`rooms/${code}`,sid=rnd(8);gr={code,st,sid,pcs:{},unsubs:[],R};
+ $("gcall").hidden=false;$("g-code").textContent=code;addTile("me",me.nickname+" (you)",st,true);
+ try{const cur=(await get(ref(rtdb,`${R}/members`))).val()||{};
+  if(Object.keys(cur).filter(k=>k!==me.uid).length>=3)return leaveRoom("Room is full (max 4 people).");
+  const mref=ref(rtdb,`${R}/members/${me.uid}`);await set(mref,{name:me.nickname,photo:me.photoURL,sid});onDisconnect(mref).remove()}
+ catch(e){return leaveRoom("Could not join room: "+e.code)}
+ gr.unsubs.push(onChildAdded(ref(rtdb,`${R}/members`),s=>{if(s.key!==me.uid&&gr)peerUp(s.key,s.val())}));
+ gr.unsubs.push(onChildRemoved(ref(rtdb,`${R}/members`),s=>peerDown(s.key)))}
+async function peerUp(uid,m){
+ if(gr.pcs[uid])return;gr.pcs[uid]={};const g=gr,S=`${g.R}/sig/${[me.uid,uid].sort().join("_")}`,pend=[],u=[];
+ const initiator=me.uid>uid;if(initiator)await remove(ref(rtdb,S)).catch(()=>{});
+ const pc=new RTCPeerConnection({iceServers:await iceServers()});if(gr!==g){pc.close();return}
+ g.pcs[uid]={pc,u};g.st.getTracks().forEach(t=>pc.addTrack(t,g.st));
+ const flush=()=>pend.splice(0).forEach(c=>pc.addIceCandidate(c).catch(()=>{}));
+ pc.ontrack=e=>addTile(uid,m.name,e.streams[0],false);
+ pc.onicecandidate=e=>e.candidate&&push(ref(rtdb,`${S}/ice/${me.uid}`),e.candidate.toJSON());
+ u.push(onChildAdded(ref(rtdb,`${S}/ice/${uid}`),s=>pc.remoteDescription?pc.addIceCandidate(s.val()).catch(()=>{}):pend.push(s.val())));
+ try{if(initiator){await pc.setLocalDescription(await pc.createOffer());
+   await set(ref(rtdb,`${S}/offer`),{sid:g.sid,type:pc.localDescription.type,sdp:pc.localDescription.sdp});
+   u.push(onValue(ref(rtdb,`${S}/answer`),async s=>{const a=s.val();if(a&&!pc.remoteDescription){await pc.setRemoteDescription(a);flush()}}))}
+  else u.push(onValue(ref(rtdb,`${S}/offer`),async s=>{const o=s.val();if(!o||o.sid!==m.sid||pc.remoteDescription)return;
+   await pc.setRemoteDescription(o);flush();await pc.setLocalDescription(await pc.createAnswer());
+   await set(ref(rtdb,`${S}/answer`),{type:pc.localDescription.type,sdp:pc.localDescription.sdp})}))}
+ catch(e){toast("Connection to "+m.name+" failed.")}}
+function peerDown(uid){if(!gr)return;const p=gr.pcs[uid];if(!p)return;p.u?.forEach(f=>f());p.pc?.close();delete gr.pcs[uid];$("t-"+uid)?.remove();$("grid").dataset.n=$("grid").children.length}
+function leaveRoom(msg){if(!gr)return;const g=gr;gr=null;g.unsubs.forEach(f=>f());
+ Object.values(g.pcs).forEach(p=>{p.u?.forEach(f=>f());p.pc?.close()});g.st.getTracks().forEach(t=>t.stop());
+ remove(ref(rtdb,`${g.R}/members/${me.uid}`)).catch(()=>{});$("gcall").hidden=true;$("grid").innerHTML="";if(msg)toast(msg)}
+const gtog=(k,e)=>{const t=gr?.st[k]();t?.forEach(x=>x.enabled=!x.enabled);return t?.[0]?.enabled};
+$("g-mute").onclick=e=>e.currentTarget.querySelector("span").textContent=gtog("getAudioTracks")?"Mic On":"Mic Off";
+$("g-cam").onclick=e=>e.currentTarget.querySelector("span").textContent=gtog("getVideoTracks")?"Camera On":"Camera Off";
+$("g-copy").onclick=()=>navigator.clipboard?.writeText(gr.code).then(()=>toast("Room code copied: "+gr.code),()=>toast("Room code: "+gr.code));
+$("g-end").onclick=()=>leaveRoom("");
 
 </script></body></html>
