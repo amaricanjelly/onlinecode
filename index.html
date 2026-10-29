@@ -409,28 +409,11 @@ $("send").onsubmit=async e=>{e.preventDefault();const text=$("text").value.trim(
   await updateDoc(doc(db,"conversations",activeCid),{lastMessage:text.slice(0,80),updatedAt:serverTimestamp(),["unread."+peer.uid]:increment(1)})}
  catch(err){$("text").value=text;toast("Message failed to send: "+err.code)}};
 
-/* ===== WebRTC ICE configuration ===== */
-const ICE_FALLBACK = [
-  { urls: "stun:stun.l.google.com:19302" },
-  { urls: "stun:stun1.l.google.com:19302" },
-  { urls: "stun:global.stun.twilio.com:3478" },
-  { urls: ["turn:openrelay.metered.ca:80", "turn:openrelay.metered.ca:443", "turn:openrelay.metered.ca:443?transport=tcp"],
-    username: "openrelayproject", credential: "openrelayproject" }
+/* ===== WebRTC — STUN-only, no TURN ===== */
+const ICE = [
+  { urls: "stun:stun.cloudflare.com:3478" },
+  { urls: "stun:stun.l.google.com:19302" }
 ];
-const TURN_ENDPOINT = ""; // e.g. "/api/turn" — must return {iceServers:[...]} with short-lived creds
-async function iceServers(){
-  if(!TURN_ENDPOINT) return ICE_FALLBACK;
-  try{
-    const r = await fetch(TURN_ENDPOINT, { headers: { Authorization: "Bearer " + await auth.currentUser.getIdToken() } });
-    if(!r.ok) throw new Error("TURN endpoint HTTP " + r.status);
-    const j = await r.json();
-    const list = Array.isArray(j.iceServers) ? j.iceServers : [];
-    return [...ICE_FALLBACK.filter(s => s.urls), ...list];
-  }catch(e){
-    console.warn("[ARA] TURN endpoint unavailable, using STUN/public-relay fallback:", e.message);
-    return ICE_FALLBACK;
-  }
-}
 const CAND_TYPE = c => {
   const s = c.candidate || "";
   if(/typ relay/.test(s)) return "relay";
@@ -453,7 +436,7 @@ function startRingtone(ctx){
 }
 function stopRingtone(){
   clearInterval(ringTimer); ringTimer = null;
-  try{ ringGain && ringGain.gain.setTargetAtTime(0, ringCtx.currentTime, 0.02); }catch(e){}
+  try{ ringGain && ringGain.setTargetAtTime(0, ringCtx.currentTime, 0.02); }catch(e){}
   try{ ringOsc && ringOsc.stop(); }catch(e){}
   ringOsc = ringGain = null;
 }
@@ -484,11 +467,10 @@ function openCallUi(name, st, video){
   $("c-video").hidden = !video;
   $("ctop").hidden = !video;
   $("cvoice").hidden = video;
-  if(!video && peer) $("cuser").textContent = uname;
 }
 
 function setupPc(id, side){
-  const pc = new RTCPeerConnection({ iceServers: call.ice });
+  const pc = new RTCPeerConnection({ iceServers: ICE });
   call.pc = pc;
   const pend = [];
   const seen = new Set();
@@ -521,8 +503,8 @@ function setupPc(id, side){
   const logTypes = new Set();
   pc.onicecandidate = e => {
     if(!e.candidate) return;
-    const t = CAND_TYPE(e.candidate);
-    if(!logTypes.has(t)){ logTypes.add(t); console.info("[ARA] gathered candidate type:", t); }
+    const ty = CAND_TYPE(e.candidate);
+    if(!logTypes.has(ty)){ logTypes.add(ty); console.info("[ARA] gathered candidate type:", ty); }
     push(ref(rtdb, `calls/${id}/ice/${side}`), e.candidate.toJSON()).catch(()=>{});
   };
   pc.onicecandidateerror = e => console.warn("[ARA] ICE candidate error:", e.errorCode, e.errorText, e.url);
@@ -535,7 +517,7 @@ function setupPc(id, side){
     console.info("[ARA] iceConnectionState:", s);
     if(s === "checking") setState("Connecting…");
     if(s === "disconnected") setState("Reconnecting…");
-    if(s === "failed") failCall("Connection failed — no ICE path (relay/TURN likely missing).", "ice-failed");
+    if(s === "failed") failCall("Cannot reach peer directly. This network requires a TURN relay (not configured).", "ice-failed");
   };
 
   pc.onconnectionstatechange = () => {
@@ -552,7 +534,6 @@ function setupPc(id, side){
         $("cdur").textContent = txt;
         $("cdur-t").textContent = txt;
       }, 1000);
-      // Log the selected pair type so we can prove relay/srflx
       (async()=>{
         try{
           const stats = await pc.getStats(); let pair=null, local=null, remote=null;
@@ -568,7 +549,7 @@ function setupPc(id, side){
       })();
     }
     if(s === "disconnected") setState("Reconnecting…");
-    if(s === "failed") failCall("Connection failed.", "connection-failed");
+    if(s === "failed") failCall("Cannot reach peer directly. This network requires a TURN relay (not configured).", "connection-failed");
   };
 
   call.unsubs.push(onChildAdded(ref(rtdb, `calls/${id}/ice/${other}`), s => addCand(s.val())));
@@ -580,7 +561,7 @@ function setupPc(id, side){
   }));
 
   call.timeout = setTimeout(() => {
-    if(call && !call.t0) failCall("No answer / connection timed out.", "timeout");
+    if(call && !call.t0) failCall("No direct P2P path found. A TURN relay would be required on this network.", "timeout");
   }, 25000);
 }
 
@@ -595,11 +576,11 @@ async function startCall(video){
   video = video && st.getVideoTracks().length > 0;
 
   const id = push(ref(rtdb,"calls")).key;
-  call = { id, video, stream: st, unsubs: [], ice: await iceServers(), role: "caller", other: peer.uid };
+  call = { id, video, stream: st, unsubs: [], role: "caller", other: peer.uid };
 
   openCallUi(peer.nickname, st, video);
 
-  // Create the call record first so ICE children can't be wiped by set()
+  // Reserve the call record first, then update — never set() over ICE children.
   await set(ref(rtdb, `calls/${id}`), { from: me.uid, to: peer.uid, video, state: "ringing" });
 
   setupPc(id, "caller");
@@ -675,7 +656,7 @@ $("acc").onclick=async()=>{
     return;
   }
 
-  call = { id: v.callId, video: v.video, stream: st, unsubs: [], ice: await iceServers(), role: "callee", other: v.from };
+  call = { id: v.callId, video: v.video, stream: st, unsubs: [], role: "callee", other: v.from };
   openCallUi(v.name, st, v.video);
   $("cstate").textContent = "Connecting…";
 
@@ -839,7 +820,7 @@ async function joinRoom(code){
 async function peerUp(uid,m){
  if(gr.pcs[uid])return;gr.pcs[uid]={};const g=gr,S=`${g.R}/sig/${[me.uid,uid].sort().join("_")}`,pend=[],u=[];
  const initiator=me.uid>uid;if(initiator)await remove(ref(rtdb,S)).catch(()=>{});
- const pc=new RTCPeerConnection({iceServers:await iceServers()});if(gr!==g){pc.close();return}
+ const pc=new RTCPeerConnection({iceServers:ICE});if(gr!==g){pc.close();return}
  g.pcs[uid]={pc,u};g.st.getTracks().forEach(t=>pc.addTrack(t,g.st));
  const flush=()=>pend.splice(0).forEach(c=>pc.addIceCandidate(c).catch(()=>{}));
  pc.ontrack=e=>addTile(uid,m.name,e.streams[0],false);
