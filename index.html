@@ -254,6 +254,49 @@ select{background:#fff;border:1px solid var(--line);padding:.6rem;border-radius:
 <div id="gcall" hidden><div id="ginfo"><b>Group call</b><small>Room code: <b id="g-code"></b></small></div><div id="grid"></div>
 <div id="gctl"><button id="g-mute" class="cb"><i data-i="mic"></i><span>Mic On</span></button><button id="g-cam" class="cb"><i data-i="camera"></i><span>Camera On</span></button><button id="g-copy" class="cb"><i data-i="link"></i><span>Invite</span></button><button id="g-end" class="cb bad"><i data-i="phone"></i><span>End</span></button></div></div>
 <div id="fm" hidden><div class="mod"><h3>Forward to…</h3><div id="f-list"></div><button id="f-x" class="ghost">Cancel</button></div></div><div id="np" hidden role="dialog" aria-label="Notifications"></div><div id="lb" hidden><img id="lb-img"></div><div id="mm" hidden></div><div id="rpk" hidden></div><div id="toast" hidden></div>
+
+<!-- ===== ARA BOOT WATCHDOG (safe, additive) ===== -->
+<script>
+(function () {
+  window.__ARA_BOOT_TIMEOUT = setTimeout(function () {
+    try {
+      var b = document.getElementById("boot");
+      if (b && !b.hidden) {
+        var p = b.querySelector(".soon");
+        if (p) p.innerHTML =
+          '<span style="color:#c0392b">Could not start ARA.</span><br>' +
+          '<small style="opacity:.8">Firebase scripts may be blocked, or the page was loaded from a stale cache.</small><br><br>' +
+          '<button onclick="location.reload()" style="margin-top:.5rem">Reload</button>';
+        console.error("[ARA] Boot watchdog fired: module did not finish initializing within 8s.");
+      }
+    } catch (e) { console.error(e); }
+  }, 8000);
+  window.__ARA_CLEAR_BOOT_TIMEOUT = function () {
+    try { clearTimeout(window.__ARA_BOOT_TIMEOUT); } catch (e) {}
+  };
+  function surfaceBootError(kind, msg) {
+    try {
+      var b = document.getElementById("boot");
+      if (b && !b.hidden) {
+        var p = b.querySelector(".soon");
+        if (p) p.innerHTML =
+          '<span style="color:#c0392b">' + kind + '</span><br>' +
+          '<small style="opacity:.8">' + (msg || "Unknown error") + '</small><br><br>' +
+          '<button onclick="location.reload()">Reload</button>';
+      }
+    } catch (e) {}
+  }
+  window.__ARA_SURFACE_BOOT_ERROR = surfaceBootError;
+  window.addEventListener("error", function (e) {
+    console.error("[ARA] uncaught:", e.message, e.filename, e.lineno, e.colno);
+    surfaceBootError("Startup error", e.message || "Unknown error");
+  });
+  window.addEventListener("unhandledrejection", function (e) {
+    console.error("[ARA] unhandled rejection:", e.reason);
+  });
+})();
+</script>
+
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {getAuth} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -269,8 +312,21 @@ export const firebaseConfig={
   appId:"1:247599477955:web:41e1d732dd537c97441e76",
   measurementId:"G-NQCNECDYWS"
 };
-const app=initializeApp(firebaseConfig);
-export const auth=getAuth(app),db=getFirestore(app),rtdb=getDatabase(app);
+
+/* ---- FIX 3: wrap Firebase init in try/catch with visible failure ---- */
+let app, auth, db, rtdb;
+try {
+  app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  db = getFirestore(app);
+  rtdb = getDatabase(app);
+} catch (e) {
+  console.error("[ARA] Firebase init failed:", e);
+  if (window.__ARA_SURFACE_BOOT_ERROR) {
+    window.__ARA_SURFACE_BOOT_ERROR("Firebase init failed", (e && (e.message || e.code)) || "Unknown error");
+  }
+  throw e;
+}
 
 import {GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {doc,getDoc,getDocs,setDoc,addDoc,updateDoc,deleteDoc,runTransaction,serverTimestamp,collection,query,where,orderBy,limit,onSnapshot,arrayUnion,startAt,endAt,deleteField,arrayRemove,increment} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -317,12 +373,22 @@ const getUser=async uid=>cache[uid]||(cache[uid]=(await getDoc(doc(db,"users",ui
 $("gbtn").onclick=async()=>{try{await signInWithPopup(auth,new GoogleAuthProvider())}
  catch(e){toast(e.code==="auth/popup-closed-by-user"?"Login cancelled.":"Google login failed: "+e.code)}};
 $("out").onclick=()=>signOut(auth);
+
+/* ---- FIX 4: always clear the boot watchdog on every terminal branch ---- */
 onAuthStateChanged(auth,async u=>{
- if(!u){me=null;started=false;show("login");return}
- try{const s=await getDoc(doc(db,"users",u.uid));
-  if(!s.exists()){show("setup");return}
-  me=s.data();startApp()}
- catch(e){show("login");toast("Database unavailable or rules not deployed ("+e.code+").")}});
+  try{
+    if(!u){me=null;started=false;show("login");window.__ARA_CLEAR_BOOT_TIMEOUT();return}
+    const s=await getDoc(doc(db,"users",u.uid));
+    if(!s.exists()){show("setup");window.__ARA_CLEAR_BOOT_TIMEOUT();return}
+    me=s.data();startApp();
+    window.__ARA_CLEAR_BOOT_TIMEOUT();
+  }catch(e){
+    console.error("[ARA] auth bootstrap failed:",e);
+    show("login");
+    toast("Database unavailable or rules not deployed ("+(e.code||e.message)+").");
+    window.__ARA_CLEAR_BOOT_TIMEOUT();
+  }
+});
 
 $("su-go").onclick=async()=>{
  const name=$("su-user").value.trim().toLowerCase(),nick=$("su-nick").value.trim(),err=$("su-err");err.textContent="";
@@ -336,20 +402,33 @@ $("su-go").onclick=async()=>{
   me=p;startApp()}
  catch(e){err.textContent=e.message==="taken"?"Username already taken.":"Could not save profile: "+(e.code||e.message)}};
 
+/* ---- FIX 5: isolate subsystem initializers ---- */
 function startApp(){
- if(started)return;started=true;show("app");listenIncoming();initPrivacy();listenFriends();applyRp();showView("home");
+ if(started)return;started=true;show("app");
+ const safe=(name,fn)=>{try{fn()}catch(e){console.error("[ARA] "+name+" failed:",e)}};
+ safe("listenIncoming",listenIncoming);
+ safe("initPrivacy",initPrivacy);
+ safe("listenFriends",listenFriends);
+ safe("applyRp",applyRp);
+ safe("showView",()=>showView("home"));
  $("me-av").src=me.photoURL;$("me-name").textContent=me.nickname;
- onValue(ref(rtdb,".info/connected"),s=>{setConn(!!s.val());if(!s.val())return;const conn=push(ref(rtdb,`status/${me.uid}/connections`));
-  onDisconnect(conn).remove();set(conn,true);onDisconnect(ref(rtdb,`status/${me.uid}/lastSeen`)).set(rts())});
- let convVer=0;
- onSnapshot(query(collection(db,"conversations"),where("participants","array-contains",me.uid)),async snap=>{
-  const v=++convVer,cl=x=>x.clearedAt?.[me.uid]?.seconds||0;
-  const list=snap.docs.map(d=>({id:d.id,...d.data()})).filter(c=>!cl(c)||(c.updatedAt?.seconds||0)>cl(c)).sort((a,b)=>(b.updatedAt?.seconds||0)-(a.updatedAt?.seconds||0));
-  const frag=document.createDocumentFragment(),data=[],cdata=[];
-  for(const c of list){const o=c.participants.find(x=>x!==me.uid),u=await getUser(o);if(!u)continue;
-   const r=row(u);data.push(u);cdata.push({c,u});r.querySelector("small").textContent=c.lastMessage||"@"+u.username;decorate(r,c);frag.append(r)}
-  if(v!==convVer)return;const box=$("convs");convsData=data;convList=cdata;box.innerHTML=list.length?"":'<i class="soon">No conversations yet</i>';box.append(frag);onConvs()},
-  e=>toast("Cannot load conversations: "+e.code))}
+ safe("presence",()=>{
+   onValue(ref(rtdb,".info/connected"),s=>{setConn(!!s.val());if(!s.val())return;const conn=push(ref(rtdb,`status/${me.uid}/connections`));
+    onDisconnect(conn).remove();set(conn,true);onDisconnect(ref(rtdb,`status/${me.uid}/lastSeen`)).set(rts())});
+ });
+ safe("convs",()=>{
+   let convVer=0;
+   onSnapshot(query(collection(db,"conversations"),where("participants","array-contains",me.uid)),async snap=>{
+    const v=++convVer,cl=x=>x.clearedAt?.[me.uid]?.seconds||0;
+    const list=snap.docs.map(d=>({id:d.id,...d.data()})).filter(c=>!cl(c)||(c.updatedAt?.seconds||0)>cl(c)).sort((a,b)=>(b.updatedAt?.seconds||0)-(a.updatedAt?.seconds||0));
+    const frag=document.createDocumentFragment(),data=[],cdata=[];
+    for(const c of list){const o=c.participants.find(x=>x!==me.uid),u=await getUser(o);if(!u)continue;
+     const r=row(u);data.push(u);cdata.push({c,u});r.querySelector("small").textContent=c.lastMessage||"@"+u.username;decorate(r,c);frag.append(r)}
+    if(v!==convVer)return;const box=$("convs");convsData=data;convList=cdata;box.innerHTML=list.length?"":'<i class="soon">No conversations yet</i>';box.append(frag);onConvs()},
+    e=>toast("Cannot load conversations: "+e.code));
+ });
+ window.__ARA_CLEAR_BOOT_TIMEOUT();
+}
 
 function row(u){const r=document.createElement("div");r.className="row";
  r.innerHTML=`<img src="${u.photoURL}"><div><b></b><br><small></small></div><span class="dot"></span>`;
@@ -436,7 +515,7 @@ function startRingtone(ctx){
 }
 function stopRingtone(){
   clearInterval(ringTimer); ringTimer = null;
-  try{ ringGain && ringGain.setTargetAtTime(0, ringCtx.currentTime, 0.02); }catch(e){}
+  try{ ringGain && ringGain.gain.setTargetAtTime(0, ringCtx.currentTime, 0.02); }catch(e){}
   try{ ringOsc && ringOsc.stop(); }catch(e){}
   ringOsc = ringGain = null;
 }
@@ -580,7 +659,6 @@ async function startCall(video){
 
   openCallUi(peer.nickname, st, video);
 
-  // Reserve the call record first, then update — never set() over ICE children.
   await set(ref(rtdb, `calls/${id}`), { from: me.uid, to: peer.uid, video, state: "ringing" });
 
   setupPc(id, "caller");
@@ -757,7 +835,6 @@ $("c-video").onclick=e=>{
   e.currentTarget.classList.toggle("off", !on);
 };
 
-/* Draggable local preview */
 (function(){
   const el = $("lv"); let drag = null;
   el.addEventListener("pointerdown", ev => {
