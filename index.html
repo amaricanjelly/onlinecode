@@ -44,50 +44,18 @@ form.send{display:flex;gap:.5rem;padding:.8rem}form.send input{border-radius:99p
 .err{color:#c0392b}.soon{color:var(--mut)}
 @media(max-width:1100px){#cols{grid-template-columns:320px 1fr}#rp{display:none}}
 @media(max-width:700px){#cols{grid-template-columns:1fr;padding:.5rem}#app.chatting aside{display:none}#app:not(.chatting) main{display:none}nav,.me b{display:none}#back{display:inline-block}}
-
-/* ===== Premium call UI ===== */
-#callui{position:fixed;inset:0;background:#0b0d0b;z-index:9;color:#fff;overflow:hidden;overscroll-behavior:contain;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-#rv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}
-#lv{position:absolute;right:14px;top:80px;width:110px;height:150px;object-fit:cover;border-radius:16px;border:2px solid #ffffff22;background:#111;z-index:3;cursor:grab;touch-action:none}
-#lv.dragging{cursor:grabbing}
-#cvoice{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;z-index:2;background:radial-gradient(circle at 50% 35%,#1a241a 0%,#0b0d0b 70%)}
-#cavatar-wrap{position:relative;width:170px;height:170px;display:grid;place-items:center}
-#cavatar{width:150px;height:150px;border-radius:50%;object-fit:cover;background:#222;box-shadow:0 0 0 4px #ffffff10,0 12px 40px #000a}
-#cring{position:absolute;inset:0;border-radius:50%;border:2px solid #ffffff22;animation:pulse 2s ease-out infinite}
-@keyframes pulse{0%{transform:scale(.9);opacity:.8}100%{transform:scale(1.25);opacity:0}}
-#cname-v{font-size:1.5rem;margin:.6rem 0 0;font-weight:800;letter-spacing:.2px}
-.cuser{font-size:.85rem;opacity:.65}
-.cstate{font-size:.95rem;opacity:.85;margin-top:.3rem}
-.cdur{font-size:1.1rem;font-weight:700;font-variant-numeric:tabular-nums;opacity:.9}
-#ctop{position:absolute;top:0;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:.15rem;padding:1rem;z-index:4;text-shadow:0 1px 4px #000;background:linear-gradient(180deg,#000a,transparent)}
-#ctop[hidden]{display:none}
-#ctop b{font-size:1.1rem}
-#ctop small{font-size:.85rem;opacity:.85;font-variant-numeric:tabular-nums}
-#cctl{position:absolute;left:0;right:0;bottom:calc(1.4rem + env(safe-area-inset-bottom));display:flex;gap:1.4rem;justify-content:center;align-items:center;z-index:4}
-.cb{display:grid;justify-items:center;gap:.35rem;background:none!important;box-shadow:none!important;border:0;color:#fff;font-size:.7rem;padding:0;cursor:pointer}
-.cb i{width:58px;height:58px;border-radius:50%;background:#ffffff1f;display:grid;place-items:center;font-size:1.4rem;transition:background .2s,transform .1s;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
-.cb:active i{transform:scale(.94)}
-.cb svg{width:26px;height:26px;stroke:#fff;fill:none}
-.cb.bad i{background:#e5324a}
-.cb.off i{background:#ffffff0d;opacity:.7}
-.cb.bad i svg{transform:rotate(135deg)}
-#c-speaker.on i{background:#56794c}
-#incoming{position:fixed;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;background:#0b0d0b;color:#fff;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-#incoming[hidden]{display:none}
-#inc-bg{position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,#1d2a1d 0%,#0b0d0b 70%)}
-#inc-card{position:relative;display:flex;flex-direction:column;align-items:center;gap:.6rem;text-align:center;padding:2rem}
-#inc-av{width:170px;height:170px;border-radius:50%;object-fit:cover;background:#222;box-shadow:0 0 0 6px #ffffff12,0 12px 40px #000a;animation:pulse2 1.8s ease-in-out infinite}
-@keyframes pulse2{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
-#inc-name-v{font-size:1.6rem;margin:0;font-weight:800}
-#inc-actions{display:flex;gap:2.4rem;margin-top:2rem}
-.inc-btn{display:grid;justify-items:center;gap:.5rem;background:none!important;border:0;color:#fff;font-size:.8rem;padding:0;cursor:pointer}
-.inc-btn i{width:70px;height:70px;border-radius:50%;display:grid;place-items:center;font-size:1.6rem;background:#fff1}
-.inc-btn i svg{width:30px;height:30px;stroke:#fff;fill:none}
-.inc-btn.good i{background:#2fbf5b;animation:ring 1.4s ease-in-out infinite}
-.inc-btn.bad i{background:#e5324a}
-.inc-btn.bad i svg{transform:rotate(135deg)}
-@keyframes ring{0%,100%{box-shadow:0 0 0 0 #2fbf5b88}50%{box-shadow:0 0 0 14px #2fbf5b00}}
-
+#callui{position:fixed;inset:0;background:#000;z-index:9}#rv{width:100%;height:100%;object-fit:cover}
+#lv{position:absolute;right:1rem;top:1rem;width:140px;border-radius:12px;background:#222}
+#cinfo{position:absolute;top:1rem;left:1rem;display:flex;gap:.6rem;text-shadow:0 0 6px #000}
+#cctl{position:absolute;bottom:1.5rem;left:0;right:0;display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+#incoming{position:fixed;top:1rem;left:50%;transform:translateX(-50%);background:var(--bg2);padding:1rem;border-radius:16px;z-index:10;display:grid;gap:.6rem;border:1px solid var(--pri)}
+.bad{background:#c0392b}
+.bad,.bad:hover{background:#c0392b;color:#fff}#incoming{color:var(--tx)}
+.me{position:relative}#menu{position:absolute;right:0;top:48px;background:var(--card);padding:.4rem;border-radius:14px;box-shadow:0 6px 20px #0003;display:grid;gap:.3rem;z-index:5;min-width:140px}
+#lv{right:1rem;bottom:8.5rem;top:auto;width:110px;height:150px;object-fit:cover;border:2px solid #fff6;border-radius:16px}
+#cinfo{flex-direction:column;gap:0;color:#fff}#cinfo small{opacity:.85}#cinfo b{font-size:1.2rem}
+.cb{display:grid;justify-items:center;gap:.3rem;background:none;box-shadow:none;padding:0;color:#fff;font-size:.75rem}.cb:hover,.cb.bad,.cb.bad:hover{background:none}
+.cb i{font-style:normal;width:54px;height:54px;border-radius:50%;background:#ffffff2e;display:grid;place-items:center;font-size:1.4rem}.cb.bad i{background:#e53b4f}
 #gcall{position:fixed;inset:0;background:#10140f;z-index:9;color:#fff}#ginfo{position:absolute;top:1rem;left:1rem;display:grid;z-index:2}
 #grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;padding:4rem .6rem 8rem;height:100%}#grid[data-n="1"]{grid-template-columns:1fr}
 .tile{position:relative;background:#000;border-radius:16px;overflow:hidden;min-height:0}.tile video{width:100%;height:100%;object-fit:cover}
@@ -106,6 +74,7 @@ select{background:#fff;border:1px solid var(--line);padding:.6rem;border-radius:
 #mm{position:fixed;background:var(--card);border-radius:12px;box-shadow:0 6px 20px #0003;padding:.3rem;z-index:12;display:grid;min-width:180px}
 #mm button{background:none;color:var(--tx);text-align:left;box-shadow:none;border-radius:8px;padding:.5rem .7rem}#mm button:hover{background:#e9ecdf}
 .mr{display:flex;align-items:center;gap:.2rem;align-self:flex-start;max-width:82%}.mr.mine{align-self:flex-end}.mr .m{max-width:none}.icn{display:flex;align-items:center;justify-content:center;gap:.4rem}.icn svg{width:20px;height:20px}
+/* reply + reactions */
 .col{display:flex;flex-direction:column;min-width:0}.mr.mine .col{align-items:flex-end}
 .acts{display:flex;align-items:center;flex:none}.acts a{cursor:pointer;color:var(--mut);padding:0 .2rem;user-select:none;line-height:1;font-size:1.1rem;transition:transform .15s}.acts a:hover{transform:scale(1.25)}
 .m{-webkit-touch-callout:none;cursor:pointer}@media(hover:none){.m{-webkit-user-select:none;user-select:none}}
@@ -121,14 +90,19 @@ select{background:#fff;border:1px solid var(--line);padding:.6rem;border-radius:
 #rpk button{background:none;box-shadow:none;padding:.2rem .3rem;font-size:1.4rem;border-radius:50%;transition:transform .12s}#rpk button:hover{background:#e9ecdf;transform:scale(1.3)}#rpk button.sel{background:#dfe6d3}
 #rbar{display:flex;align-items:center;gap:.6rem;padding:.5rem 1rem;background:#e6eadb;border-top:1px solid var(--line);animation:pop .18s}
 #rbar .qb{flex:1;min-width:0;border-left:3px solid var(--pri);padding-left:.6rem}#rbar small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--mut)}#rb-x{cursor:pointer;padding:.3rem}
+
+/* conv list: unread, menu */
 .row>div{min-width:0;flex:1}.row b{display:block}.row br{display:none}.row small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .bdg{background:var(--pri);color:#fff;font-size:.7rem;font-weight:800;min-width:22px;height:22px;padding:0 6px;border-radius:99px;display:grid;place-items:center;flex:none}.bdg.mu{background:#b5bcae}
 .cmb{cursor:pointer;font-size:1.4rem;line-height:1;color:var(--mut);padding:.2rem .35rem;border-radius:8px;user-select:none;flex:none}.cmb:hover{background:#dfe4d3}
+/* media */
 .pic{display:block;max-width:min(240px,60vw);max-height:300px;border-radius:12px;cursor:zoom-in;margin-bottom:.25rem}.vn{display:block;width:min(230px,58vw);height:38px;margin-bottom:.2rem}
 #lb{position:fixed;inset:0;background:#000d;z-index:30;display:grid;place-items:center;cursor:zoom-out}#lb img{max-width:96vw;max-height:92vh;border-radius:8px}
 #rec{flex:1;display:flex;align-items:center;gap:.6rem;background:#fff;border:1px solid var(--line);border-radius:99px;padding:.3rem .5rem .3rem 1rem}
 .rdot{width:10px;height:10px;border-radius:50%;background:#e53b4f;animation:bl 1s infinite}@keyframes bl{50%{opacity:.25}}
 #rec button{padding:.45rem .9rem}form.send .ic svg{display:block;margin:auto}
+
+/* ===== v3: theme, nav, pages ===== */
 :root{--w:#fff;--hov:#e9ecdf;--hov2:#e6eadb}
 [data-theme=dark]{--bg:#151916;--card:#1e241f;--bg2:#1e241f;--pri:#56794c;--pri2:#66905a;--tx:#e8ede5;--mut:#98a595;--ok:#6fbf68;--line:#2f3831;--w:#273029;--hov:#2b352d;color-scheme:dark}
 [data-theme=dark] body{background:var(--bg)}
@@ -209,94 +183,13 @@ select{background:#fff;border:1px solid var(--line);padding:.6rem;border-radius:
 <div id="rm" hidden><form id="rf" class="mod"><h3>Report user</h3><label>Reason<select id="r-reason"><option value="Spam">Spam</option><option value="Harassment">Harassment</option><option value="Fake Account">Fake Account</option><option value="Inappropriate Content">Inappropriate Content</option><option value="Impersonation">Impersonation</option><option value="Other">Other</option></select></label>
 <label>Description (optional)<input id="r-desc" maxlength="500"></label><div id="r-err" class="err"></div>
 <div class="two"><button>Submit report</button><button type="button" id="r-x" class="ghost">Cancel</button></div></form></div>
-
-<!-- ===== Premium call UI ===== -->
-<div id="callui" hidden>
-  <video id="rv" autoplay playsinline></video>
-  <div id="cvoice">
-    <div id="cavatar-wrap">
-      <div id="cring"></div>
-      <img id="cavatar" alt="">
-    </div>
-    <h2 id="cname-v"></h2>
-    <div id="cuser" class="cuser"></div>
-    <div id="cstate" class="cstate">Calling…</div>
-    <div id="cdur" class="cdur">00:00</div>
-  </div>
-  <video id="lv" autoplay playsinline muted></video>
-  <div id="ctop" hidden>
-    <b id="cname-t"></b>
-    <small id="cdur-t">Connecting…</small>
-  </div>
-  <div id="cctl">
-    <button id="c-speaker" class="cb" title="Speaker"><i data-i="speaker"></i><span>Speaker</span></button>
-    <button id="c-video"   class="cb" title="Video"><i data-i="camera"></i><span>Video</span></button>
-    <button id="c-mute"    class="cb" title="Mute"><i data-i="mic"></i><span>Mic</span></button>
-    <button id="c-end"     class="cb bad" title="End call"><i data-i="phone"></i><span>End</span></button>
-  </div>
-</div>
-
-<!-- ===== Incoming call UI ===== -->
-<div id="incoming" hidden>
-  <div id="inc-bg"></div>
-  <div id="inc-card">
-    <img id="inc-av" alt="">
-    <h2 id="inc-name-v"></h2>
-    <div id="inc-user" class="cuser"></div>
-    <div id="inc-type" class="cstate">Incoming Voice Call</div>
-    <div id="inc-actions">
-      <button id="rej" class="inc-btn bad"><i data-i="phone"></i><span>Decline</span></button>
-      <button id="acc" class="inc-btn good"><i data-i="phone"></i><span>Accept</span></button>
-    </div>
-  </div>
-</div>
-
+<div id="incoming" hidden><b id="inc-name"></b><div style="display:flex;gap:.5rem"><button id="acc">Accept</button><button id="rej" class="bad">Reject</button></div></div>
+<div id="callui" hidden><video id="rv" autoplay playsinline></video><video id="lv" autoplay playsinline muted></video>
+<div id="cinfo"><b id="cname"></b><small><span id="ctype"></span> <span id="cdur"></span> · <span id="cstat"></span></small></div>
+<div id="cctl"><button id="c-mute" class="cb"><i data-i="mic"></i><span>Mic On</span></button><button id="c-cam" class="cb"><i data-i="camera"></i><span>Camera On</span></button><button id="c-fs" class="cb"><i data-i="max"></i><span>Full</span></button><button id="c-pip" class="cb"><i data-i="max"></i><span>PiP</span></button><button id="c-end" class="cb bad"><i data-i="phone"></i><span>End</span></button></div></div>
 <div id="gcall" hidden><div id="ginfo"><b>Group call</b><small>Room code: <b id="g-code"></b></small></div><div id="grid"></div>
 <div id="gctl"><button id="g-mute" class="cb"><i data-i="mic"></i><span>Mic On</span></button><button id="g-cam" class="cb"><i data-i="camera"></i><span>Camera On</span></button><button id="g-copy" class="cb"><i data-i="link"></i><span>Invite</span></button><button id="g-end" class="cb bad"><i data-i="phone"></i><span>End</span></button></div></div>
 <div id="fm" hidden><div class="mod"><h3>Forward to…</h3><div id="f-list"></div><button id="f-x" class="ghost">Cancel</button></div></div><div id="np" hidden role="dialog" aria-label="Notifications"></div><div id="lb" hidden><img id="lb-img"></div><div id="mm" hidden></div><div id="rpk" hidden></div><div id="toast" hidden></div>
-
-<!-- ===== ARA BOOT WATCHDOG (safe, additive) ===== -->
-<script>
-(function () {
-  window.__ARA_BOOT_TIMEOUT = setTimeout(function () {
-    try {
-      var b = document.getElementById("boot");
-      if (b && !b.hidden) {
-        var p = b.querySelector(".soon");
-        if (p) p.innerHTML =
-          '<span style="color:#c0392b">Could not start ARA.</span><br>' +
-          '<small style="opacity:.8">Firebase scripts may be blocked, or the page was loaded from a stale cache.</small><br><br>' +
-          '<button onclick="location.reload()" style="margin-top:.5rem">Reload</button>';
-        console.error("[ARA] Boot watchdog fired: module did not finish initializing within 8s.");
-      }
-    } catch (e) { console.error(e); }
-  }, 8000);
-  window.__ARA_CLEAR_BOOT_TIMEOUT = function () {
-    try { clearTimeout(window.__ARA_BOOT_TIMEOUT); } catch (e) {}
-  };
-  function surfaceBootError(kind, msg) {
-    try {
-      var b = document.getElementById("boot");
-      if (b && !b.hidden) {
-        var p = b.querySelector(".soon");
-        if (p) p.innerHTML =
-          '<span style="color:#c0392b">' + kind + '</span><br>' +
-          '<small style="opacity:.8">' + (msg || "Unknown error") + '</small><br><br>' +
-          '<button onclick="location.reload()">Reload</button>';
-      }
-    } catch (e) {}
-  }
-  window.__ARA_SURFACE_BOOT_ERROR = surfaceBootError;
-  window.addEventListener("error", function (e) {
-    console.error("[ARA] uncaught:", e.message, e.filename, e.lineno, e.colno);
-    surfaceBootError("Startup error", e.message || "Unknown error");
-  });
-  window.addEventListener("unhandledrejection", function (e) {
-    console.error("[ARA] unhandled rejection:", e.reason);
-  });
-})();
-</script>
-
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {getAuth} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -312,21 +205,8 @@ export const firebaseConfig={
   appId:"1:247599477955:web:41e1d732dd537c97441e76",
   measurementId:"G-NQCNECDYWS"
 };
-
-/* ---- FIX 3: wrap Firebase init in try/catch with visible failure ---- */
-let app, auth, db, rtdb;
-try {
-  app = initializeApp(firebaseConfig);
-  auth = getAuth(app);
-  db = getFirestore(app);
-  rtdb = getDatabase(app);
-} catch (e) {
-  console.error("[ARA] Firebase init failed:", e);
-  if (window.__ARA_SURFACE_BOOT_ERROR) {
-    window.__ARA_SURFACE_BOOT_ERROR("Firebase init failed", (e && (e.message || e.code)) || "Unknown error");
-  }
-  throw e;
-}
+const app=initializeApp(firebaseConfig);
+export const auth=getAuth(app),db=getFirestore(app),rtdb=getDatabase(app);
 
 import {GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {doc,getDoc,getDocs,setDoc,addDoc,updateDoc,deleteDoc,runTransaction,serverTimestamp,collection,query,where,orderBy,limit,onSnapshot,arrayUnion,startAt,endAt,deleteField,arrayRemove,increment} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -353,9 +233,8 @@ mic:'<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14
 camera:'<path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/>',
 max:'<path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/>',
 link:'<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
-out:'<path d="M7 17 17 7M8 7h9v9"/>',inn:'<path d="M17 7 7 17M16 17H7V8"/>',
-speaker:'<path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14"/>'};
-const ico=n=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n]||""}</svg>`;
+out:'<path d="M7 17 17 7M8 7h9v9"/>',inn:'<path d="M17 7 7 17M16 17H7V8"/>'};
+const ico=n=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n]}</svg>`;
 const paint=(r=document)=>r.querySelectorAll("[data-i]:not([data-p])").forEach(e=>{e.insertAdjacentHTML("afterbegin",ico(e.dataset.i));e.dataset.p=1});
 const LS={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
 const mk=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
@@ -373,22 +252,12 @@ const getUser=async uid=>cache[uid]||(cache[uid]=(await getDoc(doc(db,"users",ui
 $("gbtn").onclick=async()=>{try{await signInWithPopup(auth,new GoogleAuthProvider())}
  catch(e){toast(e.code==="auth/popup-closed-by-user"?"Login cancelled.":"Google login failed: "+e.code)}};
 $("out").onclick=()=>signOut(auth);
-
-/* ---- FIX 4: always clear the boot watchdog on every terminal branch ---- */
 onAuthStateChanged(auth,async u=>{
-  try{
-    if(!u){me=null;started=false;show("login");window.__ARA_CLEAR_BOOT_TIMEOUT();return}
-    const s=await getDoc(doc(db,"users",u.uid));
-    if(!s.exists()){show("setup");window.__ARA_CLEAR_BOOT_TIMEOUT();return}
-    me=s.data();startApp();
-    window.__ARA_CLEAR_BOOT_TIMEOUT();
-  }catch(e){
-    console.error("[ARA] auth bootstrap failed:",e);
-    show("login");
-    toast("Database unavailable or rules not deployed ("+(e.code||e.message)+").");
-    window.__ARA_CLEAR_BOOT_TIMEOUT();
-  }
-});
+ if(!u){me=null;started=false;show("login");return}
+ try{const s=await getDoc(doc(db,"users",u.uid));
+  if(!s.exists()){show("setup");return}
+  me=s.data();startApp()}
+ catch(e){show("login");toast("Database unavailable or rules not deployed ("+e.code+").")}});
 
 $("su-go").onclick=async()=>{
  const name=$("su-user").value.trim().toLowerCase(),nick=$("su-nick").value.trim(),err=$("su-err");err.textContent="";
@@ -402,33 +271,20 @@ $("su-go").onclick=async()=>{
   me=p;startApp()}
  catch(e){err.textContent=e.message==="taken"?"Username already taken.":"Could not save profile: "+(e.code||e.message)}};
 
-/* ---- FIX 5: isolate subsystem initializers ---- */
 function startApp(){
- if(started)return;started=true;show("app");
- const safe=(name,fn)=>{try{fn()}catch(e){console.error("[ARA] "+name+" failed:",e)}};
- safe("listenIncoming",listenIncoming);
- safe("initPrivacy",initPrivacy);
- safe("listenFriends",listenFriends);
- safe("applyRp",applyRp);
- safe("showView",()=>showView("home"));
+ if(started)return;started=true;show("app");listenIncoming();initPrivacy();listenFriends();applyRp();showView("home");
  $("me-av").src=me.photoURL;$("me-name").textContent=me.nickname;
- safe("presence",()=>{
-   onValue(ref(rtdb,".info/connected"),s=>{setConn(!!s.val());if(!s.val())return;const conn=push(ref(rtdb,`status/${me.uid}/connections`));
-    onDisconnect(conn).remove();set(conn,true);onDisconnect(ref(rtdb,`status/${me.uid}/lastSeen`)).set(rts())});
- });
- safe("convs",()=>{
-   let convVer=0;
-   onSnapshot(query(collection(db,"conversations"),where("participants","array-contains",me.uid)),async snap=>{
-    const v=++convVer,cl=x=>x.clearedAt?.[me.uid]?.seconds||0;
-    const list=snap.docs.map(d=>({id:d.id,...d.data()})).filter(c=>!cl(c)||(c.updatedAt?.seconds||0)>cl(c)).sort((a,b)=>(b.updatedAt?.seconds||0)-(a.updatedAt?.seconds||0));
-    const frag=document.createDocumentFragment(),data=[],cdata=[];
-    for(const c of list){const o=c.participants.find(x=>x!==me.uid),u=await getUser(o);if(!u)continue;
-     const r=row(u);data.push(u);cdata.push({c,u});r.querySelector("small").textContent=c.lastMessage||"@"+u.username;decorate(r,c);frag.append(r)}
-    if(v!==convVer)return;const box=$("convs");convsData=data;convList=cdata;box.innerHTML=list.length?"":'<i class="soon">No conversations yet</i>';box.append(frag);onConvs()},
-    e=>toast("Cannot load conversations: "+e.code));
- });
- window.__ARA_CLEAR_BOOT_TIMEOUT();
-}
+ onValue(ref(rtdb,".info/connected"),s=>{setConn(!!s.val());if(!s.val())return;const conn=push(ref(rtdb,`status/${me.uid}/connections`));
+  onDisconnect(conn).remove();set(conn,true);onDisconnect(ref(rtdb,`status/${me.uid}/lastSeen`)).set(rts())});
+ let convVer=0;
+ onSnapshot(query(collection(db,"conversations"),where("participants","array-contains",me.uid)),async snap=>{
+  const v=++convVer,cl=x=>x.clearedAt?.[me.uid]?.seconds||0;
+  const list=snap.docs.map(d=>({id:d.id,...d.data()})).filter(c=>!cl(c)||(c.updatedAt?.seconds||0)>cl(c)).sort((a,b)=>(b.updatedAt?.seconds||0)-(a.updatedAt?.seconds||0));
+  const frag=document.createDocumentFragment(),data=[],cdata=[];
+  for(const c of list){const o=c.participants.find(x=>x!==me.uid),u=await getUser(o);if(!u)continue;
+   const r=row(u);data.push(u);cdata.push({c,u});r.querySelector("small").textContent=c.lastMessage||"@"+u.username;decorate(r,c);frag.append(r)}
+  if(v!==convVer)return;const box=$("convs");convsData=data;convList=cdata;box.innerHTML=list.length?"":'<i class="soon">No conversations yet</i>';box.append(frag);onConvs()},
+  e=>toast("Cannot load conversations: "+e.code))}
 
 function row(u){const r=document.createElement("div");r.className="row";
  r.innerHTML=`<img src="${u.photoURL}"><div><b></b><br><small></small></div><span class="dot"></span>`;
@@ -488,38 +344,11 @@ $("send").onsubmit=async e=>{e.preventDefault();const text=$("text").value.trim(
   await updateDoc(doc(db,"conversations",activeCid),{lastMessage:text.slice(0,80),updatedAt:serverTimestamp(),["unread."+peer.uid]:increment(1)})}
  catch(err){$("text").value=text;toast("Message failed to send: "+err.code)}};
 
-/* ===== WebRTC — STUN-only, no TURN ===== */
-const ICE = [
-  { urls: "stun:stun.cloudflare.com:3478" },
-  { urls: "stun:stun.l.google.com:19302" }
-];
-const CAND_TYPE = c => {
-  const s = c.candidate || "";
-  if(/typ relay/.test(s)) return "relay";
-  if(/typ srflx/.test(s)) return "srflx";
-  if(/typ host/.test(s)) return "host";
-  return "other";
-};
-
+/* ===== WebRTC calls (signaling via Realtime Database) ===== */
+const ICE=[{urls:"stun:stun.l.google.com:19302"},{urls:"stun:stun1.l.google.com:19302"},{urls:"stun:global.stun.twilio.com:3478"},{urls:["turn:openrelay.metered.ca:80","turn:openrelay.metered.ca:443","turn:openrelay.metered.ca:443?transport=tcp"],username:"openrelayproject",credential:"openrelayproject"}]; // last entry = free shared TURN relay (fallback for mobile data); use your own TURN_ENDPOINT for production
+const TURN_ENDPOINT=""; // optional: your backend URL returning {iceServers:[...]} with temporary TURN credentials
 let call=null,inc=null,peer=null;
-let ringCtx=null,ringOsc=null,ringGain=null,ringTimer=null;
-function startRingtone(ctx){
-  if(ringOsc) return;
-  ringGain = ctx.createGain(); ringGain.gain.value = 0.0; ringGain.connect(ctx.destination);
-  ringOsc = ctx.createOscillator(); ringOsc.type = "sine"; ringOsc.frequency.value = 620; ringOsc.connect(ringGain); ringOsc.start();
-  let on = false;
-  ringTimer = setInterval(() => {
-    on = !on;
-    try{ ringGain.gain.setTargetAtTime(on ? 0.08 : 0.0, ctx.currentTime, 0.02); }catch(e){}
-  }, 700);
-}
-function stopRingtone(){
-  clearInterval(ringTimer); ringTimer = null;
-  try{ ringGain && ringGain.gain.setTargetAtTime(0, ringCtx.currentTime, 0.02); }catch(e){}
-  try{ ringOsc && ringOsc.stop(); }catch(e){}
-  ringOsc = ringGain = null;
-}
-
+async function iceServers(){if(!TURN_ENDPOINT)return ICE;try{const r=await fetch(TURN_ENDPOINT,{headers:{Authorization:"Bearer "+await auth.currentUser.getIdToken()}});return [...ICE,...(await r.json()).iceServers]}catch{return ICE}}
 async function media(video){
  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){toast(isSecureContext?"This browser can't use mic/camera. Open ARA in Chrome or Safari.":"Mic/camera need HTTPS.");return null}
  const tries=video?[{audio:true,video:{facingMode:"user",width:{ideal:640},height:{ideal:480}}},{audio:true,video:true},{audio:true}]:[{audio:true}];
@@ -527,329 +356,60 @@ async function media(video){
    if(video&&i===tries.length-1)toast("Camera not available, using audio only.");return st}
   catch(e){err=e;if(e.name==="NotAllowedError"||e.name==="SecurityError")break}}
  const n=err&&err.name;toast(n==="NotAllowedError"||n==="SecurityError"?"Permission denied. Allow microphone/camera in your browser site settings.":n==="NotFoundError"?"No microphone found on this device.":n==="NotReadableError"?"Mic/camera is being used by another app. Close it and retry.":"Cannot access mic/camera: "+n);return null}
-
-function openCallUi(name, st, video){
-  $("callui").hidden = false;
-  document.body.classList.add("calling");
-  const u = peer || cache[call?.other] || null;
-  const photo = u?.photoURL || avatar(name);
-  const uname = u?.username ? "@" + u.username : "";
-  $("cname-v").textContent = name;
-  $("cname-t").textContent = name;
-  $("cuser").textContent = uname;
-  $("cavatar").src = photo;
-  $("cstate").textContent = "Calling…";
-  $("cdur").textContent = "00:00";
-  $("cdur-t").textContent = "Connecting…";
-  $("lv").srcObject = st;
-  $("lv").hidden = !video;
-  $("c-video").hidden = !video;
-  $("ctop").hidden = !video;
-  $("cvoice").hidden = video;
+function openCallUi(name,st,video){$("callui").hidden=false;$("cname").textContent=name;$("ctype").textContent=video?"Video Call":"Voice Call";$("cstat").textContent="connecting…";$("cdur").textContent="00:00";
+ $("lv").srcObject=st;$("lv").hidden=!video;$("c-cam").hidden=!video;$("c-pip").hidden=!video}
+function setupPc(id,side){
+ const pc=new RTCPeerConnection({iceServers:call.ice});call.pc=pc;const pend=[];call.addIce=c=>pc.remoteDescription?pc.addIceCandidate(c).catch(()=>{}):pend.push(c);call.flush=()=>pend.splice(0).forEach(c=>pc.addIceCandidate(c).catch(()=>{}));
+ call.stream.getTracks().forEach(t=>pc.addTrack(t,call.stream));
+ pc.ontrack=e=>{$("rv").srcObject=e.streams[0]||new MediaStream([e.track]);$("rv").play?.().catch(()=>{})};
+ pc.onicecandidate=e=>e.candidate&&push(ref(rtdb,`calls/${id}/ice/${side}`),e.candidate.toJSON());
+ pc.onconnectionstatechange=()=>{const s=pc.connectionState;if(!call)return;$("cstat").textContent=s;
+  if(s==="connected"&&!call.t0){call.t0=Date.now();call.tick=setInterval(()=>{const n=Math.floor((Date.now()-call.t0)/1e3);$("cdur").textContent=String(n/60|0).padStart(2,"0")+":"+String(n%60).padStart(2,"0")},1000)}
+  if(s==="failed")endCall("Connection failed (a TURN server may be needed).",true)};
+ call.unsubs.push(onChildAdded(ref(rtdb,`calls/${id}/ice/${side==="caller"?"callee":"caller"}`),s=>call?.addIce(s.val())));
+ call.unsubs.push(onValue(ref(rtdb,`calls/${id}/state`),s=>{const v=s.val();
+  if(["rejected","ended","missed"].includes(v))endCall(v==="rejected"?"Call rejected.":v==="missed"?"No answer.":"Call ended.",false)}));
 }
-
-function setupPc(id, side){
-  const pc = new RTCPeerConnection({ iceServers: ICE });
-  call.pc = pc;
-  const pend = [];
-  const seen = new Set();
-  let remoteSet = false;
-  const other = side === "caller" ? "callee" : "caller";
-
-  const addCand = c => {
-    if(!c) return;
-    const key = c.candidate || JSON.stringify(c);
-    if(seen.has(key)) return;
-    seen.add(key);
-    if(remoteSet){ pc.addIceCandidate(c).catch(()=>{}); }
-    else { pend.push(c); }
-  };
-  const flush = () => {
-    remoteSet = true;
-    while(pend.length) pc.addIceCandidate(pend.shift()).catch(()=>{});
-  };
-  call.addIce = addCand; call.flush = flush;
-
-  call.stream.getTracks().forEach(t => pc.addTrack(t, call.stream));
-
-  pc.ontrack = e => {
-    if(!e.streams[0]) return;
-    $("rv").srcObject = e.streams[0];
-    $("rv").muted = false;
-    $("rv").play?.().catch(()=>{});
-  };
-
-  const logTypes = new Set();
-  pc.onicecandidate = e => {
-    if(!e.candidate) return;
-    const ty = CAND_TYPE(e.candidate);
-    if(!logTypes.has(ty)){ logTypes.add(ty); console.info("[ARA] gathered candidate type:", ty); }
-    push(ref(rtdb, `calls/${id}/ice/${side}`), e.candidate.toJSON()).catch(()=>{});
-  };
-  pc.onicecandidateerror = e => console.warn("[ARA] ICE candidate error:", e.errorCode, e.errorText, e.url);
-
-  const setState = s => { if(call){ $("cstate").textContent = s; $("cdur-t").textContent = s; } };
-
-  pc.oniceconnectionstatechange = () => {
-    if(!call) return;
-    const s = pc.iceConnectionState;
-    console.info("[ARA] iceConnectionState:", s);
-    if(s === "checking") setState("Connecting…");
-    if(s === "disconnected") setState("Reconnecting…");
-    if(s === "failed") failCall("Cannot reach peer directly. This network requires a TURN relay (not configured).", "ice-failed");
-  };
-
-  pc.onconnectionstatechange = () => {
-    if(!call) return;
-    const s = pc.connectionState;
-    console.info("[ARA] connectionState:", s);
-    if(s === "connected" && !call.t0){
-      call.t0 = Date.now(); setState("Connected");
-      clearTimeout(call.timeout);
-      clearTimeout(call.ringTimeout);
-      call.tick = setInterval(() => {
-        const n = Math.floor((Date.now() - call.t0) / 1000);
-        const txt = String(n/60|0).padStart(2,"0") + ":" + String(n%60).padStart(2,"0");
-        $("cdur").textContent = txt;
-        $("cdur-t").textContent = txt;
-      }, 1000);
-      (async()=>{
-        try{
-          const stats = await pc.getStats(); let pair=null, local=null, remote=null;
-          stats.forEach(r => { if(r.type==="candidate-pair" && r.state==="succeeded") pair=r; });
-          if(pair){
-            stats.forEach(r => { if(r.id===pair.localCandidateId) local=r; if(r.id===pair.remoteCandidateId) remote=r; });
-            console.info("[ARA] connected via pair", {
-              local: local && { type: local.candidateType, protocol: local.protocol },
-              remote: remote && { type: remote.candidateType, protocol: remote.protocol }
-            });
-          }
-        }catch(e){}
-      })();
-    }
-    if(s === "disconnected") setState("Reconnecting…");
-    if(s === "failed") failCall("Cannot reach peer directly. This network requires a TURN relay (not configured).", "connection-failed");
-  };
-
-  call.unsubs.push(onChildAdded(ref(rtdb, `calls/${id}/ice/${other}`), s => addCand(s.val())));
-  call.unsubs.push(onValue(ref(rtdb, `calls/${id}/state`), s => {
-    const v = s.val();
-    if(["rejected","ended","missed"].includes(v)){
-      failCall(v === "rejected" ? "Call rejected." : v === "missed" ? "No answer." : "Call ended.", "remote-end");
-    }
-  }));
-
-  call.timeout = setTimeout(() => {
-    if(call && !call.t0) failCall("No direct P2P path found. A TURN relay would be required on this network.", "timeout");
-  }, 25000);
-}
-
 async function startCall(video){
-  if(!peer) return toast("Open a conversation first.");
-  if(blocked.has(peer.uid)) return toast("You blocked this user. Unblock to call.");
-  if(call) return;
-  if(!navigator.onLine) return toast("You are offline.");
-
-  const st = await media(video);
-  if(!st) return;
-  video = video && st.getVideoTracks().length > 0;
-
-  const id = push(ref(rtdb,"calls")).key;
-  call = { id, video, stream: st, unsubs: [], role: "caller", other: peer.uid };
-
-  openCallUi(peer.nickname, st, video);
-
-  await set(ref(rtdb, `calls/${id}`), { from: me.uid, to: peer.uid, video, state: "ringing" });
-
-  setupPc(id, "caller");
-  const pc = call.pc;
-
-  call.unsubs.push(onValue(ref(rtdb, `calls/${id}/answer`), async s => {
-    const a = s.val();
-    if(a && !pc.currentRemoteDescription && call){
-      try{ await pc.setRemoteDescription(a); call.flush(); }
-      catch(e){ console.warn("[ARA] setRemoteDescription(answer) failed", e); }
-    }
-  }));
-
-  await pc.setLocalDescription(await pc.createOffer());
-  await update(ref(rtdb, `calls/${id}`), {
-    offer: { type: pc.localDescription.type, sdp: pc.localDescription.sdp }
-  });
-
-  try{
-    await set(ref(rtdb, `incoming/${peer.uid}`), { callId: id, from: me.uid, video, name: me.nickname });
-  }catch(e){
-    return failCall("Could not start call: " + e.code, "incoming-write");
-  }
-
-  call.ringTimeout = setTimeout(() => {
-    if(call && !call.t0){
-      update(ref(rtdb, `calls/${id}`), { state: "missed" }).catch(()=>{});
-      failCall("No answer.", "ring-timeout");
-    }
-  }, 30000);
-}
-
+ if(!peer)return toast("Open a conversation first.");if(blocked.has(peer.uid))return toast("You blocked this user. Unblock to call.");if(call)return;if(!navigator.onLine)return toast("You are offline.");
+ const st=await media(video);if(!st)return;video=video&&st.getVideoTracks().length>0;
+ const id=push(ref(rtdb,"calls")).key;call={id,video,stream:st,unsubs:[],ice:await iceServers(),role:"caller",other:peer.uid};
+ openCallUi(peer.nickname,st,video);setupPc(id,"caller");const pc=call.pc;
+ await pc.setLocalDescription(await pc.createOffer());
+ try{await set(ref(rtdb,`calls/${id}`),{from:me.uid,to:peer.uid,video,state:"ringing",offer:{type:pc.localDescription.type,sdp:pc.localDescription.sdp}});
+  await set(ref(rtdb,`incoming/${peer.uid}`),{callId:id,from:me.uid,video,name:me.nickname})}
+ catch(e){return endCall("Could not start call: "+e.code,false)}
+ call.unsubs.push(onValue(ref(rtdb,`calls/${id}/answer`),async s=>{const a=s.val();if(a&&!pc.currentRemoteDescription){await pc.setRemoteDescription(a);call?.flush()}}));
+ call.to=setTimeout(()=>{if(!call?.t0)update(ref(rtdb,`calls/${id}`),{state:"missed"})},30000)}
 function listenIncoming(){onValue(ref(rtdb,`incoming/${me.uid}`),s=>{const v=s.val();
- if(!v){$("incoming").hidden=true;stopRingtone();if(inc&&!inc.handled)logIn(inc,"missed");inc=null;return}
+ if(!v){$("incoming").hidden=true;if(inc&&!inc.handled)logIn(inc,"missed");inc=null;return}
  if(call){update(ref(rtdb,`calls/${v.callId}`),{state:"rejected"});return}
- inc=v;showIncoming(v);
- try{
-   if(!ringCtx) ringCtx = new (window.AudioContext||window.webkitAudioContext)();
-   if(ringCtx.state==="suspended") ringCtx.resume().catch(()=>{});
-   startRingtone(ringCtx);
- }catch(e){}})}
-
-function showIncoming(v){
-  $("incoming").hidden = false;
-  $("inc-name-v").textContent = v.name || "Unknown";
-  $("inc-user").textContent = "";
-  $("inc-type").textContent = v.video ? "Incoming Video Call" : "Incoming Voice Call";
-  $("inc-av").src = cache[v.from]?.photoURL || avatar(v.name || v.from);
-  if(cache[v.from]) peer = cache[v.from];
-}
-
-$("acc").onclick=async()=>{
-  const v = inc; if(!v) return;
-  v.handled = true; $("incoming").hidden = true; stopRingtone();
-  try{ remove(ref(rtdb, `incoming/${me.uid}`)); }catch(e){}
-
-  let c = null;
-  for(let i = 0; i < 6 && !c; i++){
-    c = (await get(ref(rtdb, `calls/${v.callId}`))).val();
-    if(!c || c.state === "ended" || c.state === "rejected" || c.state === "missed") break;
-    if(c.offer) break;
-    await new Promise(r => setTimeout(r, 150));
-  }
-  if(!c || !c.offer || ["ended","rejected","missed"].includes(c.state)){
-    return toast("Call is no longer available.");
-  }
-  const fromUser = cache[v.from] || (await getUser(v.from));
-  if(fromUser) peer = fromUser;
-
-  const st = await media(v.video);
-  if(!st){
-    update(ref(rtdb, `calls/${v.callId}`), { state: "rejected" }).catch(()=>{});
-    return;
-  }
-
-  call = { id: v.callId, video: v.video, stream: st, unsubs: [], role: "callee", other: v.from };
-  openCallUi(v.name, st, v.video);
-  $("cstate").textContent = "Connecting…";
-
-  setupPc(v.callId, "callee");
-  const pc = call.pc;
-
-  try{
-    await pc.setRemoteDescription(c.offer);
-    call.flush();
-    await pc.setLocalDescription(await pc.createAnswer());
-    await update(ref(rtdb, `calls/${v.callId}`), {
-      answer: { type: pc.localDescription.type, sdp: pc.localDescription.sdp },
-      state: "active"
-    });
-  }catch(e){
-    failCall("Call setup failed: " + (e.code || e.name), "setup");
-  }
-};
-
-$("rej").onclick=()=>{
-  if(!inc) return;
-  inc.handled = true;
-  stopRingtone();
-  logIn(inc,"declined");
-  update(ref(rtdb, `calls/${inc.callId}`), { state: "rejected" }).catch(()=>{});
-  remove(ref(rtdb, `incoming/${me.uid}`)).catch(()=>{});
-  inc = null;
-  $("incoming").hidden = true;
-};
-
-function failCall(msg, reason){
-  stopRingtone();
-  if(!call) return;
-  const c = call;
-  call = null;
-  document.body.classList.remove("calling");
-
-  clearTimeout(c.timeout);
-  clearTimeout(c.ringTimeout);
-  clearInterval(c.tick);
-
-  c.unsubs.forEach(f => { try{ f(); }catch(e){} });
-  try{ c.pc?.close(); }catch(e){}
-  try{ c.stream.getTracks().forEach(t => t.stop()); }catch(e){}
-
-  $("rv").srcObject = null;
-  $("lv").srcObject = null;
-  $("callui").hidden = true;
-  if(document.pictureInPictureElement) document.exitPictureInPicture().catch(()=>{});
-
-  const t0 = c.t0;
-  const st = t0 ? "completed"
-           : reason === "remote-end" && /rejected/.test(msg) ? "declined"
-           : /no answer|timed out|timeout/i.test(msg) ? "missed"
-           : reason === "ice-failed" || reason === "connection-failed" ? "failed"
-           : "cancelled";
-  addDoc(collection(db, "callLog", me.uid, "items"), {
-    peer: c.other, name: cache[c.other]?.nickname || "User",
-    video: !!c.video, dir: c.role === "caller" ? "out" : "in",
-    status: st, dur: t0 ? Math.round((Date.now() - t0) / 1000) : 0,
-    at: serverTimestamp()
-  }).catch(()=>{});
-
-  if(c.role === "caller"){
-    update(ref(rtdb, `calls/${c.id}`), { state: "ended" }).catch(()=>{});
-    remove(ref(rtdb, `incoming/${c.other}`)).catch(()=>{});
-  } else {
-    update(ref(rtdb, `calls/${c.id}`), { state: "ended" }).catch(()=>{});
-  }
-  setTimeout(() => { remove(ref(rtdb, `calls/${c.id}`)).catch(()=>{}); }, 1500);
-
-  if(msg) toast(msg);
-}
-const endCall = failCall;
-
+ inc=v;$("inc-name").textContent=`${v.name} is ${v.video?"video":"voice"} calling…`;$("incoming").hidden=false})}
+$("acc").onclick=async()=>{const v=inc;if(!v)return;v.handled=true;$("incoming").hidden=true;
+ const c=(await get(ref(rtdb,`calls/${v.callId}`))).val();
+ if(!c||c.state!=="ringing"){remove(ref(rtdb,`incoming/${me.uid}`));return toast("Call is no longer available.")}
+ const st=await media(v.video);
+ if(!st){update(ref(rtdb,`calls/${v.callId}`),{state:"rejected"});remove(ref(rtdb,`incoming/${me.uid}`));return}
+ call={id:v.callId,video:v.video,stream:st,unsubs:[],ice:await iceServers(),role:"callee",other:v.from};
+ openCallUi(v.name,st,v.video);setupPc(v.callId,"callee");const pc=call.pc;
+ try{await pc.setRemoteDescription(c.offer);call?.flush();await pc.setLocalDescription(await pc.createAnswer());
+  await update(ref(rtdb,`calls/${v.callId}`),{answer:{type:pc.localDescription.type,sdp:pc.localDescription.sdp},state:"active"})}
+ catch(e){endCall("Call setup failed: "+(e.code||e.name),true)}
+ remove(ref(rtdb,`incoming/${me.uid}`))};
+$("rej").onclick=()=>{if(!inc)return;inc.handled=true;logIn(inc,"declined");update(ref(rtdb,`calls/${inc.callId}`),{state:"rejected"});remove(ref(rtdb,`incoming/${me.uid}`))};
+function endCall(msg,notify=true){if(!call)return;const c=call;call=null;logCall(c,msg);
+ clearTimeout(c.to);clearInterval(c.tick);c.unsubs.forEach(f=>f());c.pc?.close();c.stream.getTracks().forEach(t=>t.stop());
+ $("rv").srcObject=null;$("lv").srcObject=null;$("callui").hidden=true;
+ if(document.pictureInPictureElement)document.exitPictureInPicture().catch(()=>{});
+ if(notify)update(ref(rtdb,`calls/${c.id}`),{state:"ended"}).catch(()=>{});
+ if(c.role==="caller"){remove(ref(rtdb,`incoming/${c.other}`)).catch(()=>{});setTimeout(()=>remove(ref(rtdb,`calls/${c.id}`)).catch(()=>{}),5000)}
+ if(msg)toast(msg)}
 $("call-a").onclick=()=>startCall(false);$("call-v").onclick=()=>startCall(true);
-$("c-end").onclick=()=>failCall("", "local-end");
-
-let speakerOn=false;
-$("c-speaker").onclick=e=>{
-  speakerOn = !speakerOn;
-  e.currentTarget.classList.toggle("on", speakerOn);
-  try{ $("rv").volume = 1; }catch(_){}
-};
-$("c-mute").onclick=e=>{
-  const t = call?.stream.getAudioTracks();
-  t?.forEach(x=>x.enabled=!x.enabled);
-  const on = t?.[0]?.enabled;
-  e.currentTarget.querySelector("span").textContent = on ? "Mic" : "Mic Off";
-  e.currentTarget.classList.toggle("off", !on);
-};
-$("c-video").onclick=e=>{
-  const t = call?.stream.getVideoTracks();
-  if(!t?.length) return toast("Camera not available.");
-  t.forEach(x=>x.enabled=!x.enabled);
-  const on = t[0].enabled;
-  e.currentTarget.querySelector("span").textContent = on ? "Video" : "Video Off";
-  e.currentTarget.classList.toggle("off", !on);
-};
-
-(function(){
-  const el = $("lv"); let drag = null;
-  el.addEventListener("pointerdown", ev => {
-    drag = { x: ev.clientX, y: ev.clientY, rect: el.getBoundingClientRect() };
-    el.classList.add("dragging"); el.setPointerCapture(ev.pointerId);
-  });
-  el.addEventListener("pointermove", ev => {
-    if(!drag) return;
-    const dx = ev.clientX - drag.x, dy = ev.clientY - drag.y;
-    el.style.left = (drag.rect.left + dx) + "px";
-    el.style.top = (drag.rect.top + dy) + "px";
-    el.style.right = "auto";
-  });
-  el.addEventListener("pointerup", () => { drag = null; el.classList.remove("dragging"); });
-})();
+$("c-end").onclick=()=>endCall("",true);
+$("c-mute").onclick=e=>{const t=call?.stream.getAudioTracks();t?.forEach(x=>x.enabled=!x.enabled);e.currentTarget.querySelector("span").textContent=t?.[0]?.enabled?"Mic On":"Mic Off"};
+$("c-cam").onclick=e=>{const t=call?.stream.getVideoTracks();t?.forEach(x=>x.enabled=!x.enabled);e.currentTarget.querySelector("span").textContent=t?.[0]?.enabled?"Camera On":"Camera Off"};
+$("c-fs").onclick=()=>$("callui").requestFullscreen?.().catch(()=>{});
+$("c-pip").onclick=()=>$("rv").requestPictureInPicture?.().catch(()=>toast("Picture-in-Picture not supported here."));
 
 /* ===== profile editing + right panel ===== */
 function fillRp(u){$("rp-empty").hidden=true;$("rp-body").hidden=false;$("rp-av").src=u.photoURL;$("rp-name").textContent=u.nickname;$("rp-user").textContent="@"+u.username;$("rp-bio").textContent=u.bio||"No bio yet.";renderFr(u)}
@@ -897,7 +457,7 @@ async function joinRoom(code){
 async function peerUp(uid,m){
  if(gr.pcs[uid])return;gr.pcs[uid]={};const g=gr,S=`${g.R}/sig/${[me.uid,uid].sort().join("_")}`,pend=[],u=[];
  const initiator=me.uid>uid;if(initiator)await remove(ref(rtdb,S)).catch(()=>{});
- const pc=new RTCPeerConnection({iceServers:ICE});if(gr!==g){pc.close();return}
+ const pc=new RTCPeerConnection({iceServers:await iceServers()});if(gr!==g){pc.close();return}
  g.pcs[uid]={pc,u};g.st.getTracks().forEach(t=>pc.addTrack(t,g.st));
  const flush=()=>pend.splice(0).forEach(c=>pc.addIceCandidate(c).catch(()=>{}));
  pc.ontrack=e=>addTile(uid,m.name,e.streams[0],false);
@@ -957,12 +517,13 @@ $("rf").onsubmit=async e=>{e.preventDefault();if(!confirm(`Report ${peer.nicknam
   $("rm").hidden=true;toast("Report submitted. Thank you.",1)}
  catch(x){$("r-err").textContent=x.code==="permission-denied"?"You have already reported this user.":"Could not submit: "+(x.code||x.message)}};
 
-/* ===== message menu ===== */
+/* ===== message menu: reply, react, copy, pin, forward, delete ===== */
 let pin=null,convsData=[],replying=null;
 const EMO=["❤️","😂","😮","😢","👍","👎","🔥","🎉"];
 function renderPin(){$("pinbar").hidden=!pin;$("pin-text").textContent=pin?.text||""}
 function renderReply(){$("rbar").hidden=!replying;if(replying){$("rb-name").textContent="Replying to "+replying.name;$("rb-text").textContent=replying.text}}
 $("rb-x").onclick=()=>{replying=null;renderReply()};
+/* one reaction per user: reactions = {uid: emoji}; same emoji again removes it */
 function react(d,m,e){const cur=(m.reactions||{})[me.uid];
  updateDoc(d.ref,{["reactions."+me.uid]:cur===e?deleteField():e}).catch(x=>toast("Reaction failed: "+x.code))}
 function picker(btn,d,m){const p=$("rpk");$("mm").hidden=true;p.innerHTML="";const cur=(m.reactions||{})[me.uid];
@@ -991,11 +552,11 @@ function fwd(m){const text=m.text;const l=$("f-list");l.innerHTML=convsData.leng
    await updateDoc(doc(db,"conversations",cid),{lastMessage:"↪ "+text.slice(0,78),updatedAt:serverTimestamp(),["unread."+u.uid]:increment(1)});toast("Forwarded to "+u.nickname,1)}
   catch(e){toast("Forward failed: "+(e.code||e.message))}};l.append(r)});$("fm").hidden=false}
 
-/* ===== conversation list ===== */
+/* ===== conversation list: unread badge (99+), mute, delete chat ===== */
 let unreadNow=0;
 const resetUnread=()=>activeCid&&updateDoc(doc(db,"conversations",activeCid),{["unread."+me.uid]:0}).catch(()=>{});
 document.addEventListener("visibilitychange",()=>{if(!document.hidden&&unreadNow>0)resetUnread()});
-function decorate(r,c){const n=c.unread?.[me.uid]||0,mu=(c.mutedBy||[]).includes(me.uid),tdt=c.updatedAt?.toDate?.();if(tdt){const nw=new Date();r.append(mk("small","tm",tdt.toDateString()===nw.toDateString()?tdt.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}):tdt.toLocaleDateString([],{month:"short",day:"numeric"}))}
+function decorate(r,c){const n=c.unread?.[me.uid]||0,mu=(c.mutedBy||[]).includes(me.uid),tdt=c.updatedAt?.toDate?.();if(tdt){const nw=new Date();r.append(mk("small","tm",tdt.toDateString()===nw.toDateString()?tdt.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}):tdt.toLocaleDateString([],{month:"short",day:"numeric"})))}
  if(mu){const i=document.createElement("span");i.innerHTML=ico("bellOff");i.className="mi";i.title="Muted";r.append(i)}
  if(n>0&&c.id!==activeCid){const b=document.createElement("span");b.className="bdg"+(mu?" mu":"");b.textContent=n>99?"99+":n;r.append(b)}
  const mb=document.createElement("a");mb.className="cmb";mb.textContent="⋮";mb.title="More";mb.onclick=ev=>{ev.stopPropagation();convMenu(mb,c,mu)};r.append(mb)}
@@ -1010,7 +571,7 @@ function closeChat(){if(rec)stopRec(false);unsub.forEach(f=>f());unsub=[];active
  $("send").hidden=true;$("pinbar").hidden=true;$("h-name").textContent="Select a conversation";$("h-av").hidden=true;$("h-seen").textContent="";
  $("rp-body").hidden=true;$("rp-empty").hidden=false;$("app").classList.remove("chatting")}
 
-/* ===== photo + voice messages ===== */
+/* ===== photo + voice messages (compressed, stored in the message doc, no Storage) ===== */
 async function sendMedia(f,label){
  if(!activeCid||!peer)return;if(!navigator.onLine)return toast("You are offline.");
  const rep=replying,extra=rep?{replyTo:rep.id,replyPreview:{name:rep.name,text:rep.text,from:rep.from}}:{};
@@ -1061,6 +622,7 @@ const btn=(txt,icn,fn,cls="ghost sm",dis)=>{const b=mk("button",cls);b.type="but
 function userItem(u,sub,un){const w=mk("div","item"),im=mk("img"),i=mk("div","info"),d=mk("span","dot");im.src=u.photoURL;im.alt="";
  i.append(mk("b","",u.nickname),mk("small","soon",sub));w.append(im,i,d);
  if(un)un.push(onValue(ref(rtdb,`status/${u.uid}/connections`),s=>d.classList.toggle("on",s.exists()),()=>{}));return w}
+/* friends */
 const rel=uid=>{const o=reqOut.get(uid),i=reqIn.get(uid);return o?.status==="accepted"||i?.status==="accepted"?"friends":o?"sent":i?"received":"none"};
 const sendReq=u=>{if(rel(u.uid)!=="none")return;setDoc(doc(db,"friendRequests",me.uid+"_"+u.uid),{from:me.uid,to:u.uid,status:"pending",createdAt:serverTimestamp()}).then(()=>toast("Friend request sent.",1)).catch(e=>toast("Could not send request: "+(e.code||e.message)))};
 const acceptReq=uid=>updateDoc(doc(db,"friendRequests",uid+"_"+me.uid),{status:"accepted"}).then(()=>toast("Friend added.",1)).catch(e=>toast("Failed: "+(e.code||e.message)));
@@ -1077,6 +639,7 @@ function frChanged(){updBell();renderFr(peer);if(curView==="contacts")renderCont
 function renderFr(u){const b=$("rp-fr");if(!u){b.hidden=true;return}b.hidden=false;const r=rel(u.uid);
  const set=(t,i,f,d)=>{b.innerHTML=ico(i);b.append(" "+t);b.disabled=!!d;b.onclick=f||null};
  r==="none"?set("Add Friend","userplus",()=>sendReq(u)):r==="sent"?set("Request sent (tap to cancel)","userplus",()=>delRel(u.uid)):r==="received"?set("Accept friend request","check",()=>acceptReq(u.uid)):set("Friends","check",null,1)}
+/* notifications */
 function notifItems(){const it=[];
  convList.forEach(({c,u})=>{const n=c.unread?.[me.uid]||0;if(n>0&&c.id!==activeCid&&!(c.mutedBy||[]).includes(me.uid))it.push({t:"msg",u,n,c})});
  reqIn.forEach(r=>{if(r.status==="pending")it.push({t:"req",r})});return it}
@@ -1092,6 +655,7 @@ function onConvs(){updBell();if(curView==="home")renderHome();
  convList.forEach(({c,u})=>{const n=c.unread?.[me.uid]||0,old=prevUn[c.id];
   if(old!==undefined&&n>old&&!(c.mutedBy||[]).includes(me.uid)&&(document.hidden||c.id!==activeCid)&&LS.get("ara-notif")==="1"&&"Notification"in window&&Notification.permission==="granted"){try{new Notification(u.nickname,{body:c.lastMessage||"New message"})}catch(e){}}
   prevUn[c.id]=n})}
+/* home */
 let hmUn=[];
 function renderHome(){$("hm-av").src=me.photoURL;$("hm-name").textContent=me.nickname;$("hm-user").textContent="@"+me.username;
  const box=$("hm-list");hmUn.forEach(f=>f());hmUn=[];box.innerHTML="";
@@ -1100,6 +664,7 @@ function renderHome(){$("hm-av").src=me.photoURL;$("hm-name").textContent=me.nic
   if(n>0)w.append(mk("span","bdg"+((c.mutedBy||[]).includes(me.uid)?" mu":""),n>99?"99+":String(n)));w.style.cursor="pointer";w.onclick=()=>openChat(u);box.append(w)})}
 $("qa-chat").onclick=()=>{showView("chats");$("q").focus()};$("qa-con").onclick=()=>showView("contacts");$("qa-call").onclick=()=>showView("calls");$("qa-grp").onclick=()=>$("g-new").click();
 $("new-c").onclick=()=>$("q").focus();$("calls-g").onclick=()=>$("g-new").click();
+/* contacts */
 let ctUsers=[],ctUn=[],ctAt=0;
 async function loadContacts(){if(!ctUsers.length||Date.now()-ctAt>60000){try{const s=await getDocs(query(collection(db,"users"),limit(100)));
   ctUsers=s.docs.map(d=>d.data()).filter(u=>u.uid!==me.uid);ctUsers.forEach(u=>cache[u.uid]=u);ctAt=Date.now()}catch(e){toast("Cannot load contacts: "+e.code)}}renderContacts()}
@@ -1108,6 +673,7 @@ function renderContacts(){const box=$("ct-list"),q=$("ct-q").value.trim().toLowe
  if(!l.length){box.append(mk("p","soon",q?"No matching contacts.":"No other users yet."));return}
  l.forEach(u=>{const w=userItem(u,"@"+u.username,ctUn),a=mk("div","acts2");a.append(btn("Message","chat",()=>openChat(u),"sm"),...frBtns(u));w.append(a);box.append(w)})}
 $("ct-q").oninput=renderContacts;
+/* calls */
 function logCall(c,msg){const m=msg||"",st=c.t0?"completed":/rejected/i.test(m)?"declined":/no answer/i.test(m)?"missed":"cancelled";
  addDoc(collection(db,"callLog",me.uid,"items"),{peer:c.other,name:cache[c.other]?.nickname||"User",video:!!c.video,dir:c.role==="caller"?"out":"in",status:st,dur:c.t0?Math.round((Date.now()-c.t0)/1e3):0,at:serverTimestamp()}).catch(()=>{})}
 function logIn(v,st){addDoc(collection(db,"callLog",me.uid,"items"),{peer:v.from,name:v.name||"User",video:!!v.video,dir:"in",status:st,dur:0,at:serverTimestamp()}).catch(()=>{})}
@@ -1121,6 +687,7 @@ async function loadCalls(){const box=$("cl-list");box.innerHTML="";box.append(mk
    if(u.username!==""){const a=mk("div","acts2");a.append(btn("Call","phone",async()=>{await openChat(u);startCall(false)},"sm"),btn("Video","video",async()=>{await openChat(u);startCall(true)}));w.append(a)}
    box.append(w)}}
  catch(e){box.innerHTML="";box.append(mk("p","err","Cannot load call history: "+(e.code||e.message)+". Publish the new Firestore rules."))}}
+/* settings */
 function renderSettings(){$("st-acc").textContent=me.nickname+" · @"+me.username+(auth.currentUser?.email?" · "+auth.currentUser.email:"");
  $("st-dark").checked=document.documentElement.dataset.theme==="dark";$("st-notif").checked=LS.get("ara-notif")==="1"&&"Notification"in window&&Notification.permission==="granted";$("st-rp").checked=LS.get("ara-rp")!=="0"}
 $("st-dark").onchange=e=>setTheme(e.target.checked?"dark":"light");
@@ -1130,6 +697,7 @@ $("st-notif").onchange=async e=>{if(!e.target.checked){LS.set("ara-notif","0");r
  const p=Notification.permission==="granted"?"granted":await Notification.requestPermission();
  if(p==="granted"){LS.set("ara-notif","1");toast("Notifications on.",1)}else{e.target.checked=false;LS.set("ara-notif","0");toast("Notification permission was not granted.")}};
 $("st-priv").onclick=()=>$("menu-priv").click();$("st-edit").onclick=openPm;$("st-out").onclick=()=>signOut(auth);
+/* shared media */
 function renderMedia(snap){const g=$("rp-media");g.innerHTML="";let n=0;
  snap.docs.forEach(d=>{const m=d.data();if(!m.image||n>=9||(m.deletedFor||[]).includes(me.uid)||(m.createdAt&&m.createdAt.seconds<=clr))return;n++;
   const im=mk("img");im.src=m.image;im.alt="Shared photo";im.onclick=()=>{$("lb-img").src=m.image;$("lb").hidden=false};g.append(im)});$("rp-mc").hidden=!n}
